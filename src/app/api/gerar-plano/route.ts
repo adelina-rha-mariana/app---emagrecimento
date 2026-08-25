@@ -1,0 +1,202 @@
+import { NextResponse } from "next/server";
+import Anthropic from "@anthropic-ai/sdk";
+
+export const runtime = "nodejs";
+
+type Answers = { q1: string; q2: string; q3: string };
+
+type PlanDay = {
+  dia: number;
+  titulo: string;
+  nutricao: string;
+  movimento: string;
+  comportamento: string;
+  porque: string;
+};
+
+type PlanResult = {
+  perfil: string;
+  acolhimento: string;
+  insight_cientifico: string;
+  plano: PlanDay[];
+};
+
+const client = new Anthropic(); // lê ANTHROPIC_API_KEY do ambiente do servidor
+
+function buildPrompt(answers: Answers): string {
+  return `Você é um assistente de acolhimento e bem-estar dentro de um app de hábitos alimentares e comportamento (NÃO é terapia nem tratamento médico).
+
+Uma pessoa respondeu três perguntas abertas sobre a relação dela com comida, corpo e peso:
+
+1) O que mais pesa: ${answers.q1}
+2) O que já tentou e não funcionou: ${answers.q2}
+3) Como isso afeta o dia a dia dela: ${answers.q3}
+
+Sua tarefa:
+1. Identifique um "perfil" curto e humano que resuma o padrão dela (ex: quem come por ansiedade à noite e se culpa depois), com base SOMENTE no que ela escreveu.
+2. Escreva um "acolhimento": um parágrafo curto (3-4 frases), tom caloroso e direto, mostrando que você entendeu especificamente o caso dela — refira-se a algo concreto que ela disse, sem usar aspas. NÃO use a segunda pessoa para afirmar que ela "sofre de" uma condição de saúde; fale sobre o padrão de comportamento, não sobre um diagnóstico.
+3. Escreva um "insight científico": 1-2 frases explicando, em linguagem simples, um princípio real de ciência do comportamento alimentar, hormônios (insulina, cortisol, leptina, grelina, tireoide) ou psicologia relevante ao caso dela.
+4. Monte um plano de 5 dias de ação, ESPECÍFICO para o padrão dela. Cada dia deve ter: um título curto, uma tarefa em NUTRIÇÃO, uma em MOVIMENTO/EXERCÍCIO e uma em COMPORTAMENTO (sono/estresse), cada uma com um "porquê" ligado a um mecanismo hormonal ou comportamental real.
+
+Regras importantes:
+- Não prometa perda de peso específica nem prazo de resultado.
+- Não faça alegações médicas nem substitua acompanhamento profissional (nutricionista, psicólogo, médico).
+- Tom acolhedor, sem julgamento, sem clichê motivacional vazio.
+- NUNCA use o caractere de aspas duplas (") em nenhum texto.
+- Cada campo deve ser texto corrido em uma única linha.
+
+Responda EXATAMENTE neste formato de marcadores, preenchendo cada um, sem markdown, sem explicações antes ou depois:
+
+@@PERFIL@@
+(texto do perfil aqui)
+@@ACOLHIMENTO@@
+(texto do acolhimento aqui)
+@@INSIGHT@@
+(texto do insight científico aqui)
+@@DIA1_TITULO@@
+(título do dia 1)
+@@DIA1_NUTRICAO@@
+(ação de nutrição do dia 1)
+@@DIA1_MOVIMENTO@@
+(ação de movimento/exercício do dia 1)
+@@DIA1_COMPORTAMENTO@@
+(ação de comportamento/sono do dia 1)
+@@DIA1_PORQUE@@
+(porquê hormonal/comportamental do dia 1)
+@@DIA2_TITULO@@
+(título do dia 2)
+@@DIA2_NUTRICAO@@
+(ação de nutrição do dia 2)
+@@DIA2_MOVIMENTO@@
+(ação de movimento/exercício do dia 2)
+@@DIA2_COMPORTAMENTO@@
+(ação de comportamento/sono do dia 2)
+@@DIA2_PORQUE@@
+(porquê do dia 2)
+@@DIA3_TITULO@@
+(título do dia 3)
+@@DIA3_NUTRICAO@@
+(ação de nutrição do dia 3)
+@@DIA3_MOVIMENTO@@
+(ação de movimento/exercício do dia 3)
+@@DIA3_COMPORTAMENTO@@
+(ação de comportamento/sono do dia 3)
+@@DIA3_PORQUE@@
+(porquê do dia 3)
+@@DIA4_TITULO@@
+(título do dia 4)
+@@DIA4_NUTRICAO@@
+(ação de nutrição do dia 4)
+@@DIA4_MOVIMENTO@@
+(ação de movimento/exercício do dia 4)
+@@DIA4_COMPORTAMENTO@@
+(ação de comportamento/sono do dia 4)
+@@DIA4_PORQUE@@
+(porquê do dia 4)
+@@DIA5_TITULO@@
+(título do dia 5)
+@@DIA5_NUTRICAO@@
+(ação de nutrição do dia 5)
+@@DIA5_MOVIMENTO@@
+(ação de movimento/exercício do dia 5)
+@@DIA5_COMPORTAMENTO@@
+(ação de comportamento/sono do dia 5)
+@@DIA5_PORQUE@@
+(porquê do dia 5)
+@@FIM@@`;
+}
+
+function extractField(raw: string, key: string): string {
+  const re = new RegExp("@@" + key + "@@([\\s\\S]*?)(?=@@|$)");
+  const m = raw.match(re);
+  return m ? m[1].trim() : "";
+}
+
+export async function POST(request: Request) {
+  if (!process.env.ANTHROPIC_API_KEY) {
+    return NextResponse.json(
+      { error: "ANTHROPIC_API_KEY não está configurada no servidor." },
+      { status: 500 }
+    );
+  }
+
+  let body: { answers?: Partial<Answers> };
+  try {
+    body = await request.json();
+  } catch {
+    return NextResponse.json({ error: "Corpo da requisição inválido." }, { status: 400 });
+  }
+
+  const q1 = body.answers?.q1?.trim();
+  const q2 = body.answers?.q2?.trim();
+  const q3 = body.answers?.q3?.trim();
+
+  if (!q1 || !q2 || !q3) {
+    return NextResponse.json({ error: "Respostas incompletas." }, { status: 400 });
+  }
+
+  const prompt = buildPrompt({ q1, q2, q3 });
+
+  let message;
+  try {
+    message = await client.beta.messages.create({
+      model: "claude-opus-5",
+      max_tokens: 4096,
+      betas: ["server-side-fallback-2026-07-01"],
+      fallbacks: "default",
+      messages: [{ role: "user", content: prompt }],
+    });
+  } catch (err) {
+    if (err instanceof Anthropic.APIError) {
+      return NextResponse.json(
+        { error: err.message || `Erro da IA (HTTP ${err.status ?? "desconhecido"}).` },
+        { status: err.status ?? 502 }
+      );
+    }
+    return NextResponse.json(
+      { error: "Falha ao conectar com a IA. Tente novamente." },
+      { status: 502 }
+    );
+  }
+
+  if (message.stop_reason === "refusal") {
+    return NextResponse.json(
+      { error: "A IA não conseguiu gerar essa análise agora. Toque para tentar de novo." },
+      { status: 502 }
+    );
+  }
+
+  const textBlock = message.content.find((b) => b.type === "text");
+  if (!textBlock || textBlock.type !== "text" || !textBlock.text) {
+    return NextResponse.json({ error: "A IA não retornou texto na resposta." }, { status: 502 });
+  }
+
+  const raw = textBlock.text;
+
+  const perfil = extractField(raw, "PERFIL");
+  const acolhimento = extractField(raw, "ACOLHIMENTO");
+  const insight_cientifico = extractField(raw, "INSIGHT");
+
+  const plano: PlanDay[] = [1, 2, 3, 4, 5].map((n) => ({
+    dia: n,
+    titulo: extractField(raw, `DIA${n}_TITULO`),
+    nutricao: extractField(raw, `DIA${n}_NUTRICAO`),
+    movimento: extractField(raw, `DIA${n}_MOVIMENTO`),
+    comportamento: extractField(raw, `DIA${n}_COMPORTAMENTO`),
+    porque: extractField(raw, `DIA${n}_PORQUE`),
+  }));
+
+  const planoValido = plano.every((d) => d.titulo && d.nutricao && d.movimento && d.comportamento);
+
+  if (!perfil || !acolhimento || !planoValido) {
+    const diaFaltando = plano.find((d) => !d.titulo || !d.nutricao || !d.movimento || !d.comportamento);
+    const detalhe = diaFaltando ? ` (faltou o dia ${diaFaltando.dia})` : "";
+    return NextResponse.json(
+      { error: `A resposta da IA veio incompleta${detalhe}. Toque para tentar de novo.` },
+      { status: 502 }
+    );
+  }
+
+  const result: PlanResult = { perfil, acolhimento, insight_cientifico, plano };
+  return NextResponse.json(result);
+}
