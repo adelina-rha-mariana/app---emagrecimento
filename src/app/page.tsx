@@ -178,7 +178,7 @@ function GhostLink({
 
 function Screen({ children }: { children: React.ReactNode }) {
   return (
-    <div style={{ flex: 1, display: "flex", flexDirection: "column", padding: "28px 24px 24px", overflowY: "auto" }}>
+    <div style={{ flex: 1, minHeight: 0, display: "flex", flexDirection: "column", padding: "28px 24px 24px", overflowY: "auto" }}>
       {children}
     </div>
   );
