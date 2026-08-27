@@ -278,13 +278,21 @@ function buildWalkScript(result: PlanResult | null) {
   ];
 }
 
-async function callClaude(answers: Answers): Promise<PlanResult> {
+type Diagnostico = {
+  altura_cm: number;
+  peso_atual_kg: number;
+  peso_meta_kg: number;
+  condicoes_saude: string[];
+};
+
+async function callClaude(answers: Answers, diagnostico: Diagnostico): Promise<PlanResult> {
   // A chamada à Anthropic acontece no servidor (src/app/api/gerar-plano/route.ts),
   // usando ANTHROPIC_API_KEY como variável de ambiente — a chave nunca chega ao navegador.
+  // O servidor também salva as respostas do questionário no Supabase.
   const response = await fetch("/api/gerar-plano", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ answers }),
+    body: JSON.stringify({ answers, diagnostico }),
   });
 
   const data = await response.json().catch(() => null);
@@ -398,7 +406,12 @@ export default function App() {
     setLoading(true);
     setError(null);
     try {
-      const res = await callClaude(answers);
+      const res = await callClaude(answers, {
+        altura_cm: height,
+        peso_atual_kg: weightNow,
+        peso_meta_kg: weightGoal,
+        condicoes_saude: HEALTH_CONDITIONS.filter((c) => conditions[c]),
+      });
       setResult(res);
       setLoading(false);
       setStep(9);

@@ -1,9 +1,17 @@
 import { NextResponse } from "next/server";
 import Anthropic from "@anthropic-ai/sdk";
+import { supabase } from "@/lib/supabase";
 
 export const runtime = "nodejs";
 
 type Answers = { q1: string; q2: string; q3: string };
+
+type Diagnostico = {
+  altura_cm?: number;
+  peso_atual_kg?: number;
+  peso_meta_kg?: number;
+  condicoes_saude?: string[];
+};
 
 type PlanDay = {
   dia: number;
@@ -120,7 +128,7 @@ export async function POST(request: Request) {
     );
   }
 
-  let body: { answers?: Partial<Answers> };
+  let body: { answers?: Partial<Answers>; diagnostico?: Diagnostico };
   try {
     body = await request.json();
   } catch {
@@ -133,6 +141,21 @@ export async function POST(request: Request) {
 
   if (!q1 || !q2 || !q3) {
     return NextResponse.json({ error: "Respostas incompletas." }, { status: 400 });
+  }
+
+  // Salva as respostas do questionário no Supabase. Não bloqueia nem falha a geração
+  // do plano caso a gravação dê erro — a IA continua funcionando normalmente.
+  const { error: dbError } = await supabase.from("respostas_questionario").insert({
+    altura_cm: body.diagnostico?.altura_cm,
+    peso_atual_kg: body.diagnostico?.peso_atual_kg,
+    peso_meta_kg: body.diagnostico?.peso_meta_kg,
+    condicoes_saude: body.diagnostico?.condicoes_saude,
+    q1_o_que_pesa: q1,
+    q2_o_que_tentou: q2,
+    q3_impacto_dia_a_dia: q3,
+  });
+  if (dbError) {
+    console.error("Falha ao salvar respostas do questionário no Supabase:", dbError.message);
   }
 
   const prompt = buildPrompt({ q1, q2, q3 });
