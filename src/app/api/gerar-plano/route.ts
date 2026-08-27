@@ -121,13 +121,6 @@ function extractField(raw: string, key: string): string {
 }
 
 export async function POST(request: Request) {
-  if (!process.env.ANTHROPIC_API_KEY) {
-    return NextResponse.json(
-      { error: "ANTHROPIC_API_KEY não está configurada no servidor." },
-      { status: 500 }
-    );
-  }
-
   let body: { answers?: Partial<Answers>; diagnostico?: Diagnostico };
   try {
     body = await request.json();
@@ -143,8 +136,9 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Respostas incompletas." }, { status: 400 });
   }
 
-  // Salva as respostas do questionário no Supabase. Não bloqueia nem falha a geração
-  // do plano caso a gravação dê erro — a IA continua funcionando normalmente.
+  // Salva as respostas do questionário no Supabase antes de qualquer coisa relacionada à IA,
+  // para não perder a resposta da pessoa caso a IA falhe ou a chave não esteja configurada.
+  // Não bloqueia nem falha a geração do plano caso a gravação dê erro.
   const { error: dbError } = await supabase.from("respostas_questionario").insert({
     altura_cm: body.diagnostico?.altura_cm,
     peso_atual_kg: body.diagnostico?.peso_atual_kg,
@@ -156,6 +150,13 @@ export async function POST(request: Request) {
   });
   if (dbError) {
     console.error("Falha ao salvar respostas do questionário no Supabase:", dbError.message);
+  }
+
+  if (!process.env.ANTHROPIC_API_KEY) {
+    return NextResponse.json(
+      { error: "ANTHROPIC_API_KEY não está configurada no servidor." },
+      { status: 500 }
+    );
   }
 
   const prompt = buildPrompt({ q1, q2, q3 });
