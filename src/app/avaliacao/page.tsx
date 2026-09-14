@@ -3,7 +3,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import {
   ChevronLeft, HeartHandshake, Sparkles, BookOpen, Check, AlertCircle, Footprints,
-  Music, Play, Pause, Volume2, VolumeX, ExternalLink, Droplets, Stethoscope,
+  Music, Play, Pause, Volume2, VolumeX, ExternalLink, Droplets,
   Flame, TrendingUp, Share2, Award, Lock, Utensils, Dumbbell, Wind, Moon, Activity,
   Salad, Star,
 } from "lucide-react";
@@ -57,11 +57,14 @@ const QUESTIONS: Array<{ key: keyof Answers; title: string; sub: string; placeho
   },
 ];
 
-const HEALTH_CONDITIONS = [
-  "Diabetes ou pré-diabetes",
-  "Pressão alta ou problema cardíaco",
-  "Problema de tireoide",
-  "Gestante ou amamentando",
+// Sinais leves de rotina (sono, alimentação, movimento, estresse) — substitui
+// a antiga lista de exames/condições médicas na tela de abertura, pra manter
+// o primeiro contato num tom de bem-estar, não de triagem clínica.
+const ROTINA_SINAIS = [
+  "Durmo mal ou poucas horas por noite",
+  "Como de forma irregular (pulo refeições, belisco fora de hora)",
+  "Quase não me movimento no dia a dia",
+  "Sinto que o estresse pesa na minha rotina",
 ];
 
 // TODO(pagamento): flag temporária SÓ PARA TESTE LOCAL — libera o conteúdo dos
@@ -181,7 +184,7 @@ type Diagnostico = {
   altura_cm: number;
   peso_atual_kg: number;
   peso_meta_kg: number;
-  condicoes_saude: string[];
+  sinais_rotina: string[];
 };
 
 async function callClaude(answers: Answers, diagnostico: Diagnostico): Promise<PlanResult> {
@@ -216,10 +219,9 @@ export default function AvaliacaoApp() {
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
-  // Saúde / compromisso
-  const [conditions, setConditions] = useState<Record<string, boolean>>({});
+  // Rotina / compromisso
+  const [rotina, setRotina] = useState<Record<string, boolean>>({});
   const [committed, setCommitted] = useState(false);
-  const anyCondition = HEALTH_CONDITIONS.some((c) => conditions[c]);
 
   // Meus números
   const [glicose, setGlicose] = useState("");
@@ -312,7 +314,7 @@ export default function AvaliacaoApp() {
         altura_cm: height,
         peso_atual_kg: weightNow,
         peso_meta_kg: weightGoal,
-        condicoes_saude: HEALTH_CONDITIONS.filter((c) => conditions[c]),
+        sinais_rotina: ROTINA_SINAIS.filter((c) => rotina[c]),
       });
       setResult(res);
       setLoading(false);
@@ -381,47 +383,31 @@ export default function AvaliacaoApp() {
                 VIXOFIT
               </span>
             </div>
-            <Eyebrow icon={<Stethoscope size={16} color="#F0A15C" />}>ANTES DE COMEÇARMOS</Eyebrow>
+            <Eyebrow icon={<Sparkles size={16} color="#F0A15C" />}>ANTES DE COMEÇARMOS</Eyebrow>
             <h1 style={{ fontFamily: "Fraunces, serif", fontWeight: 600, fontSize: 26, lineHeight: 1.2, color: "#F4EEE1", margin: "4px 0 10px" }}>
-              Emagrecer com saúde, não contra ela
+              Sua jornada para uma rotina mais saudável começa aqui
             </h1>
             <p style={{ color: "#9CB3A8", fontSize: 14, lineHeight: 1.5, margin: "0 0 20px" }}>
-              Perder peso sem cuidar do que está por trás pode desequilibrar seu corpo. Alguns passos antes de começar.
+              Queremos te conhecer um pouco antes de começar — sono, alimentação, movimento e rotina fazem parte da sua jornada.
             </p>
 
-            <div style={{ fontSize: 11, color: "#9CB3A8", fontWeight: 700, letterSpacing: 0.5, marginBottom: 8 }}>EXAMES BÁSICOS RECOMENDADOS</div>
+            <div style={{ fontSize: 11, color: "#9CB3A8", fontWeight: 700, letterSpacing: 0.5, marginBottom: 8 }}>COMO ANDA SUA ROTINA?</div>
             <div style={{ display: "grid", gap: 8, marginBottom: 14 }}>
-              {["Glicemia em jejum", "Hemograma completo", "Perfil lipídico (colesterol)", "TSH (função da tireoide)"].map((e) => (
-                <div key={e} style={{ background: "#1B302A", borderRadius: 12, padding: "11px 14px", color: "#F4EEE1", fontSize: 13, fontWeight: 600 }}>{e}</div>
-              ))}
-            </div>
-            <p style={{ color: "#6E7A73", fontSize: 11, lineHeight: 1.4, margin: "0 0 20px" }}>
-              Leve essa lista ao seu médico. Não é preciso já ter os resultados para começar.
-            </p>
-
-            <div style={{ fontSize: 11, color: "#9CB3A8", fontWeight: 700, letterSpacing: 0.5, marginBottom: 8 }}>ALGUMA DESSAS SITUAÇÕES É SUA?</div>
-            <div style={{ display: "grid", gap: 8 }}>
-              {HEALTH_CONDITIONS.map((c) => (
+              {ROTINA_SINAIS.map((c) => (
                 <label key={c} style={{ display: "flex", alignItems: "center", gap: 10, background: "#1B302A", borderRadius: 12, padding: "11px 14px", cursor: "pointer" }}>
                   <input
                     type="checkbox"
-                    checked={!!conditions[c]}
-                    onChange={() => setConditions({ ...conditions, [c]: !conditions[c] })}
+                    checked={!!rotina[c]}
+                    onChange={() => setRotina({ ...rotina, [c]: !rotina[c] })}
                     style={{ width: 17, height: 17, accentColor: "#F0A15C", flexShrink: 0 }}
                   />
                   <span style={{ color: "#F4EEE1", fontSize: 13 }}>{c}</span>
                 </label>
               ))}
             </div>
-
-            {anyCondition && (
-              <div style={{ marginTop: 14, background: "rgba(232,120,90,0.1)", border: "1px solid rgba(232,120,90,0.3)", borderRadius: 14, padding: "14px 16px" }}>
-                <div style={{ color: "#F4EEE1", fontSize: 13, fontWeight: 700, marginBottom: 4 }}>⚠️ Fale com seu médico antes de começar</div>
-                <p style={{ color: "#9CB3A8", fontSize: 12, lineHeight: 1.5, margin: 0 }}>
-                  Com essas condições, seu plano precisa de acompanhamento profissional para ser seguro. Você ainda pode continuar — vamos adaptar as recomendações.
-                </p>
-              </div>
-            )}
+            <p style={{ color: "#6E7A73", fontSize: 11, lineHeight: 1.4, margin: "0 0 4px" }}>
+              Marque o que fizer sentido pra você agora — não tem certo ou errado, isso só nos ajuda a personalizar sua jornada.
+            </p>
 
             <label style={{ display: "flex", alignItems: "flex-start", gap: 11, background: "rgba(240,161,92,0.08)", border: "1px solid rgba(240,161,92,0.25)", borderRadius: 14, padding: "15px 16px", marginTop: 18, cursor: "pointer" }}>
               <input

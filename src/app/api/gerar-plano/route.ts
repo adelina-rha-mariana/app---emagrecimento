@@ -10,7 +10,7 @@ type Diagnostico = {
   altura_cm?: number;
   peso_atual_kg?: number;
   peso_meta_kg?: number;
-  condicoes_saude?: string[];
+  sinais_rotina?: string[];
 };
 
 type PlanDay = {
@@ -143,7 +143,7 @@ export async function POST(request: Request) {
     altura_cm: body.diagnostico?.altura_cm,
     peso_atual_kg: body.diagnostico?.peso_atual_kg,
     peso_meta_kg: body.diagnostico?.peso_meta_kg,
-    condicoes_saude: body.diagnostico?.condicoes_saude,
+    sinais_rotina: body.diagnostico?.sinais_rotina,
     q1_o_que_pesa: q1,
     q2_o_que_tentou: q2,
     q3_impacto_dia_a_dia: q3,
