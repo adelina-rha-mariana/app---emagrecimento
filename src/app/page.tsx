@@ -12,6 +12,7 @@ import {
 } from "./components/ui";
 import NutricaoSobMedida from "./components/NutricaoSobMedida";
 import TelaAvaliacaoDia7 from "./components/TelaAvaliacaoDia7";
+import { buildShareLink, copyToClipboard } from "./components/shareLink";
 
 // ---- Design tokens ----
 const FONT_IMPORT =
@@ -228,6 +229,9 @@ export default function App() {
     Array<{ glicose: string; sistolica: string; diastolica: string; when: string }>
   >([]);
 
+  // Indicar para uma amiga (compartilhamento)
+  const [shareStatus, setShareStatus] = useState<"idle" | "copiado" | "erro">("idle");
+
   // Caminhada guiada
   const [walkMinutes, setWalkMinutes] = useState(15);
   const [walkElapsed, setWalkElapsed] = useState(0);
@@ -330,6 +334,21 @@ export default function App() {
     if (!glicose && !sistolica) return;
     setNumHistory([{ glicose, sistolica, diastolica, when: "agora" }, ...numHistory]);
     setGlicose(""); setSistolica(""); setDiastolica("");
+  };
+
+  const handleIndicarAmiga = async () => {
+    const { url, mensagem } = buildShareLink();
+    if (typeof navigator !== "undefined" && navigator.share) {
+      try {
+        await navigator.share({ title: "Vixofit", text: mensagem, url });
+        return;
+      } catch {
+        // usuária cancelou o share nativo ou o navegador falhou — cai pro fallback de copiar
+      }
+    }
+    const ok = await copyToClipboard(`${mensagem} ${url}`);
+    setShareStatus(ok ? "copiado" : "erro");
+    setTimeout(() => setShareStatus("idle"), 2500);
   };
 
   return (
@@ -830,7 +849,9 @@ export default function App() {
               <p style={{ color: "#9CB3A8", fontSize: 12, lineHeight: 1.5, margin: "0 0 12px" }}>
                 Compartilhe com uma amiga — ela também pode começar a avaliação gratuita.
               </p>
-              <SecondaryButton onClick={() => {}}>Indicar para uma amiga</SecondaryButton>
+              <SecondaryButton onClick={handleIndicarAmiga}>
+                {shareStatus === "copiado" ? "Link copiado!" : shareStatus === "erro" ? "Não consegui copiar o link" : "Indicar para uma amiga"}
+              </SecondaryButton>
             </div>
 
             <div style={{ marginTop: 16 }}>
