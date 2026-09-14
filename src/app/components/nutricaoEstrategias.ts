@@ -16,7 +16,7 @@ export type Estrategia = {
   tagline: string;
   corId: "good" | "info" | "accent" | "accent2";
   // Situações que pedem cautela/acompanhamento antes de seguir com a estratégia.
-  // Não é uma lista diagnóstica — é um alerta pra procurar orientação profissional.
+  // Isso não avalia a saúde de quem responde — é um alerta pra procurar orientação profissional.
   triagem: string[];
   modalidades: Modalidade[];
   conteudoEducativo: {
@@ -35,9 +35,7 @@ export const ESTRATEGIAS: Estrategia[] = [
     nome: "Equilibrada",
     tagline: "Todos os grupos alimentares, em porções ajustadas",
     corId: "good",
-    triagem: [
-      "Nenhuma condição de saúde diagnosticada relacionada à alimentação",
-    ],
+    triagem: [],
     modalidades: [
       { id: "padrao", nome: "Padrão", descricao: "Proteínas, carboidratos e gorduras nas proporções recomendadas pelo Guia Alimentar." },
       { id: "mediterranea", nome: "Mediterrânea", descricao: "Ênfase em azeite, peixes, grãos integrais, leguminosas e vegetais." },
@@ -101,7 +99,7 @@ export const ESTRATEGIAS: Estrategia[] = [
     corId: "accent",
     triagem: [
       "Diabetes tipo 1 ou uso de insulina",
-      "Doença renal ou hepática",
+      "Problemas nos rins ou no fígado",
       "Histórico de pancreatite",
       "Uso de medicação para pressão alta ou diurético",
       "Gestante ou amamentando",
@@ -116,7 +114,7 @@ export const ESTRATEGIAS: Estrategia[] = [
       comoFunciona: "Sem carboidrato suficiente, o fígado converte gordura em cetonas para abastecer o cérebro e os músculos — esse processo metabólico se chama cetose.",
       beneficios: [
         "Pode reduzir apetite de forma expressiva em algumas pessoas",
-        "Usada clinicamente, sob supervisão médica, em alguns quadros específicos (ex: epilepsia refratária)",
+        "Usada em alguns casos específicos, sempre sob acompanhamento médico direto (ex: epilepsia de difícil controle)",
       ],
       atencao: [
         "É a mais restritiva das quatro estratégias — alto risco de deficiência de fibras, vitaminas e minerais sem planejamento",
@@ -138,11 +136,11 @@ export const ESTRATEGIAS: Estrategia[] = [
     tagline: "Só alimentos de origem animal",
     corId: "accent2",
     triagem: [
-      "Doença renal (qualquer grau)",
+      "Problema nos rins (qualquer grau)",
       "Gota ou ácido úrico alto",
-      "Colesterol alto ou histórico de doença cardiovascular",
+      "Colesterol alto ou histórico de problema cardíaco",
       "Diabetes ou uso de insulina",
-      "Doença hepática",
+      "Problema no fígado",
       "Gestante ou amamentando",
       "Histórico de transtorno alimentar",
       "Menor de 18 anos",
@@ -155,7 +153,7 @@ export const ESTRATEGIAS: Estrategia[] = [
       oQueE: "Uma dieta de eliminação que retira todo alimento de origem vegetal, mantendo apenas carne, peixe, ovos e — em algumas versões — laticínios com pouca lactose.",
       comoFunciona: "Sem nenhum carboidrato vegetal, o corpo passa a depender quase exclusivamente de proteína e gordura animal como fonte de energia, em cetose praticamente permanente.",
       beneficios: [
-        "Relatos anedóticos de melhora de sintomas digestivos em quadros de sensibilidade alimentar (não confirmado por evidência forte ainda)",
+        "Relatos pessoais de melhora digestiva em quadros de sensibilidade alimentar (não confirmado por evidência forte ainda)",
         "Simplicidade de decisão alimentar — poucas categorias de alimento para escolher",
       ],
       atencao: [

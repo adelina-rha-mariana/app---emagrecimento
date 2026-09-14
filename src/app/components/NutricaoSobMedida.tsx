@@ -101,7 +101,7 @@ export default function NutricaoSobMedida({ onVoltar }: { onVoltar: () => void }
           </div>
 
           <p style={{ color: COLORS.textFaint, fontSize: 10.5, lineHeight: 1.5, textAlign: "center", margin: "20px 0 0" }}>
-            Este conteúdo é educativo e não substitui consulta, diagnóstico ou acompanhamento médico e nutricional.
+            Este conteúdo é educativo e não substitui o acompanhamento de um profissional de saúde e nutrição.
           </p>
         </Screen>
       )}
@@ -115,22 +115,28 @@ export default function NutricaoSobMedida({ onVoltar }: { onVoltar: () => void }
               <Eyebrow icon={<Stethoscope size={16} color={cor} />}>{estrategia.nome.toUpperCase()} · TRIAGEM DE SEGURANÇA</Eyebrow>
               <QTitle>Alguma dessas situações é sua?</QTitle>
               <p style={{ color: COLORS.textMuted, fontSize: 13, margin: "0 0 16px", lineHeight: 1.4 }}>
-                Marque o que se aplica. Isso não é um diagnóstico — é pra saber se você precisa de acompanhamento
-                profissional antes de seguir com essa estratégia.
+                Marque o que se aplica. Isso não avalia sua saúde de verdade — é só pra saber se vale buscar
+                orientação profissional antes de seguir com essa estratégia.
               </p>
-              <div style={{ display: "grid", gap: 8, marginBottom: 14 }}>
-                {estrategia.triagem.map((c) => (
-                  <label key={c} style={{ display: "flex", alignItems: "center", gap: 10, background: COLORS.card, borderRadius: 12, padding: "11px 14px", cursor: "pointer" }}>
-                    <input
-                      type="checkbox"
-                      checked={!!condicoesMarcadas[c]}
-                      onChange={() => setCondicoesMarcadas({ ...condicoesMarcadas, [c]: !condicoesMarcadas[c] })}
-                      style={{ width: 17, height: 17, accentColor: cor, flexShrink: 0 }}
-                    />
-                    <span style={{ color: COLORS.text, fontSize: 13 }}>{c}</span>
-                  </label>
-                ))}
-              </div>
+              {estrategia.triagem.length > 0 ? (
+                <div style={{ display: "grid", gap: 8, marginBottom: 14 }}>
+                  {estrategia.triagem.map((c) => (
+                    <label key={c} style={{ display: "flex", alignItems: "center", gap: 10, background: COLORS.card, borderRadius: 12, padding: "11px 14px", cursor: "pointer" }}>
+                      <input
+                        type="checkbox"
+                        checked={!!condicoesMarcadas[c]}
+                        onChange={() => setCondicoesMarcadas({ ...condicoesMarcadas, [c]: !condicoesMarcadas[c] })}
+                        style={{ width: 17, height: 17, accentColor: cor, flexShrink: 0 }}
+                      />
+                      <span style={{ color: COLORS.text, fontSize: 13 }}>{c}</span>
+                    </label>
+                  ))}
+                </div>
+              ) : (
+                <div style={{ background: COLORS.card, borderRadius: 12, padding: "12px 14px", marginBottom: 14 }}>
+                  <span style={{ color: COLORS.textMuted, fontSize: 13 }}>Nenhuma restrição especial pra essa estratégia — pode seguir direto.</span>
+                </div>
+              )}
 
               {algumaCondicao && (
                 <div style={{ background: "rgba(232,120,90,0.1)", border: "1px solid rgba(232,120,90,0.3)", borderRadius: 14, padding: "14px 16px", marginBottom: 14 }}>
@@ -245,8 +251,8 @@ export default function NutricaoSobMedida({ onVoltar }: { onVoltar: () => void }
               <div style={{ background: "rgba(240,161,92,0.08)", border: "1px solid rgba(240,161,92,0.25)", borderRadius: 14, padding: "14px 16px", marginBottom: 18, display: "flex", gap: 10 }}>
                 <Stethoscope size={16} color={COLORS.accent} style={{ flexShrink: 0, marginTop: 1 }} />
                 <p style={{ color: COLORS.text, fontSize: 12, lineHeight: 1.5, margin: 0 }}>
-                  Este conteúdo é educativo e não substitui consulta, diagnóstico ou acompanhamento médico e
-                  nutricional. Converse com um profissional antes de mudar sua alimentação de forma significativa.
+                  Este conteúdo é educativo e não substitui o acompanhamento de um profissional de saúde e
+                  nutrição. Converse com um profissional antes de mudar sua alimentação de forma significativa.
                 </p>
               </div>
 

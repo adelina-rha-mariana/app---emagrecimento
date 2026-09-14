@@ -60,7 +60,7 @@ const QUESTIONS: Array<{ key: keyof Answers; title: string; sub: string; placeho
 
 // Sinais leves de rotina (sono, alimentação, movimento, estresse) — substitui
 // a antiga lista de exames/condições médicas na tela de abertura, pra manter
-// o primeiro contato num tom de bem-estar, não de triagem clínica.
+// o primeiro contato num tom de bem-estar, não de triagem médica.
 const ROTINA_SINAIS = [
   "Durmo mal ou poucas horas por noite",
   "Como de forma irregular (pulo refeições, belisco fora de hora)",
@@ -181,21 +181,21 @@ function buildWalkScript(result: PlanResult | null) {
   ];
 }
 
-type Diagnostico = {
+type DadosIniciais = {
   altura_cm: number;
   peso_atual_kg: number;
   peso_meta_kg: number;
   sinais_rotina: string[];
 };
 
-async function callClaude(answers: Answers, diagnostico: Diagnostico): Promise<PlanResult> {
+async function callClaude(answers: Answers, dadosIniciais: DadosIniciais): Promise<PlanResult> {
   // A chamada à Anthropic acontece no servidor (src/app/api/gerar-plano/route.ts),
   // usando ANTHROPIC_API_KEY como variável de ambiente — a chave nunca chega ao navegador.
   // O servidor também salva as respostas do questionário no Supabase.
   const response = await fetch("/api/gerar-plano", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ answers, diagnostico }),
+    body: JSON.stringify({ answers, dadosIniciais }),
   });
 
   const data = await response.json().catch(() => null);
@@ -208,7 +208,7 @@ async function callClaude(answers: Answers, diagnostico: Diagnostico): Promise<P
 }
 
 export default function AvaliacaoApp() {
-  // -1 saúde/compromisso | 0 welcome | 1 altura | 2 peso atual | 3 peso meta | 4 diagnóstico
+  // -1 rotina/consentimento | 0 welcome | 1 altura | 2 peso atual | 3 peso meta | 4 seus números
   // 5-7 perguntas abertas | 8 loading IA | 9 acolhimento IA | 10 plano IA | 11 caminhada guiada
   // 12 progresso | 13 meus números
   const [step, setStep] = useState(-1);
@@ -444,7 +444,7 @@ export default function AvaliacaoApp() {
               <PrimaryButton onClick={() => setStep(0)} disabled={!aceitouTermos || !aceitouDadosRotina}>Continuar para avaliação</PrimaryButton>
             </div>
             <p style={{ color: "#6E7A73", fontSize: 10.5, lineHeight: 1.5, textAlign: "center", margin: "12px 0 0" }}>
-              Este app não substitui consulta, diagnóstico ou acompanhamento médico.
+              Este app não substitui o acompanhamento de um profissional de saúde.
             </p>
           </Screen>
         )}
@@ -456,7 +456,7 @@ export default function AvaliacaoApp() {
                 <HeartHandshake size={26} color="#1B140D" />
               </div>
               <h1 style={{ fontFamily: "Fraunces, serif", fontWeight: 600, fontSize: 32, lineHeight: 1.15, color: "#F4EEE1", margin: "0 0 12px" }}>
-                Seu diagnóstico completo — números e escuta.
+                Seus números, sua jornada.
               </h1>
               <p style={{ color: "#9CB3A8", fontSize: 15, lineHeight: 1.5, margin: 0 }}>
                 Primeiro os índices (peso, IMC, quanto falta pra sua meta). Depois, 3 perguntas
@@ -499,7 +499,7 @@ export default function AvaliacaoApp() {
               <Stepper value={weightGoal} setValue={setWeightGoal} min={35} max={weightNow} unit="kg" big />
             </div>
             <div style={{ marginTop: "auto", paddingTop: 20 }}>
-              <PrimaryButton onClick={() => setStep(4)}>Ver meu diagnóstico</PrimaryButton>
+              <PrimaryButton onClick={() => setStep(4)}>Ver minha avaliação</PrimaryButton>
             </div>
           </Screen>
         )}
@@ -950,7 +950,7 @@ export default function AvaliacaoApp() {
             </div>
 
             <p style={{ color: "#6E7A73", fontSize: 10.5, lineHeight: 1.5, textAlign: "center", margin: "0 0 10px" }}>
-              Registro organizacional e educativo. Valores fora da faixa não são diagnóstico — procure seu médico.
+              Registro organizacional e educativo. Valores fora da faixa pedem atenção — procure um profissional de saúde.
             </p>
 
             <GhostLink onClick={() => setStep(12)}>Voltar ao progresso</GhostLink>

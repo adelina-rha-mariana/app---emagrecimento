@@ -6,7 +6,7 @@ export const runtime = "nodejs";
 
 type Answers = { q1: string; q2: string; q3: string };
 
-type Diagnostico = {
+type DadosIniciais = {
   altura_cm?: number;
   peso_atual_kg?: number;
   peso_meta_kg?: number;
@@ -32,7 +32,7 @@ type PlanResult = {
 const client = new Anthropic(); // lê ANTHROPIC_API_KEY do ambiente do servidor
 
 function buildPrompt(answers: Answers): string {
-  return `Você é um assistente de acolhimento e bem-estar dentro de um app de hábitos alimentares e comportamento (NÃO é terapia nem tratamento médico).
+  return `Você é um assistente de acolhimento e bem-estar dentro de um app de hábitos alimentares e comportamento (NÃO é terapia nem substitui acompanhamento médico).
 
 Uma pessoa respondeu três perguntas abertas sobre a relação dela com comida, corpo e peso:
 
@@ -42,7 +42,7 @@ Uma pessoa respondeu três perguntas abertas sobre a relação dela com comida, 
 
 Sua tarefa:
 1. Identifique um "perfil" curto e humano que resuma o padrão dela (ex: quem come por ansiedade à noite e se culpa depois), com base SOMENTE no que ela escreveu.
-2. Escreva um "acolhimento": um parágrafo curto (3-4 frases), tom caloroso e direto, mostrando que você entendeu especificamente o caso dela — refira-se a algo concreto que ela disse, sem usar aspas. NÃO use a segunda pessoa para afirmar que ela "sofre de" uma condição de saúde; fale sobre o padrão de comportamento, não sobre um diagnóstico.
+2. Escreva um "acolhimento": um parágrafo curto (3-4 frases), tom caloroso e direto, mostrando que você entendeu especificamente o caso dela — refira-se a algo concreto que ela disse, sem usar aspas. NÃO use a segunda pessoa para afirmar que ela "sofre de" uma condição de saúde; fale sobre o padrão de comportamento, não como se fosse uma avaliação médica.
 3. Escreva um "insight científico": 1-2 frases explicando, em linguagem simples, um princípio real de ciência do comportamento alimentar, hormônios (insulina, cortisol, leptina, grelina, tireoide) ou psicologia relevante ao caso dela.
 4. Monte um plano de 5 dias de ação, ESPECÍFICO para o padrão dela. Cada dia deve ter: um título curto, uma tarefa em NUTRIÇÃO, uma em MOVIMENTO/EXERCÍCIO e uma em COMPORTAMENTO (sono/estresse), cada uma com um "porquê" ligado a um mecanismo hormonal ou comportamental real.
 
@@ -121,7 +121,7 @@ function extractField(raw: string, key: string): string {
 }
 
 export async function POST(request: Request) {
-  let body: { answers?: Partial<Answers>; diagnostico?: Diagnostico };
+  let body: { answers?: Partial<Answers>; dadosIniciais?: DadosIniciais };
   try {
     body = await request.json();
   } catch {
@@ -140,10 +140,10 @@ export async function POST(request: Request) {
   // para não perder a resposta da pessoa caso a IA falhe ou a chave não esteja configurada.
   // Não bloqueia nem falha a geração do plano caso a gravação dê erro.
   const { error: dbError } = await supabase.from("respostas_questionario").insert({
-    altura_cm: body.diagnostico?.altura_cm,
-    peso_atual_kg: body.diagnostico?.peso_atual_kg,
-    peso_meta_kg: body.diagnostico?.peso_meta_kg,
-    sinais_rotina: body.diagnostico?.sinais_rotina,
+    altura_cm: body.dadosIniciais?.altura_cm,
+    peso_atual_kg: body.dadosIniciais?.peso_atual_kg,
+    peso_meta_kg: body.dadosIniciais?.peso_meta_kg,
+    sinais_rotina: body.dadosIniciais?.sinais_rotina,
     q1_o_que_pesa: q1,
     q2_o_que_tentou: q2,
     q3_impacto_dia_a_dia: q3,
