@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { Check } from "lucide-react";
+import PageFooter from "@/app/components/PageFooter";
 
 // TODO(pagamento): nenhum gateway de pagamento está integrado ainda (Stripe,
 // Mercado Pago, PagSeguro, etc.). Enquanto isso, PAGAMENTO_SIMULADO=true faz
@@ -35,13 +36,14 @@ export default function CheckoutPage() {
   };
 
   return (
-    <div style={{ minHeight: "100vh", width: "100%", background: "#0B1512", fontFamily: "Inter, sans-serif", display: "flex", alignItems: "center", justifyContent: "center", padding: "32px 20px" }}>
+    <div style={{ minHeight: "100vh", width: "100%", background: "#0B1512", fontFamily: "Inter, sans-serif", display: "flex", flexDirection: "column" }}>
       <style>{`
         ${FONT_IMPORT}
         * { box-sizing: border-box; }
         @keyframes spin { to { transform: rotate(360deg); } }
       `}</style>
 
+      <main style={{ flex: 1, display: "flex", alignItems: "center", justifyContent: "center", padding: "32px 20px" }}>
       <div style={{ maxWidth: 420, width: "100%" }}>
         <div style={{ textAlign: "center", marginBottom: 22 }}>
           <span style={{ fontFamily: "Fraunces, serif", fontWeight: 700, fontSize: 14, color: "#F0A15C", letterSpacing: 3 }}>
@@ -95,6 +97,8 @@ export default function CheckoutPage() {
           </Link>
         </div>
       </div>
+      </main>
+      <PageFooter />
     </div>
   );
 }

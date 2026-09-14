@@ -1,17 +1,19 @@
 import Link from "next/link";
 import { CheckCircle2 } from "lucide-react";
+import PageFooter from "@/app/components/PageFooter";
 
 const FONT_IMPORT =
   "@import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap');";
 
 export default function PagamentoAprovadoPage() {
   return (
-    <div style={{ minHeight: "100vh", width: "100%", background: "#0B1512", fontFamily: "Inter, sans-serif", display: "flex", alignItems: "center", justifyContent: "center", padding: "32px 20px" }}>
+    <div style={{ minHeight: "100vh", width: "100%", background: "#0B1512", fontFamily: "Inter, sans-serif", display: "flex", flexDirection: "column" }}>
       <style>{`
         ${FONT_IMPORT}
         * { box-sizing: border-box; }
       `}</style>
 
+      <main style={{ flex: 1, display: "flex", alignItems: "center", justifyContent: "center", padding: "32px 20px" }}>
       <div style={{ maxWidth: 400, width: "100%", textAlign: "center" }}>
         <div style={{ width: 64, height: 64, borderRadius: "50%", background: "rgba(143,191,159,0.15)", display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 20px" }}>
           <CheckCircle2 size={30} color="#8FBF9F" />
@@ -36,6 +38,8 @@ export default function PagamentoAprovadoPage() {
           Começar minha avaliação
         </Link>
       </div>
+      </main>
+      <PageFooter />
     </div>
   );
 }

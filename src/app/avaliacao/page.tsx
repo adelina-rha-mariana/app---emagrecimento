@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, useRef } from "react";
 import Link from "next/link";
+import PageFooter from "@/app/components/PageFooter";
 import {
   ChevronLeft, HeartHandshake, Sparkles, BookOpen, Check, AlertCircle, Footprints,
   Music, Play, Pause, Volume2, VolumeX, ExternalLink, Droplets,
@@ -356,7 +357,7 @@ export default function AvaliacaoApp() {
   };
 
   return (
-    <div style={{ minHeight: "100vh", width: "100%", display: "flex", alignItems: "center", justifyContent: "center", background: "#0B1512", fontFamily: "Inter, sans-serif", padding: "24px 12px" }}>
+    <div style={{ minHeight: "100vh", width: "100%", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", background: "#0B1512", fontFamily: "Inter, sans-serif", padding: "24px 12px" }}>
       <style>{`
         ${FONT_IMPORT}
         * { box-sizing: border-box; }
@@ -963,6 +964,7 @@ export default function AvaliacaoApp() {
         {/* STEP AVALIAÇÃO DIA 7 */}
         {step === STEP_AVALIACAO_DIA7 && <TelaAvaliacaoDia7 onVoltar={() => setStep(12)} />}
       </div>
+      <PageFooter />
     </div>
   );
 }

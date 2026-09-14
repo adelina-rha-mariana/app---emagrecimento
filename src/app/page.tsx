@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { HeartHandshake, Sparkles, Footprints, TrendingUp } from "lucide-react";
+import PageFooter from "./components/PageFooter";
 
 // Landing page pública do Vixofit. Início do funil:
 // Landing (aqui) -> /checkout -> /pagamento-aprovado -> /avaliacao
@@ -67,6 +68,7 @@ export default function LandingPage() {
           </p>
         </div>
       </main>
+      <PageFooter />
     </div>
   );
 }
