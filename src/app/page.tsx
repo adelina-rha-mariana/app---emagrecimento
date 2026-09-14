@@ -376,6 +376,11 @@ export default function App() {
         {/* STEP -1: SAÚDE + COMPROMISSO */}
         {step === -1 && (
           <Screen>
+            <div style={{ textAlign: "center", marginBottom: 18 }}>
+              <span style={{ fontFamily: "Fraunces, serif", fontWeight: 700, fontSize: 14, color: "#F0A15C", letterSpacing: 3 }}>
+                VIXOFIT
+              </span>
+            </div>
             <Eyebrow icon={<Stethoscope size={16} color="#F0A15C" />}>ANTES DE COMEÇARMOS</Eyebrow>
             <h1 style={{ fontFamily: "Fraunces, serif", fontWeight: 600, fontSize: 26, lineHeight: 1.2, color: "#F4EEE1", margin: "4px 0 10px" }}>
               Emagrecer com saúde, não contra ela
