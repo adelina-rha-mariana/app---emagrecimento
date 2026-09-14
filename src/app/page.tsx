@@ -5,7 +5,13 @@ import {
   ChevronLeft, HeartHandshake, Sparkles, BookOpen, Check, AlertCircle, Footprints,
   Music, Play, Pause, Volume2, VolumeX, ExternalLink, Droplets, Stethoscope,
   Flame, TrendingUp, Share2, Award, Lock, Utensils, Dumbbell, Wind, Moon, Activity,
+  Salad, Star,
 } from "lucide-react";
+import {
+  Screen, ProgressDots, QTitle, Eyebrow, PrimaryButton, SecondaryButton, GhostLink, btnCircle,
+} from "./components/ui";
+import NutricaoSobMedida from "./components/NutricaoSobMedida";
+import TelaAvaliacaoDia7 from "./components/TelaAvaliacaoDia7";
 
 // ---- Design tokens ----
 const FONT_IMPORT =
@@ -63,6 +69,11 @@ const HEALTH_CONDITIONS = [
 // para que os Dias 2-5 voltem a ficar bloqueados até a liberação paga.
 const DEV_DESBLOQUEAR_TODOS_OS_DIAS = false;
 
+// Steps de módulos à parte, fora da numeração sequencial do questionário/plano
+// (eles controlam sua própria navegação interna e voltam pra tela principal via callback).
+const STEP_NUTRICAO = 20;
+const STEP_AVALIACAO_DIA7 = 21;
+
 const WALK_MOODS = [
   { key: "presenca", icon: "🧘", label: "Presença", sub: "respiração guiada", url: "https://open.spotify.com/search/playlist%20mindfulness%20respira%C3%A7%C3%A3o" },
   { key: "relaxar", icon: "🌿", label: "Relaxar", sub: "sons ambiente", url: "https://open.spotify.com/search/playlist%20sons%20da%20natureza%20relaxar" },
@@ -94,119 +105,6 @@ function Stepper({
         <span style={{ fontSize: 16, color: "#9CB3A8", marginLeft: 6 }}>{unit}</span>
       </div>
       <button onClick={() => setValue(Math.min(max, value + 1))} style={btnCircle} aria-label="aumentar">+</button>
-    </div>
-  );
-}
-
-const btnCircle = {
-  width: 44, height: 44, borderRadius: "50%", border: "1px solid #2A4A40", background: "#1B302A",
-  color: "#F0A15C", fontSize: 22, fontFamily: "Inter, sans-serif", cursor: "pointer",
-  display: "flex", alignItems: "center", justifyContent: "center",
-};
-
-function PrimaryButton({
-  children,
-  onClick,
-  disabled,
-}: {
-  children: React.ReactNode;
-  onClick: () => void;
-  disabled?: boolean;
-}) {
-  return (
-    <button
-      onClick={onClick}
-      disabled={disabled}
-      style={{
-        width: "100%", padding: "16px 20px", borderRadius: 14, border: "none",
-        background: disabled ? "#3A3F3A" : "linear-gradient(135deg, #F0A15C, #E8785A)",
-        color: disabled ? "#7A8079" : "#1B140D", fontFamily: "Inter, sans-serif", fontWeight: 700,
-        fontSize: 15, letterSpacing: 0.2, cursor: disabled ? "not-allowed" : "pointer",
-        boxShadow: disabled ? "none" : "0 8px 20px -8px rgba(232,120,90,0.6)", transition: "transform 0.15s ease",
-      }}
-      onMouseDown={(e) => !disabled && (e.currentTarget.style.transform = "scale(0.98)")}
-      onMouseUp={(e) => (e.currentTarget.style.transform = "scale(1)")}
-    >
-      {children}
-    </button>
-  );
-}
-
-function SecondaryButton({
-  children,
-  onClick,
-  icon,
-}: {
-  children: React.ReactNode;
-  onClick: () => void;
-  icon?: React.ReactNode;
-}) {
-  return (
-    <button
-      onClick={onClick}
-      style={{
-        width: "100%", display: "flex", alignItems: "center", justifyContent: "center", gap: 8,
-        padding: "14px 20px", borderRadius: 14, border: "1px solid #2A4A40", background: "#1B302A",
-        color: "#F4EEE1", fontFamily: "Inter, sans-serif", fontWeight: 600, fontSize: 14, cursor: "pointer",
-      }}
-    >
-      {icon}{children}
-    </button>
-  );
-}
-
-function GhostLink({
-  children,
-  onClick,
-}: {
-  children: React.ReactNode;
-  onClick: () => void;
-}) {
-  return (
-    <button
-      onClick={onClick}
-      style={{
-        width: "100%", padding: "10px 0", background: "none", border: "none", cursor: "pointer",
-        color: "#9CB3A8", fontFamily: "Inter, sans-serif", fontSize: 13, fontWeight: 600,
-        textDecoration: "underline", textUnderlineOffset: 3,
-      }}
-    >
-      {children}
-    </button>
-  );
-}
-
-function Screen({ children }: { children: React.ReactNode }) {
-  return (
-    <div style={{ flex: 1, minHeight: 0, display: "flex", flexDirection: "column", padding: "28px 24px 24px", overflowY: "auto" }}>
-      {children}
-    </div>
-  );
-}
-
-function ProgressDots({ step, total }: { step: number; total: number }) {
-  return (
-    <div style={{ display: "flex", gap: 6, justifyContent: "center", marginBottom: 22 }}>
-      {Array.from({ length: total }).map((_, i) => (
-        <div key={i} style={{ height: 4, width: i === step ? 22 : 14, borderRadius: 4, background: i <= step ? "#F0A15C" : "#2A4A40", transition: "all 0.3s ease" }} />
-      ))}
-    </div>
-  );
-}
-
-function QTitle({ children }: { children: React.ReactNode }) {
-  return (
-    <h2 style={{ fontFamily: "Fraunces, serif", fontSize: 21, fontWeight: 600, color: "#F4EEE1", margin: "0 0 8px", lineHeight: 1.3 }}>
-      {children}
-    </h2>
-  );
-}
-
-function Eyebrow({ icon, children }: { icon: React.ReactNode; children: React.ReactNode }) {
-  return (
-    <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 4 }}>
-      {icon}
-      <span style={{ fontSize: 12, color: "#F0A15C", fontWeight: 700, letterSpacing: 0.5 }}>{children}</span>
     </div>
   );
 }
@@ -426,7 +324,7 @@ export default function App() {
     if (step === 13) return setStep(12);
     setStep(step - 1);
   };
-  const showBack = step !== -1 && step !== 8;
+  const showBack = step !== -1 && step !== 8 && step !== STEP_NUTRICAO && step !== STEP_AVALIACAO_DIA7;
 
   const saveNumber = () => {
     if (!glicose && !sistolica) return;
@@ -739,6 +637,10 @@ export default function App() {
               Iniciar caminhada guiada
             </SecondaryButton>
             <div style={{ marginTop: 10 }} />
+            <SecondaryButton onClick={() => setStep(STEP_NUTRICAO)} icon={<Salad size={16} color="#F0A15C" style={{ marginRight: 2 }} />}>
+              Nutrição sob medida
+            </SecondaryButton>
+            <div style={{ marginTop: 10 }} />
             <SecondaryButton onClick={() => setStep(12)} icon={<TrendingUp size={16} color="#F0A15C" style={{ marginRight: 2 }} />}>
               Ver meu progresso
             </SecondaryButton>
@@ -915,6 +817,10 @@ export default function App() {
             <SecondaryButton onClick={() => setStep(13)} icon={<Activity size={16} color="#F0A15C" style={{ marginRight: 2 }} />}>
               Registrar glicose e pressão
             </SecondaryButton>
+            <div style={{ marginTop: 10 }} />
+            <SecondaryButton onClick={() => setStep(STEP_AVALIACAO_DIA7)} icon={<Star size={16} color="#F0A15C" style={{ marginRight: 2 }} />}>
+              Avaliar minha semana (Dia 7)
+            </SecondaryButton>
 
             <div style={{ marginTop: 14, background: "rgba(127,166,201,0.1)", border: "1px solid rgba(127,166,201,0.25)", borderRadius: 16, padding: 18 }}>
               <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 6 }}>
@@ -1019,6 +925,12 @@ export default function App() {
             <GhostLink onClick={() => setStep(12)}>Voltar ao progresso</GhostLink>
           </Screen>
         )}
+
+        {/* STEP NUTRIÇÃO SOB MEDIDA */}
+        {step === STEP_NUTRICAO && <NutricaoSobMedida onVoltar={() => setStep(10)} />}
+
+        {/* STEP AVALIAÇÃO DIA 7 */}
+        {step === STEP_AVALIACAO_DIA7 && <TelaAvaliacaoDia7 onVoltar={() => setStep(12)} />}
       </div>
     </div>
   );
