@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from "react";
+import Link from "next/link";
 import {
   ChevronLeft, HeartHandshake, Sparkles, BookOpen, Check, AlertCircle, Footprints,
   Music, Play, Pause, Volume2, VolumeX, ExternalLink, Droplets,
@@ -219,9 +220,10 @@ export default function AvaliacaoApp() {
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
-  // Rotina / compromisso
+  // Rotina / consentimento
   const [rotina, setRotina] = useState<Record<string, boolean>>({});
-  const [committed, setCommitted] = useState(false);
+  const [aceitouTermos, setAceitouTermos] = useState(false);
+  const [aceitouDadosRotina, setAceitouDadosRotina] = useState(false);
 
   // Meus números
   const [glicose, setGlicose] = useState("");
@@ -412,17 +414,34 @@ export default function AvaliacaoApp() {
             <label style={{ display: "flex", alignItems: "flex-start", gap: 11, background: "rgba(240,161,92,0.08)", border: "1px solid rgba(240,161,92,0.25)", borderRadius: 14, padding: "15px 16px", marginTop: 18, cursor: "pointer" }}>
               <input
                 type="checkbox"
-                checked={committed}
-                onChange={() => setCommitted(!committed)}
+                checked={aceitouTermos}
+                onChange={() => setAceitouTermos(!aceitouTermos)}
                 style={{ width: 18, height: 18, accentColor: "#F0A15C", flexShrink: 0, marginTop: 1 }}
               />
               <span style={{ color: "#F4EEE1", fontSize: 12.5, lineHeight: 1.5, fontWeight: 500 }}>
-                Entendo que este é um programa de acompanhamento, e me comprometo a cuidar da minha saúde durante o processo.
+                Li e aceito os Termos de Uso e a{" "}
+                <Link href="/politica-de-privacidade" style={{ color: "#F0A15C", textDecoration: "underline" }}>
+                  Política de Privacidade
+                </Link>.
+              </span>
+            </label>
+
+            <label style={{ display: "flex", alignItems: "flex-start", gap: 11, background: "rgba(240,161,92,0.08)", border: "1px solid rgba(240,161,92,0.25)", borderRadius: 14, padding: "15px 16px", marginTop: 10, cursor: "pointer" }}>
+              <input
+                type="checkbox"
+                checked={aceitouDadosRotina}
+                onChange={() => setAceitouDadosRotina(!aceitouDadosRotina)}
+                style={{ width: 18, height: 18, accentColor: "#F0A15C", flexShrink: 0, marginTop: 1 }}
+              />
+              <span style={{ color: "#F4EEE1", fontSize: 12.5, lineHeight: 1.5, fontWeight: 500 }}>
+                Autorizo o uso das informações sobre minha rotina e hábitos que eu compartilhar aqui exclusivamente
+                para personalizar meu plano de nutrição e hábitos — esses dados nunca são usados para fins de
+                diagnóstico médico.
               </span>
             </label>
 
             <div style={{ marginTop: 20 }}>
-              <PrimaryButton onClick={() => setStep(0)} disabled={!committed}>Continuar para avaliação</PrimaryButton>
+              <PrimaryButton onClick={() => setStep(0)} disabled={!aceitouTermos || !aceitouDadosRotina}>Continuar para avaliação</PrimaryButton>
             </div>
             <p style={{ color: "#6E7A73", fontSize: 10.5, lineHeight: 1.5, textAlign: "center", margin: "12px 0 0" }}>
               Este app não substitui consulta, diagnóstico ou acompanhamento médico.
