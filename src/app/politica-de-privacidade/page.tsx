@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { BrandHeader } from "@/app/components/Logo";
 
 const FONT_IMPORT =
   "@import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap');";
@@ -25,9 +26,7 @@ export default function PoliticaDePrivacidadePage() {
 
       <main style={{ flex: 1, padding: "48px 20px 64px", display: "flex", justifyContent: "center" }}>
         <div style={{ maxWidth: 620, width: "100%" }}>
-          <span style={{ fontFamily: "Fraunces, serif", fontWeight: 700, fontSize: 14, color: "#F0A15C", letterSpacing: 3 }}>
-            VIXOFIT
-          </span>
+          <BrandHeader />
           <h1 style={{ fontFamily: "Fraunces, serif", fontWeight: 600, fontSize: 30, color: "#F4EEE1", margin: "14px 0 6px" }}>
             Política de Privacidade
           </h1>

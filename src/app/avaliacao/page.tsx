@@ -15,6 +15,7 @@ import {
 import NutricaoSobMedida from "@/app/components/NutricaoSobMedida";
 import TelaAvaliacaoDia7 from "@/app/components/TelaAvaliacaoDia7";
 import { buildShareLink, copyToClipboard } from "@/app/components/shareLink";
+import { LogoCompleta, BrandHeader } from "@/app/components/Logo";
 
 // ---- Design tokens ----
 const FONT_IMPORT =
@@ -369,22 +370,20 @@ export default function AvaliacaoApp() {
       <div style={{ width: 375, height: 780, maxHeight: "92vh", borderRadius: 42, border: "10px solid #05100C", background: "#12211D", boxShadow: "0 30px 60px -20px rgba(0,0,0,0.6)", position: "relative", display: "flex", flexDirection: "column", overflow: "hidden" }}>
         <div style={{ position: "absolute", top: 0, left: "50%", transform: "translateX(-50%)", width: 130, height: 22, background: "#05100C", borderBottomLeftRadius: 14, borderBottomRightRadius: 14, zIndex: 10 }} />
 
-        {showBack && (
-          <div style={{ padding: "34px 20px 0", display: "flex", alignItems: "center" }}>
-            <button onClick={goBack} style={{ background: "none", border: "none", cursor: "pointer", padding: 4 }}>
+        <div style={{ padding: "34px 20px 0", display: "flex", alignItems: "center", justifyContent: "center", position: "relative" }}>
+          {showBack && (
+            <button onClick={goBack} style={{ position: "absolute", left: 20, background: "none", border: "none", cursor: "pointer", padding: 4 }}>
               <ChevronLeft size={22} color="#9CB3A8" />
             </button>
-          </div>
-        )}
-        {!showBack && <div style={{ paddingTop: 34 }} />}
+          )}
+          <BrandHeader compact />
+        </div>
 
         {/* STEP -1: SAÚDE + COMPROMISSO */}
         {step === -1 && (
           <Screen>
             <div style={{ textAlign: "center", marginBottom: 18 }}>
-              <span style={{ fontFamily: "Fraunces, serif", fontWeight: 700, fontSize: 14, color: "#F0A15C", letterSpacing: 3 }}>
-                VIXOFIT
-              </span>
+              <LogoCompleta width={150} />
             </div>
             <Eyebrow icon={<Sparkles size={16} color="#F0A15C" />}>ANTES DE COMEÇARMOS</Eyebrow>
             <h1 style={{ fontFamily: "Fraunces, serif", fontWeight: 600, fontSize: 26, lineHeight: 1.2, color: "#F4EEE1", margin: "4px 0 10px" }}>

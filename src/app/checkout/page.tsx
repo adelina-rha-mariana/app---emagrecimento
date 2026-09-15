@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { Check } from "lucide-react";
 import PageFooter from "@/app/components/PageFooter";
+import { BrandHeader } from "@/app/components/Logo";
 
 // TODO(pagamento): nenhum gateway de pagamento está integrado ainda (Stripe,
 // Mercado Pago, PagSeguro, etc.). Enquanto isso, PAGAMENTO_SIMULADO=true faz
@@ -46,9 +47,7 @@ export default function CheckoutPage() {
       <main style={{ flex: 1, display: "flex", alignItems: "center", justifyContent: "center", padding: "32px 20px" }}>
       <div style={{ maxWidth: 420, width: "100%" }}>
         <div style={{ textAlign: "center", marginBottom: 22 }}>
-          <span style={{ fontFamily: "Fraunces, serif", fontWeight: 700, fontSize: 14, color: "#F0A15C", letterSpacing: 3 }}>
-            VIXOFIT
-          </span>
+          <BrandHeader />
         </div>
 
         <div style={{ background: "#1B302A", border: "1px solid #2A4A40", borderRadius: 20, padding: 24 }}>

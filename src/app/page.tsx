@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { HeartHandshake, Sparkles, Footprints, TrendingUp } from "lucide-react";
 import PageFooter from "./components/PageFooter";
+import { LogoCompleta } from "./components/Logo";
 
 // Landing page pública do Vixofit. Início do funil:
 // Landing (aqui) -> /checkout -> /pagamento-aprovado -> /avaliacao
@@ -27,9 +28,9 @@ export default function LandingPage() {
 
       <main style={{ flex: 1, display: "flex", alignItems: "center", justifyContent: "center", padding: "48px 20px" }}>
         <div style={{ maxWidth: 460, width: "100%", textAlign: "center" }}>
-          <span style={{ fontFamily: "Fraunces, serif", fontWeight: 700, fontSize: 15, color: "#F0A15C", letterSpacing: 3 }}>
-            VIXOFIT
-          </span>
+          <div style={{ display: "flex", justifyContent: "center", marginBottom: 8 }}>
+            <LogoCompleta width={200} />
+          </div>
 
           <h1 style={{ fontFamily: "Fraunces, serif", fontWeight: 600, fontSize: 36, lineHeight: 1.2, color: "#F4EEE1", margin: "18px 0 14px" }}>
             Rotinas mais saudáveis, no seu ritmo.

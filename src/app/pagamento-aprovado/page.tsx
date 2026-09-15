@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { CheckCircle2 } from "lucide-react";
 import PageFooter from "@/app/components/PageFooter";
+import { BrandHeader } from "@/app/components/Logo";
 
 const FONT_IMPORT =
   "@import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap');";
@@ -15,6 +16,9 @@ export default function PagamentoAprovadoPage() {
 
       <main style={{ flex: 1, display: "flex", alignItems: "center", justifyContent: "center", padding: "32px 20px" }}>
       <div style={{ maxWidth: 400, width: "100%", textAlign: "center" }}>
+        <div style={{ marginBottom: 22 }}>
+          <BrandHeader />
+        </div>
         <div style={{ width: 64, height: 64, borderRadius: "50%", background: "rgba(143,191,159,0.15)", display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 20px" }}>
           <CheckCircle2 size={30} color="#8FBF9F" />
         </div>
