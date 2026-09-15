@@ -44,7 +44,11 @@ export default function ContaPage() {
     setCarregando(true);
 
     if (modo === "criar") {
-      const { data, error } = await supabase.auth.signUp({ email: email.trim(), password: senha });
+      const { data, error } = await supabase.auth.signUp({
+        email: email.trim(),
+        password: senha,
+        options: { emailRedirectTo: `${window.location.origin}/avaliacao` },
+      });
       setCarregando(false);
       if (error) {
         setErro(error.message);
