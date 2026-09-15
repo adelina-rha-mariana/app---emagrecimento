@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import Anthropic from "@anthropic-ai/sdk";
-import { supabase } from "@/lib/supabase";
+import { createClient } from "@supabase/supabase-js";
 
 export const runtime = "nodejs";
 
@@ -27,7 +27,23 @@ type PlanResult = {
   acolhimento: string;
   insight_cientifico: string;
   plano: PlanDay[];
+  gerado_em: string;
 };
+
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY;
+
+// Cliente por requisição, autenticado como o usuário que chamou a rota (via o
+// access token da sessão dele) — é isso que faz `auth.uid()` resolver certo
+// dentro das policies de RLS de respostas_questionario e planos.
+function supabaseComoUsuario(accessToken: string) {
+  if (!supabaseUrl || !supabaseKey) {
+    throw new Error("Supabase não configurado no servidor.");
+  }
+  return createClient(supabaseUrl, supabaseKey, {
+    global: { headers: { Authorization: `Bearer ${accessToken}` } },
+  });
+}
 
 const client = new Anthropic(); // lê ANTHROPIC_API_KEY do ambiente do servidor
 
@@ -121,6 +137,19 @@ function extractField(raw: string, key: string): string {
 }
 
 export async function POST(request: Request) {
+  const authHeader = request.headers.get("authorization") || "";
+  const accessToken = authHeader.replace(/^Bearer\s+/i, "").trim();
+  if (!accessToken) {
+    return NextResponse.json({ error: "Você precisa estar logada para gerar seu plano." }, { status: 401 });
+  }
+
+  const supabase = supabaseComoUsuario(accessToken);
+  const { data: userData, error: userError } = await supabase.auth.getUser(accessToken);
+  if (userError || !userData.user) {
+    return NextResponse.json({ error: "Sessão inválida ou expirada. Entre novamente." }, { status: 401 });
+  }
+  const userId = userData.user.id;
+
   let body: { answers?: Partial<Answers>; dadosIniciais?: DadosIniciais };
   try {
     body = await request.json();
@@ -140,6 +169,7 @@ export async function POST(request: Request) {
   // para não perder a resposta da pessoa caso a IA falhe ou a chave não esteja configurada.
   // Não bloqueia nem falha a geração do plano caso a gravação dê erro.
   const { error: dbError } = await supabase.from("respostas_questionario").insert({
+    user_id: userId,
     altura_cm: body.dadosIniciais?.altura_cm,
     peso_atual_kg: body.dadosIniciais?.peso_atual_kg,
     peso_meta_kg: body.dadosIniciais?.peso_meta_kg,
@@ -221,6 +251,23 @@ export async function POST(request: Request) {
     );
   }
 
-  const result: PlanResult = { perfil, acolhimento, insight_cientifico, plano };
+  const gerado_em = new Date().toISOString();
+
+  const { error: planoError } = await supabase.from("planos").insert({
+    user_id: userId,
+    gerado_em,
+    altura_cm: body.dadosIniciais?.altura_cm,
+    peso_atual_kg: body.dadosIniciais?.peso_atual_kg,
+    peso_meta_kg: body.dadosIniciais?.peso_meta_kg,
+    perfil,
+    acolhimento,
+    insight_cientifico,
+    dias: plano,
+  });
+  if (planoError) {
+    console.error("Falha ao salvar o plano gerado no Supabase:", planoError.message);
+  }
+
+  const result: PlanResult = { perfil, acolhimento, insight_cientifico, plano, gerado_em };
   return NextResponse.json(result);
 }

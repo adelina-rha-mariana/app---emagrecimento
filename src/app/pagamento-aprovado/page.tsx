@@ -31,7 +31,7 @@ export default function PagamentoAprovadoPage() {
         </p>
 
         <Link
-          href="/avaliacao"
+          href="/conta"
           style={{
             display: "block", width: "100%", padding: "17px 20px", borderRadius: 14,
             background: "linear-gradient(135deg, #F0A15C, #E8785A)", color: "#1B140D",

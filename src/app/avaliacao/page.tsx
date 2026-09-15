@@ -2,7 +2,9 @@
 
 import React, { useState, useEffect, useRef } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import PageFooter from "@/app/components/PageFooter";
+import { supabase } from "@/lib/supabase";
 import {
   ChevronLeft, HeartHandshake, Sparkles, BookOpen, Check, AlertCircle, Footprints,
   Music, Play, Pause, Volume2, VolumeX, ExternalLink, Droplets,
@@ -37,6 +39,7 @@ type PlanResult = {
   acolhimento: string;
   insight_cientifico: string;
   plano: PlanDay[];
+  gerado_em: string;
 };
 
 const QUESTIONS: Array<{ key: keyof Answers; title: string; sub: string; placeholder: string }> = [
@@ -69,12 +72,6 @@ const ROTINA_SINAIS = [
   "Quase não me movimento no dia a dia",
   "Sinto que o estresse pesa na minha rotina",
 ];
-
-// TODO(pagamento): flag temporária SÓ PARA TESTE LOCAL — libera o conteúdo dos
-// Dias 2 a 5 sem exigir pagamento, para permitir revisão de conteúdo.
-// REVERTER (voltar para `false`) assim que o sistema de pagamento/paywall for implementado,
-// para que os Dias 2-5 voltem a ficar bloqueados até a liberação paga.
-const DEV_DESBLOQUEAR_TODOS_OS_DIAS = false;
 
 // Steps de módulos à parte, fora da numeração sequencial do questionário/plano
 // (eles controlam sua própria navegação interna e voltam pra tela principal via callback).
@@ -190,13 +187,32 @@ type DadosIniciais = {
   sinais_rotina: string[];
 };
 
+// Uma semana (em horas) é dividida em 5 blocos de 24h — 1 dia novo do plano
+// libera a cada 24h desde que o plano foi gerado, até o Dia 5.
+function diasDesbloqueadosDesde(geradoEm: string): number {
+  const horas = (Date.now() - new Date(geradoEm).getTime()) / 3_600_000;
+  return Math.min(5, Math.max(1, Math.floor(horas / 24) + 1));
+}
+
+function horasAteProximoDia(geradoEm: string): number {
+  const horas = (Date.now() - new Date(geradoEm).getTime()) / 3_600_000;
+  return Math.max(0, Math.ceil(24 - (horas % 24)));
+}
+
 async function callClaude(answers: Answers, dadosIniciais: DadosIniciais): Promise<PlanResult> {
   // A chamada à Anthropic acontece no servidor (src/app/api/gerar-plano/route.ts),
   // usando ANTHROPIC_API_KEY como variável de ambiente — a chave nunca chega ao navegador.
-  // O servidor também salva as respostas do questionário no Supabase.
+  // O servidor também salva as respostas do questionário e o plano gerado no Supabase,
+  // associados ao usuário logado — por isso mandamos o access token da sessão.
+  const { data: sessionData } = await supabase.auth.getSession();
+  const accessToken = sessionData.session?.access_token;
+  if (!accessToken) {
+    throw new Error("Sua sessão expirou. Entre novamente pra continuar.");
+  }
+
   const response = await fetch("/api/gerar-plano", {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
+    headers: { "Content-Type": "application/json", Authorization: `Bearer ${accessToken}` },
     body: JSON.stringify({ answers, dadosIniciais }),
   });
 
@@ -210,6 +226,11 @@ async function callClaude(answers: Answers, dadosIniciais: DadosIniciais): Promi
 }
 
 export default function AvaliacaoApp() {
+  const router = useRouter();
+  // Resolve a sessão (redireciona pra /conta se não houver) e, se já existir um plano salvo,
+  // retoma direto nele em vez de começar do zero. Enquanto isso, mostramos uma tela de espera.
+  const [sessaoPronta, setSessaoPronta] = useState(false);
+
   // -1 rotina/consentimento | 0 welcome | 1 altura | 2 peso atual | 3 peso meta | 4 seus números
   // 5-7 perguntas abertas | 8 loading IA | 9 acolhimento IA | 10 plano IA | 11 caminhada guiada
   // 12 progresso | 13 meus números
@@ -237,6 +258,66 @@ export default function AvaliacaoApp() {
 
   // Indicar para uma amiga (compartilhamento)
   const [shareStatus, setShareStatus] = useState<"idle" | "copiado" | "erro">("idle");
+
+  useEffect(() => {
+    let ativo = true;
+
+    (async () => {
+      const { data: sessionData } = await supabase.auth.getSession();
+      const user = sessionData.session?.user;
+      if (!user) {
+        router.replace("/conta");
+        return;
+      }
+
+      const [{ data: planos }, { data: vitais }] = await Promise.all([
+        supabase
+          .from("planos")
+          .select("perfil, acolhimento, insight_cientifico, dias, gerado_em, altura_cm, peso_atual_kg, peso_meta_kg")
+          .order("created_at", { ascending: false })
+          .limit(1),
+        supabase
+          .from("registros_vitais")
+          .select("glicose, sistolica, diastolica, created_at")
+          .order("created_at", { ascending: false }),
+      ]);
+
+      if (!ativo) return;
+
+      if (vitais) {
+        setNumHistory(
+          vitais.map((v) => ({
+            glicose: v.glicose != null ? String(v.glicose) : "",
+            sistolica: v.sistolica != null ? String(v.sistolica) : "",
+            diastolica: v.diastolica != null ? String(v.diastolica) : "",
+            when: new Date(v.created_at).toLocaleDateString("pt-BR"),
+          }))
+        );
+      }
+
+      const plano = planos?.[0];
+      if (plano) {
+        setResult({
+          perfil: plano.perfil,
+          acolhimento: plano.acolhimento,
+          insight_cientifico: plano.insight_cientifico ?? "",
+          plano: plano.dias,
+          gerado_em: plano.gerado_em,
+        });
+        if (plano.altura_cm) setHeight(plano.altura_cm);
+        if (plano.peso_atual_kg) setWeightNow(plano.peso_atual_kg);
+        if (plano.peso_meta_kg) setWeightGoal(plano.peso_meta_kg);
+        setStep(10);
+      }
+
+      setSessaoPronta(true);
+    })();
+
+    return () => {
+      ativo = false;
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   // Caminhada guiada
   const [walkMinutes, setWalkMinutes] = useState(15);
@@ -336,10 +417,19 @@ export default function AvaliacaoApp() {
   };
   const showBack = step !== -1 && step !== 8 && step !== STEP_NUTRICAO && step !== STEP_AVALIACAO_DIA7;
 
-  const saveNumber = () => {
+  const saveNumber = async () => {
     if (!glicose && !sistolica) return;
+    const { data: sessionData } = await supabase.auth.getSession();
+    const user = sessionData.session?.user;
+    if (!user) return;
     setNumHistory([{ glicose, sistolica, diastolica, when: "agora" }, ...numHistory]);
     setGlicose(""); setSistolica(""); setDiastolica("");
+    await supabase.from("registros_vitais").insert({
+      user_id: user.id,
+      glicose: glicose ? Number(glicose) : null,
+      sistolica: sistolica ? Number(sistolica) : null,
+      diastolica: diastolica ? Number(diastolica) : null,
+    });
   };
 
   const handleIndicarAmiga = async () => {
@@ -356,6 +446,15 @@ export default function AvaliacaoApp() {
     setShareStatus(ok ? "copiado" : "erro");
     setTimeout(() => setShareStatus("idle"), 2500);
   };
+
+  if (!sessaoPronta) {
+    return (
+      <div style={{ minHeight: "100vh", width: "100%", display: "flex", alignItems: "center", justifyContent: "center", background: "#0B1512" }}>
+        <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
+        <div style={{ width: 40, height: 40, borderRadius: "50%", border: "3px solid #2A4A40", borderTopColor: "#F0A15C", animation: "spin 0.9s linear infinite" }} />
+      </div>
+    );
+  }
 
   return (
     <div style={{ minHeight: "100vh", width: "100%", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", background: "#0B1512", fontFamily: "Inter, sans-serif", padding: "24px 12px" }}>
@@ -613,7 +712,10 @@ export default function AvaliacaoApp() {
           </Screen>
         )}
 
-        {step === 10 && result && (
+        {step === 10 && result && (() => {
+          const diasDesbloqueados = diasDesbloqueadosDesde(result.gerado_em);
+          const horasProximo = horasAteProximoDia(result.gerado_em);
+          return (
           <Screen>
             <span style={{ fontSize: 12, color: "#F0A15C", fontWeight: 700, letterSpacing: 0.5 }}>SEU PLANO, FEITO PRA VOCÊ</span>
             <h2 style={{ fontFamily: "Fraunces, serif", fontSize: 20, color: "#F4EEE1", margin: "4px 0 6px", fontWeight: 600 }}>
@@ -627,7 +729,7 @@ export default function AvaliacaoApp() {
               <div key={d.dia} style={{ background: "#1B302A", border: d.dia === 1 ? "1px solid #F0A15C" : "1px solid #2A4A40", borderRadius: 16, padding: 16, marginBottom: 10 }}>
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 8 }}>
                   <span style={{ color: "#F0A15C", fontSize: 12, fontWeight: 700 }}>DIA {d.dia}</span>
-                  {d.dia === 1 || DEV_DESBLOQUEAR_TODOS_OS_DIAS ? (
+                  {d.dia <= diasDesbloqueados ? (
                     <Check size={16} color="#8FBF9F" />
                   ) : (
                     <Lock size={13} color="#6E7A73" />
@@ -635,7 +737,7 @@ export default function AvaliacaoApp() {
                 </div>
                 <div style={{ color: "#F4EEE1", fontWeight: 600, fontSize: 15, marginBottom: 10 }}>{d.titulo}</div>
 
-                {d.dia === 1 || DEV_DESBLOQUEAR_TODOS_OS_DIAS ? (
+                {d.dia <= diasDesbloqueados ? (
                   <div style={{ display: "grid", gap: 8 }}>
                     <div style={{ display: "flex", gap: 8, alignItems: "flex-start" }}>
                       <Utensils size={14} color="#8FBF9F" style={{ marginTop: 2, flexShrink: 0 }} />
@@ -652,7 +754,9 @@ export default function AvaliacaoApp() {
                     <div style={{ color: "#9CB3A8", fontSize: 11.5, lineHeight: 1.4, fontStyle: "italic", marginTop: 2 }}>Por quê: {d.porque}</div>
                   </div>
                 ) : (
-                  <div style={{ color: "#6E7A73", fontSize: 12 }}>Desbloqueia ao concluir o dia anterior.</div>
+                  <div style={{ color: "#6E7A73", fontSize: 12 }}>
+                    {d.dia === diasDesbloqueados + 1 ? `Desbloqueia em ${horasProximo}h.` : "Desbloqueia nos próximos dias."}
+                  </div>
                 )}
               </div>
             ))}
@@ -676,7 +780,8 @@ export default function AvaliacaoApp() {
             <div style={{ marginTop: 10 }} />
             <PrimaryButton onClick={() => setStep(0)}>Refazer do zero</PrimaryButton>
           </Screen>
-        )}
+          );
+        })()}
 
         {step === 11 && (
           <Screen>
