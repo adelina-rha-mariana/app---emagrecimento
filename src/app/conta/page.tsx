@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { Mail, Lock, AlertCircle, CheckCircle2 } from "lucide-react";
+import { KeyRound, Lock, AlertCircle, CheckCircle2 } from "lucide-react";
 import { supabase } from "@/lib/supabase";
 import { BrandHeader } from "@/app/components/Logo";
 import PageFooter from "@/app/components/PageFooter";
@@ -12,6 +12,8 @@ const FONT_IMPORT =
   "@import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap');";
 
 type Modo = "entrar" | "criar";
+// fechado | pedir-codigo (digitou email, esperando o código chegar) | redefinir (código + nova senha)
+type EtapaSenha = "fechado" | "pedir-codigo" | "redefinir";
 
 const inputStyle: React.CSSProperties = {
   width: "100%",
@@ -24,6 +26,14 @@ const inputStyle: React.CSSProperties = {
   fontFamily: "Inter, sans-serif",
 };
 
+const codigoInputStyle: React.CSSProperties = {
+  ...inputStyle,
+  fontSize: 22,
+  letterSpacing: 8,
+  textAlign: "center",
+  fontFamily: "Fraunces, serif",
+};
+
 export default function ContaPage() {
   const router = useRouter();
   const [modo, setModo] = useState<Modo>("criar");
@@ -31,9 +41,18 @@ export default function ContaPage() {
   const [senha, setSenha] = useState("");
   const [carregando, setCarregando] = useState(false);
   const [erro, setErro] = useState<string | null>(null);
-  const [confirmeEmail, setConfirmeEmail] = useState(false);
-  const [esqueciSenha, setEsqueciSenha] = useState(false);
-  const [linkEnviado, setLinkEnviado] = useState(false);
+
+  // Confirmação de cadastro por código de 6 dígitos (em vez de link — links de
+  // confirmação são "clicados" por scanners de segurança de alguns provedores
+  // de email antes da pessoa mesma clicar, o que invalida o token).
+  const [aguardandoConfirmacao, setAguardandoConfirmacao] = useState(false);
+  const [codigoConfirmacao, setCodigoConfirmacao] = useState("");
+  const [codigoReenviado, setCodigoReenviado] = useState(false);
+
+  // Esqueci minha senha — mesma lógica de código, sem depender de link.
+  const [etapaSenha, setEtapaSenha] = useState<EtapaSenha>("fechado");
+  const [codigoSenha, setCodigoSenha] = useState("");
+  const [novaSenha, setNovaSenha] = useState("");
 
   const submeter = async () => {
     setErro(null);
@@ -44,19 +63,15 @@ export default function ContaPage() {
     setCarregando(true);
 
     if (modo === "criar") {
-      const { data, error } = await supabase.auth.signUp({
-        email: email.trim(),
-        password: senha,
-        options: { emailRedirectTo: `${window.location.origin}/avaliacao` },
-      });
+      const { data, error } = await supabase.auth.signUp({ email: email.trim(), password: senha });
       setCarregando(false);
       if (error) {
         setErro(error.message);
         return;
       }
       if (!data.session) {
-        // Confirmação de email habilitada no projeto: ainda não há sessão.
-        setConfirmeEmail(true);
+        // Confirmação de email habilitada no projeto: ainda não há sessão até confirmar o código.
+        setAguardandoConfirmacao(true);
         return;
       }
       router.push("/avaliacao");
@@ -66,16 +81,55 @@ export default function ContaPage() {
     const { error } = await supabase.auth.signInWithPassword({ email: email.trim(), password: senha });
     setCarregando(false);
     if (error) {
+      if (error.message.toLowerCase().includes("email not confirmed")) {
+        // Conta criada mas nunca confirmada — manda direto pra tela de código em vez de um erro genérico.
+        await supabase.auth.resend({ type: "signup", email: email.trim() });
+        setAguardandoConfirmacao(true);
+        return;
+      }
       setErro("Email ou senha incorretos.");
       return;
     }
     router.push("/avaliacao");
   };
 
-  const enviarLinkRecuperacao = async () => {
+  const confirmarCadastro = async () => {
+    setErro(null);
+    if (codigoConfirmacao.trim().length < 6) {
+      setErro("Digite o código de 6 dígitos que mandamos pro seu email.");
+      return;
+    }
+    setCarregando(true);
+    const { error } = await supabase.auth.verifyOtp({
+      email: email.trim(),
+      token: codigoConfirmacao.trim(),
+      type: "signup",
+    });
+    setCarregando(false);
+    if (error) {
+      setErro("Código inválido ou expirado. Confira o que digitou ou peça um novo.");
+      return;
+    }
+    router.push("/avaliacao");
+  };
+
+  const reenviarCodigoCadastro = async () => {
+    setErro(null);
+    setCarregando(true);
+    const { error } = await supabase.auth.resend({ type: "signup", email: email.trim() });
+    setCarregando(false);
+    if (error) {
+      setErro(error.message);
+      return;
+    }
+    setCodigoReenviado(true);
+    setTimeout(() => setCodigoReenviado(false), 4000);
+  };
+
+  const pedirCodigoSenha = async () => {
     setErro(null);
     if (!email.trim()) {
-      setErro("Digite seu email pra receber o link.");
+      setErro("Digite seu email pra receber o código.");
       return;
     }
     setCarregando(true);
@@ -87,7 +141,44 @@ export default function ContaPage() {
       setErro(error.message);
       return;
     }
-    setLinkEnviado(true);
+    setEtapaSenha("redefinir");
+  };
+
+  const redefinirComCodigo = async () => {
+    setErro(null);
+    if (codigoSenha.trim().length < 6) {
+      setErro("Digite o código de 6 dígitos que mandamos pro seu email.");
+      return;
+    }
+    if (novaSenha.length < 6) {
+      setErro("A nova senha precisa ter pelo menos 6 caracteres.");
+      return;
+    }
+    setCarregando(true);
+    const { error: verifyError } = await supabase.auth.verifyOtp({
+      email: email.trim(),
+      token: codigoSenha.trim(),
+      type: "recovery",
+    });
+    if (verifyError) {
+      setCarregando(false);
+      setErro("Código inválido ou expirado. Confira o que digitou ou peça um novo.");
+      return;
+    }
+    const { error: updateError } = await supabase.auth.updateUser({ password: novaSenha });
+    setCarregando(false);
+    if (updateError) {
+      setErro(updateError.message);
+      return;
+    }
+    router.push("/avaliacao");
+  };
+
+  const fecharFluxoSenha = () => {
+    setEtapaSenha("fechado");
+    setCodigoSenha("");
+    setNovaSenha("");
+    setErro(null);
   };
 
   return (
@@ -105,27 +196,14 @@ export default function ContaPage() {
           </div>
 
           <div style={{ background: "#1B302A", border: "1px solid #2A4A40", borderRadius: 20, padding: 24 }}>
-            {esqueciSenha ? (
-              linkEnviado ? (
-                <div style={{ textAlign: "center" }}>
-                  <CheckCircle2 size={32} color="#8FBF9F" style={{ marginBottom: 12 }} />
-                  <p style={{ color: "#F4EEE1", fontSize: 14, lineHeight: 1.6, margin: "0 0 18px" }}>
-                    Se esse email tiver uma conta, enviamos um link pra você redefinir a senha.
-                  </p>
-                  <button
-                    onClick={() => { setEsqueciSenha(false); setLinkEnviado(false); }}
-                    style={{ background: "none", border: "none", color: "#9CB3A8", fontSize: 13, fontWeight: 600, textDecoration: "underline", cursor: "pointer" }}
-                  >
-                    Voltar
-                  </button>
-                </div>
-              ) : (
+            {etapaSenha !== "fechado" ? (
+              etapaSenha === "pedir-codigo" ? (
                 <>
                   <h1 style={{ fontFamily: "Fraunces, serif", fontWeight: 600, fontSize: 20, color: "#F4EEE1", margin: "0 0 6px" }}>
                     Esqueceu sua senha?
                   </h1>
                   <p style={{ color: "#9CB3A8", fontSize: 13, lineHeight: 1.5, margin: "0 0 18px" }}>
-                    Digite o email da sua conta e mandamos um link pra você criar uma senha nova.
+                    Digite o email da sua conta e mandamos um código pra você criar uma senha nova.
                   </p>
                   <label style={{ display: "block", fontSize: 11, fontWeight: 700, color: "#9CB3A8", letterSpacing: 0.4, marginBottom: 6 }}>EMAIL</label>
                   <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="voce@email.com" style={inputStyle} />
@@ -138,7 +216,7 @@ export default function ContaPage() {
                   )}
 
                   <button
-                    onClick={enviarLinkRecuperacao}
+                    onClick={pedirCodigoSenha}
                     disabled={carregando}
                     style={{
                       width: "100%", marginTop: 18, padding: "15px 20px", borderRadius: 14, border: "none",
@@ -147,29 +225,136 @@ export default function ContaPage() {
                       fontSize: 14.5, cursor: carregando ? "not-allowed" : "pointer",
                     }}
                   >
-                    {carregando ? "Enviando..." : "Enviar link"}
+                    {carregando ? "Enviando..." : "Enviar código"}
                   </button>
                   <div style={{ textAlign: "center", marginTop: 14 }}>
                     <button
-                      onClick={() => setEsqueciSenha(false)}
+                      onClick={fecharFluxoSenha}
                       style={{ background: "none", border: "none", color: "#9CB3A8", fontSize: 13, fontWeight: 600, textDecoration: "underline", cursor: "pointer" }}
                     >
                       Voltar
                     </button>
                   </div>
                 </>
+              ) : (
+                <>
+                  <KeyRound size={26} color="#F0A15C" style={{ marginBottom: 10 }} />
+                  <h1 style={{ fontFamily: "Fraunces, serif", fontWeight: 600, fontSize: 20, color: "#F4EEE1", margin: "0 0 6px" }}>
+                    Digite o código e a nova senha
+                  </h1>
+                  <p style={{ color: "#9CB3A8", fontSize: 13, lineHeight: 1.5, margin: "0 0 18px" }}>
+                    Mandamos um código de 6 dígitos pra <strong style={{ color: "#F4EEE1" }}>{email}</strong>.
+                  </p>
+
+                  <label style={{ display: "block", fontSize: 11, fontWeight: 700, color: "#9CB3A8", letterSpacing: 0.4, marginBottom: 6 }}>CÓDIGO</label>
+                  <input
+                    type="text" inputMode="numeric" maxLength={6} value={codigoSenha}
+                    onChange={(e) => setCodigoSenha(e.target.value.replace(/\D/g, ""))}
+                    placeholder="000000" style={codigoInputStyle}
+                  />
+
+                  <label style={{ display: "block", fontSize: 11, fontWeight: 700, color: "#9CB3A8", letterSpacing: 0.4, margin: "14px 0 6px" }}>NOVA SENHA</label>
+                  <input
+                    type="password" value={novaSenha} onChange={(e) => setNovaSenha(e.target.value)}
+                    placeholder="Mínimo 6 caracteres" style={inputStyle}
+                    onKeyDown={(e) => e.key === "Enter" && redefinirComCodigo()}
+                  />
+
+                  {erro && (
+                    <div style={{ display: "flex", gap: 8, alignItems: "center", marginTop: 12 }}>
+                      <AlertCircle size={15} color="#E8785A" />
+                      <span style={{ color: "#F4EEE1", fontSize: 12.5 }}>{erro}</span>
+                    </div>
+                  )}
+
+                  <button
+                    onClick={redefinirComCodigo}
+                    disabled={carregando}
+                    style={{
+                      width: "100%", marginTop: 18, padding: "15px 20px", borderRadius: 14, border: "none",
+                      background: carregando ? "#3A3F3A" : "linear-gradient(135deg, #F0A15C, #E8785A)",
+                      color: carregando ? "#7A8079" : "#1B140D", fontFamily: "Inter, sans-serif", fontWeight: 700,
+                      fontSize: 14.5, cursor: carregando ? "not-allowed" : "pointer",
+                    }}
+                  >
+                    {carregando ? "Salvando..." : "Salvar nova senha"}
+                  </button>
+                  <div style={{ textAlign: "center", marginTop: 14, display: "flex", justifyContent: "center", gap: 16 }}>
+                    <button
+                      onClick={pedirCodigoSenha}
+                      disabled={carregando}
+                      style={{ background: "none", border: "none", color: "#9CB3A8", fontSize: 12.5, textDecoration: "underline", cursor: "pointer" }}
+                    >
+                      Reenviar código
+                    </button>
+                    <button
+                      onClick={fecharFluxoSenha}
+                      style={{ background: "none", border: "none", color: "#9CB3A8", fontSize: 12.5, textDecoration: "underline", cursor: "pointer" }}
+                    >
+                      Voltar
+                    </button>
+                  </div>
+                </>
               )
-            ) : confirmeEmail ? (
-              <div style={{ textAlign: "center" }}>
-                <Mail size={32} color="#F0A15C" style={{ marginBottom: 12 }} />
-                <h1 style={{ fontFamily: "Fraunces, serif", fontWeight: 600, fontSize: 20, color: "#F4EEE1", margin: "0 0 8px" }}>
+            ) : aguardandoConfirmacao ? (
+              <>
+                <KeyRound size={26} color="#F0A15C" style={{ marginBottom: 10 }} />
+                <h1 style={{ fontFamily: "Fraunces, serif", fontWeight: 600, fontSize: 20, color: "#F4EEE1", margin: "0 0 6px" }}>
                   Confirme seu email
                 </h1>
-                <p style={{ color: "#9CB3A8", fontSize: 13.5, lineHeight: 1.6, margin: 0 }}>
-                  Mandamos um link de confirmação para <strong style={{ color: "#F4EEE1" }}>{email}</strong>.
-                  Toque nele pra ativar sua conta e continuar sua avaliação.
+                <p style={{ color: "#9CB3A8", fontSize: 13, lineHeight: 1.5, margin: "0 0 18px" }}>
+                  Mandamos um código de 6 dígitos pra <strong style={{ color: "#F4EEE1" }}>{email}</strong>. Digite abaixo pra ativar sua conta.
                 </p>
-              </div>
+
+                <label style={{ display: "block", fontSize: 11, fontWeight: 700, color: "#9CB3A8", letterSpacing: 0.4, marginBottom: 6 }}>CÓDIGO</label>
+                <input
+                  type="text" inputMode="numeric" maxLength={6} value={codigoConfirmacao}
+                  onChange={(e) => setCodigoConfirmacao(e.target.value.replace(/\D/g, ""))}
+                  placeholder="000000" style={codigoInputStyle}
+                  onKeyDown={(e) => e.key === "Enter" && confirmarCadastro()}
+                />
+
+                {erro && (
+                  <div style={{ display: "flex", gap: 8, alignItems: "center", marginTop: 12 }}>
+                    <AlertCircle size={15} color="#E8785A" />
+                    <span style={{ color: "#F4EEE1", fontSize: 12.5 }}>{erro}</span>
+                  </div>
+                )}
+                {codigoReenviado && (
+                  <div style={{ display: "flex", gap: 8, alignItems: "center", marginTop: 12 }}>
+                    <CheckCircle2 size={15} color="#8FBF9F" />
+                    <span style={{ color: "#F4EEE1", fontSize: 12.5 }}>Código reenviado.</span>
+                  </div>
+                )}
+
+                <button
+                  onClick={confirmarCadastro}
+                  disabled={carregando}
+                  style={{
+                    width: "100%", marginTop: 18, padding: "15px 20px", borderRadius: 14, border: "none",
+                    background: carregando ? "#3A3F3A" : "linear-gradient(135deg, #F0A15C, #E8785A)",
+                    color: carregando ? "#7A8079" : "#1B140D", fontFamily: "Inter, sans-serif", fontWeight: 700,
+                    fontSize: 14.5, cursor: carregando ? "not-allowed" : "pointer",
+                  }}
+                >
+                  {carregando ? "Confirmando..." : "Confirmar e continuar"}
+                </button>
+                <div style={{ textAlign: "center", marginTop: 14, display: "flex", justifyContent: "center", gap: 16 }}>
+                  <button
+                    onClick={reenviarCodigoCadastro}
+                    disabled={carregando}
+                    style={{ background: "none", border: "none", color: "#9CB3A8", fontSize: 12.5, textDecoration: "underline", cursor: "pointer" }}
+                  >
+                    Reenviar código
+                  </button>
+                  <button
+                    onClick={() => { setAguardandoConfirmacao(false); setCodigoConfirmacao(""); setErro(null); }}
+                    style={{ background: "none", border: "none", color: "#9CB3A8", fontSize: 12.5, textDecoration: "underline", cursor: "pointer" }}
+                  >
+                    Voltar
+                  </button>
+                </div>
+              </>
             ) : (
               <>
                 <div style={{ display: "flex", gap: 6, marginBottom: 20, background: "#12211D", borderRadius: 12, padding: 4 }}>
@@ -217,7 +402,7 @@ export default function ContaPage() {
                 {modo === "entrar" && (
                   <div style={{ textAlign: "right", marginTop: 10 }}>
                     <button
-                      onClick={() => { setEsqueciSenha(true); setErro(null); }}
+                      onClick={() => { setEtapaSenha("pedir-codigo"); setErro(null); }}
                       style={{ background: "none", border: "none", color: "#9CB3A8", fontSize: 12.5, textDecoration: "underline", cursor: "pointer" }}
                     >
                       Esqueci minha senha
