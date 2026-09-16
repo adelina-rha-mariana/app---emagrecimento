@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { KeyRound, Lock, AlertCircle, CheckCircle2 } from "lucide-react";
+import { KeyRound, Lock, AlertCircle, CheckCircle2, Eye, EyeOff } from "lucide-react";
 import { supabase } from "@/lib/supabase";
 import { BrandHeader } from "@/app/components/Logo";
 import PageFooter from "@/app/components/PageFooter";
@@ -38,6 +38,46 @@ const codigoInputStyle: React.CSSProperties = {
 // não este app — validar/limitar por um número de dígitos específico aqui
 // quebraria a confirmação se o tamanho do código mudar do lado deles.
 const CODIGO_MIN_LENGTH = 4;
+
+// Campo de senha com botão de mostrar/ocultar — ajuda quem tem menos prática
+// com tecnologia a conferir o que digitou antes de confirmar.
+function PasswordInput({
+  value,
+  onChange,
+  placeholder,
+  onKeyDown,
+}: {
+  value: string;
+  onChange: (v: string) => void;
+  placeholder?: string;
+  onKeyDown?: (e: React.KeyboardEvent<HTMLInputElement>) => void;
+}) {
+  const [visivel, setVisivel] = useState(false);
+  return (
+    <div style={{ position: "relative" }}>
+      <input
+        type={visivel ? "text" : "password"}
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+        placeholder={placeholder}
+        style={{ ...inputStyle, paddingRight: 44 }}
+        onKeyDown={onKeyDown}
+      />
+      <button
+        type="button"
+        onClick={() => setVisivel(!visivel)}
+        aria-label={visivel ? "Ocultar senha" : "Mostrar senha"}
+        style={{
+          position: "absolute", right: 2, top: "50%", transform: "translateY(-50%)",
+          background: "none", border: "none", cursor: "pointer", padding: 10,
+          display: "flex", alignItems: "center", color: "#9CB3A8",
+        }}
+      >
+        {visivel ? <EyeOff size={18} /> : <Eye size={18} />}
+      </button>
+    </div>
+  );
+}
 
 export default function ContaPage() {
   const router = useRouter();
@@ -259,9 +299,9 @@ export default function ContaPage() {
                   />
 
                   <label style={{ display: "block", fontSize: 11, fontWeight: 700, color: "#9CB3A8", letterSpacing: 0.4, margin: "14px 0 6px" }}>NOVA SENHA</label>
-                  <input
-                    type="password" value={novaSenha} onChange={(e) => setNovaSenha(e.target.value)}
-                    placeholder="Mínimo 6 caracteres" style={inputStyle}
+                  <PasswordInput
+                    value={novaSenha} onChange={setNovaSenha}
+                    placeholder="Mínimo 6 caracteres"
                     onKeyDown={(e) => e.key === "Enter" && redefinirComCodigo()}
                   />
 
@@ -395,10 +435,9 @@ export default function ContaPage() {
                   </div>
                   <div>
                     <label style={{ display: "block", fontSize: 11, fontWeight: 700, color: "#9CB3A8", letterSpacing: 0.4, marginBottom: 6 }}>SENHA</label>
-                    <input
-                      type="password" value={senha} onChange={(e) => setSenha(e.target.value)}
+                    <PasswordInput
+                      value={senha} onChange={setSenha}
                       placeholder={modo === "criar" ? "Mínimo 6 caracteres" : "Sua senha"}
-                      style={inputStyle}
                       onKeyDown={(e) => e.key === "Enter" && submeter()}
                     />
                   </div>
