@@ -112,7 +112,7 @@ export default function ContaPage() {
     });
     setCarregando(false);
     if (error) {
-      setErro("Código inválido ou expirado. Confira o que digitou ou peça um novo.");
+      setErro(`${error.message} (código: ${error.code ?? error.status ?? "?"})`);
       return;
     }
     router.push("/avaliacao");
@@ -167,7 +167,7 @@ export default function ContaPage() {
     });
     if (verifyError) {
       setCarregando(false);
-      setErro("Código inválido ou expirado. Confira o que digitou ou peça um novo.");
+      setErro(`${verifyError.message} (código: ${verifyError.code ?? verifyError.status ?? "?"})`);
       return;
     }
     const { error: updateError } = await supabase.auth.updateUser({ password: novaSenha });
