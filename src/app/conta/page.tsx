@@ -29,10 +29,15 @@ const inputStyle: React.CSSProperties = {
 const codigoInputStyle: React.CSSProperties = {
   ...inputStyle,
   fontSize: 22,
-  letterSpacing: 8,
+  letterSpacing: 6,
   textAlign: "center",
   fontFamily: "Fraunces, serif",
 };
+
+// Não fixamos um tamanho exato: quem gera o código é o Supabase (server-side),
+// não este app — validar/limitar por um número de dígitos específico aqui
+// quebraria a confirmação se o tamanho do código mudar do lado deles.
+const CODIGO_MIN_LENGTH = 4;
 
 export default function ContaPage() {
   const router = useRouter();
@@ -42,7 +47,7 @@ export default function ContaPage() {
   const [carregando, setCarregando] = useState(false);
   const [erro, setErro] = useState<string | null>(null);
 
-  // Confirmação de cadastro por código de 6 dígitos (em vez de link — links de
+  // Confirmação de cadastro por código numérico (em vez de link — links de
   // confirmação são "clicados" por scanners de segurança de alguns provedores
   // de email antes da pessoa mesma clicar, o que invalida o token).
   const [aguardandoConfirmacao, setAguardandoConfirmacao] = useState(false);
@@ -95,8 +100,8 @@ export default function ContaPage() {
 
   const confirmarCadastro = async () => {
     setErro(null);
-    if (codigoConfirmacao.trim().length < 6) {
-      setErro("Digite o código de 6 dígitos que mandamos pro seu email.");
+    if (codigoConfirmacao.trim().length < CODIGO_MIN_LENGTH) {
+      setErro("Digite o código que mandamos pro seu email.");
       return;
     }
     setCarregando(true);
@@ -146,8 +151,8 @@ export default function ContaPage() {
 
   const redefinirComCodigo = async () => {
     setErro(null);
-    if (codigoSenha.trim().length < 6) {
-      setErro("Digite o código de 6 dígitos que mandamos pro seu email.");
+    if (codigoSenha.trim().length < CODIGO_MIN_LENGTH) {
+      setErro("Digite o código que mandamos pro seu email.");
       return;
     }
     if (novaSenha.length < 6) {
@@ -243,12 +248,12 @@ export default function ContaPage() {
                     Digite o código e a nova senha
                   </h1>
                   <p style={{ color: "#9CB3A8", fontSize: 13, lineHeight: 1.5, margin: "0 0 18px" }}>
-                    Mandamos um código de 6 dígitos pra <strong style={{ color: "#F4EEE1" }}>{email}</strong>.
+                    Mandamos um código pra <strong style={{ color: "#F4EEE1" }}>{email}</strong>.
                   </p>
 
                   <label style={{ display: "block", fontSize: 11, fontWeight: 700, color: "#9CB3A8", letterSpacing: 0.4, marginBottom: 6 }}>CÓDIGO</label>
                   <input
-                    type="text" inputMode="numeric" maxLength={6} value={codigoSenha}
+                    type="text" inputMode="numeric" maxLength={10} value={codigoSenha}
                     onChange={(e) => setCodigoSenha(e.target.value.replace(/\D/g, ""))}
                     placeholder="000000" style={codigoInputStyle}
                   />
@@ -303,12 +308,12 @@ export default function ContaPage() {
                   Confirme seu email
                 </h1>
                 <p style={{ color: "#9CB3A8", fontSize: 13, lineHeight: 1.5, margin: "0 0 18px" }}>
-                  Mandamos um código de 6 dígitos pra <strong style={{ color: "#F4EEE1" }}>{email}</strong>. Digite abaixo pra ativar sua conta.
+                  Mandamos um código pra <strong style={{ color: "#F4EEE1" }}>{email}</strong>. Digite abaixo pra ativar sua conta.
                 </p>
 
                 <label style={{ display: "block", fontSize: 11, fontWeight: 700, color: "#9CB3A8", letterSpacing: 0.4, marginBottom: 6 }}>CÓDIGO</label>
                 <input
-                  type="text" inputMode="numeric" maxLength={6} value={codigoConfirmacao}
+                  type="text" inputMode="numeric" maxLength={10} value={codigoConfirmacao}
                   onChange={(e) => setCodigoConfirmacao(e.target.value.replace(/\D/g, ""))}
                   placeholder="000000" style={codigoInputStyle}
                   onKeyDown={(e) => e.key === "Enter" && confirmarCadastro()}
