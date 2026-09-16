@@ -255,7 +255,7 @@ export default function ContaPage() {
                   <input
                     type="text" inputMode="numeric" maxLength={10} value={codigoSenha}
                     onChange={(e) => setCodigoSenha(e.target.value.replace(/\D/g, ""))}
-                    placeholder="000000" style={codigoInputStyle}
+                    placeholder="Digite o código" style={codigoInputStyle}
                   />
 
                   <label style={{ display: "block", fontSize: 11, fontWeight: 700, color: "#9CB3A8", letterSpacing: 0.4, margin: "14px 0 6px" }}>NOVA SENHA</label>
@@ -315,7 +315,7 @@ export default function ContaPage() {
                 <input
                   type="text" inputMode="numeric" maxLength={10} value={codigoConfirmacao}
                   onChange={(e) => setCodigoConfirmacao(e.target.value.replace(/\D/g, ""))}
-                  placeholder="000000" style={codigoInputStyle}
+                  placeholder="Digite o código" style={codigoInputStyle}
                   onKeyDown={(e) => e.key === "Enter" && confirmarCadastro()}
                 />
 
