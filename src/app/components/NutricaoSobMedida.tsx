@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
+import Image, { type StaticImageData } from "next/image";
 import {
   ChevronLeft, Salad, Wheat, Flame, Beef, ShieldAlert, ShieldCheck, BookOpen,
   Check, Stethoscope, ClipboardCheck,
@@ -9,12 +10,25 @@ import {
   Screen, ProgressDots, QTitle, Eyebrow, PrimaryButton, GhostLink, COLORS,
 } from "./ui";
 import { ESTRATEGIAS, getEstrategiaById } from "./nutricaoEstrategias";
+import fotoEquilibrada from "@/assets/nutricao/equilibrada.jpg";
+import fotoLowCarb from "@/assets/nutricao/low-carb.jpg";
+import fotoCetogenica from "@/assets/nutricao/cetogenica.jpg";
+import fotoCarnivora from "@/assets/nutricao/carnivora.jpg";
 
 const ICONS: Record<string, React.ComponentType<{ size?: number; color?: string }>> = {
   equilibrada: Salad,
   "low-carb": Wheat,
   cetogenica: Flame,
   carnivora: Beef,
+};
+
+// Fotos ilustrativas (banco de imagens gratuito, Unsplash License) — só pra
+// dar contexto visual à leitura, não representam um cardápio prescrito.
+const FOTOS: Record<string, StaticImageData> = {
+  equilibrada: fotoEquilibrada,
+  "low-carb": fotoLowCarb,
+  cetogenica: fotoCetogenica,
+  carnivora: fotoCarnivora,
 };
 
 // Sub-passos internos do módulo, controlados aqui dentro — não interferem
@@ -214,6 +228,15 @@ export default function NutricaoSobMedida({ onVoltar }: { onVoltar: () => void }
 
           {subStep === "conteudo" && (
             <>
+              <div style={{ borderRadius: 16, overflow: "hidden", marginBottom: 14, position: "relative", height: 140 }}>
+                <Image
+                  src={FOTOS[estrategia.id]}
+                  alt={`Prato ilustrativo da estratégia ${estrategia.nome}`}
+                  fill
+                  sizes="400px"
+                  style={{ objectFit: "cover" }}
+                />
+              </div>
               <Eyebrow icon={<BookOpen size={16} color={cor} />}>{estrategia.nome.toUpperCase()} · CONTEÚDO EDUCATIVO</Eyebrow>
               <QTitle>O que é e como funciona</QTitle>
               <div style={{ background: COLORS.card, borderRadius: 16, padding: 16, marginBottom: 12 }}>

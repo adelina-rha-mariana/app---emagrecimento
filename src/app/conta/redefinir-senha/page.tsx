@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { AlertCircle, CheckCircle2, KeyRound } from "lucide-react";
+import { AlertCircle, CheckCircle2, KeyRound, Eye, EyeOff } from "lucide-react";
 import { supabase } from "@/lib/supabase";
 import { BrandHeader } from "@/app/components/Logo";
 import PageFooter from "@/app/components/PageFooter";
@@ -20,6 +20,46 @@ const inputStyle: React.CSSProperties = {
   color: "#F4EEE1",
   fontFamily: "Inter, sans-serif",
 };
+
+// Campo de senha com botão de mostrar/ocultar — ajuda quem tem menos prática
+// com tecnologia a conferir o que digitou antes de confirmar.
+function PasswordInput({
+  value,
+  onChange,
+  placeholder,
+  onKeyDown,
+}: {
+  value: string;
+  onChange: (v: string) => void;
+  placeholder?: string;
+  onKeyDown?: (e: React.KeyboardEvent<HTMLInputElement>) => void;
+}) {
+  const [visivel, setVisivel] = useState(false);
+  return (
+    <div style={{ position: "relative" }}>
+      <input
+        type={visivel ? "text" : "password"}
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+        placeholder={placeholder}
+        style={{ ...inputStyle, paddingRight: 44 }}
+        onKeyDown={onKeyDown}
+      />
+      <button
+        type="button"
+        onClick={() => setVisivel(!visivel)}
+        aria-label={visivel ? "Ocultar senha" : "Mostrar senha"}
+        style={{
+          position: "absolute", right: 2, top: "50%", transform: "translateY(-50%)",
+          background: "none", border: "none", cursor: "pointer", padding: 10,
+          display: "flex", alignItems: "center", color: "#9CB3A8",
+        }}
+      >
+        {visivel ? <EyeOff size={18} /> : <Eye size={18} />}
+      </button>
+    </div>
+  );
+}
 
 export default function RedefinirSenhaPage() {
   const router = useRouter();
@@ -93,9 +133,9 @@ export default function RedefinirSenhaPage() {
                 <p style={{ color: "#9CB3A8", fontSize: 13, lineHeight: 1.5, margin: "0 0 18px" }}>
                   Mínimo de 6 caracteres.
                 </p>
-                <input
-                  type="password" value={senha} onChange={(e) => setSenha(e.target.value)}
-                  placeholder="Nova senha" style={inputStyle}
+                <PasswordInput
+                  value={senha} onChange={setSenha}
+                  placeholder="Nova senha"
                   onKeyDown={(e) => e.key === "Enter" && salvar()}
                 />
 
