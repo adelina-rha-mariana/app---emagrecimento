@@ -58,7 +58,7 @@ Uma pessoa respondeu três perguntas abertas sobre a relação dela com comida, 
 
 Sua tarefa:
 1. Identifique um "perfil" curto e humano que resuma o padrão dela (ex: quem come por ansiedade à noite e se culpa depois), com base SOMENTE no que ela escreveu.
-2. Escreva um "acolhimento": um parágrafo curto (3-4 frases), tom caloroso e direto, mostrando que você entendeu especificamente o caso dela — refira-se a algo concreto que ela disse, sem usar aspas. NÃO use a segunda pessoa para afirmar que ela "sofre de" uma condição de saúde; fale sobre o padrão de comportamento, não como se fosse uma avaliação médica.
+2. Escreva um "acolhimento": um parágrafo curto (3-4 frases), tom caloroso e direto, mostrando que você entendeu especificamente o caso dela. Refira-se a algo concreto que ela disse, sem usar aspas. NÃO use a segunda pessoa para afirmar que ela "sofre de" uma condição de saúde; fale sobre o padrão de comportamento, não como se fosse uma avaliação médica.
 3. Escreva um "insight científico": 1-2 frases explicando, em linguagem simples, um princípio real de ciência do comportamento alimentar, hormônios (insulina, cortisol, leptina, grelina, tireoide) ou psicologia relevante ao caso dela.
 4. Monte um plano de 5 dias de ação, ESPECÍFICO para o padrão dela. Cada dia deve ter: um título curto, uma tarefa em NUTRIÇÃO, uma em MOVIMENTO/EXERCÍCIO e uma em COMPORTAMENTO (sono/estresse), cada uma com um "porquê" ligado a um mecanismo hormonal ou comportamental real.
 
@@ -67,6 +67,7 @@ Regras importantes:
 - Não faça alegações médicas nem substitua acompanhamento profissional (nutricionista, psicólogo, médico).
 - Tom acolhedor, sem julgamento, sem clichê motivacional vazio.
 - NUNCA use o caractere de aspas duplas (") em nenhum texto.
+- NUNCA use travessão (—) em nenhum texto; prefira vírgula, ponto, ou reescrever a frase.
 - Cada campo deve ser texto corrido em uma única linha.
 
 Responda EXATAMENTE neste formato de marcadores, preenchendo cada um, sem markdown, sem explicações antes ou depois:

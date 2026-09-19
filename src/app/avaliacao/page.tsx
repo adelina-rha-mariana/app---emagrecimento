@@ -58,7 +58,7 @@ const QUESTIONS: Array<{ key: keyof Answers; title: string; sub: string; placeho
   {
     key: "q3",
     title: "Como isso te afeta no seu dia a dia?",
-    sub: "No trabalho, nas relações, em como você se vê — o que muda por causa disso.",
+    sub: "No trabalho, nas relações, em como você se vê, o que muda por causa disso.",
     placeholder: "Ex: evito sair pra jantar com amigas porque fico pensando no que vou comer...",
   },
 ];
@@ -176,7 +176,7 @@ function buildWalkScript(result: PlanResult | null) {
     { pct: 22, text: result.insight_cientifico || "Cada pequeno movimento ajuda seu corpo e sua mente a trabalharem juntos." },
     { pct: 45, text: "Repare na sua respiração. Não precisa acelerar o passo, só continuar." },
     { pct: 70, text: primeiroDia ? `Lembre do porquê de hoje: ${primeiroDia.porque}` : "Você já percorreu mais da metade do caminho." },
-    { pct: 90, text: "Estamos quase terminando. O que você fez agora já conta — obrigada por se escolher hoje." },
+    { pct: 90, text: "Estamos quase terminando. O que você fez agora já conta, obrigada por se escolher hoje." },
   ];
 }
 
@@ -489,7 +489,7 @@ export default function AvaliacaoApp() {
               Sua jornada para uma rotina mais saudável começa aqui
             </h1>
             <p style={{ color: "#9CB3A8", fontSize: 14, lineHeight: 1.5, margin: "0 0 20px" }}>
-              Queremos te conhecer um pouco antes de começar — sono, alimentação, movimento e rotina fazem parte da sua jornada.
+              Queremos te conhecer um pouco antes de começar. Sono, alimentação, movimento e rotina fazem parte da sua jornada.
             </p>
 
             <div style={{ fontSize: 11, color: "#9CB3A8", fontWeight: 700, letterSpacing: 0.5, marginBottom: 8 }}>COMO ANDA SUA ROTINA?</div>
@@ -507,7 +507,7 @@ export default function AvaliacaoApp() {
               ))}
             </div>
             <p style={{ color: "#6E7A73", fontSize: 11, lineHeight: 1.4, margin: "0 0 4px" }}>
-              Marque o que fizer sentido pra você agora — não tem certo ou errado, isso só nos ajuda a personalizar sua jornada.
+              Marque o que fizer sentido pra você agora, não tem certo ou errado, isso só nos ajuda a personalizar sua jornada.
             </p>
 
             <label style={{ display: "flex", alignItems: "flex-start", gap: 11, background: "rgba(240,161,92,0.08)", border: "1px solid rgba(240,161,92,0.25)", borderRadius: 14, padding: "15px 16px", marginTop: 18, cursor: "pointer" }}>
@@ -534,7 +534,7 @@ export default function AvaliacaoApp() {
               />
               <span style={{ color: "#F4EEE1", fontSize: 12.5, lineHeight: 1.5, fontWeight: 500 }}>
                 Autorizo o uso das informações sobre minha rotina e hábitos que eu compartilhar aqui exclusivamente
-                para personalizar meu plano de nutrição e hábitos — esses dados nunca são usados para fins de
+                para personalizar meu plano de nutrição e hábitos. Esses dados nunca são usados para fins de
                 diagnóstico médico.
               </span>
             </label>
@@ -637,7 +637,7 @@ export default function AvaliacaoApp() {
             </div>
 
             <p style={{ color: "#6E7A73", fontSize: 11, lineHeight: 1.4, margin: "12px 0 16px" }}>
-              Projeção com ritmo seguro (~0,5kg/semana) — sem promessas milagrosas.
+              Projeção com ritmo seguro (~0,5kg/semana), sem promessas milagrosas.
             </p>
 
             <div style={{ marginTop: "auto" }}>
@@ -762,7 +762,7 @@ export default function AvaliacaoApp() {
             ))}
 
             <p style={{ color: "#6E7A73", fontSize: 11, lineHeight: 1.5, margin: "10px 0 16px" }}>
-              Isso é orientação baseada em hábitos e ciência comportamental — não substitui acompanhamento
+              Isso é orientação baseada em hábitos e ciência comportamental. Não substitui acompanhamento
               de nutricionista, psicólogo ou médico.
             </p>
 
@@ -888,7 +888,7 @@ export default function AvaliacaoApp() {
             </a>
 
             <p style={{ color: "#6E7A73", fontSize: 11, lineHeight: 1.5, textAlign: "center", margin: "0 0 6px" }}>
-              A narração usa a voz do seu navegador — a música toca à parte, no Spotify.
+              A narração usa a voz do seu navegador, a música toca à parte, no Spotify.
             </p>
 
             <div style={{ marginTop: "auto" }}>
@@ -905,7 +905,7 @@ export default function AvaliacaoApp() {
               Você está indo bem.
             </h2>
             <p style={{ color: "#9CB3A8", fontSize: 13, lineHeight: 1.5, margin: "0 0 18px" }}>
-              Constância importa mais que perfeição — olha o que você já construiu.
+              Constância importa mais que perfeição, olha o que você já construiu.
             </p>
 
             <div style={{ background: "linear-gradient(135deg, #1B302A, #12211D)", border: "1px solid #2A4A40", borderRadius: 18, padding: "22px 20px", textAlign: "center", marginBottom: 18 }}>
@@ -962,7 +962,7 @@ export default function AvaliacaoApp() {
                 <span style={{ color: "#F4EEE1", fontSize: 12.5, fontWeight: 700 }}>Gostando do resultado?</span>
               </div>
               <p style={{ color: "#9CB3A8", fontSize: 12, lineHeight: 1.5, margin: "0 0 12px" }}>
-                Compartilhe com uma amiga — ela também pode começar a avaliação gratuita.
+                Compartilhe com uma amiga, ela também pode começar a avaliação gratuita.
               </p>
               <SecondaryButton onClick={handleIndicarAmiga}>
                 {shareStatus === "copiado" ? "Link copiado!" : shareStatus === "erro" ? "Não consegui copiar o link" : "Indicar para uma amiga"}
@@ -983,13 +983,13 @@ export default function AvaliacaoApp() {
               Seus números
             </h2>
             <p style={{ color: "#9CB3A8", fontSize: 13, lineHeight: 1.5, margin: "0 0 16px" }}>
-              Meça no seu aparelho de casa e registre aqui. O app organiza seu histórico — ele não mede nada sozinho.
+              Meça no seu aparelho de casa e registre aqui. O app organiza seu histórico, ele não mede nada sozinho.
             </p>
 
             <div style={{ background: "rgba(240,161,92,0.08)", border: "1px solid rgba(240,161,92,0.25)", borderRadius: 14, padding: "14px 16px", marginBottom: 18 }}>
               <div style={{ color: "#F4EEE1", fontSize: 12.5, fontWeight: 700, marginBottom: 5 }}>Por que não medimos pelo celular?</div>
               <p style={{ color: "#9CB3A8", fontSize: 11.5, lineHeight: 1.5, margin: 0 }}>
-                Não existe hoje tecnologia validada que meça glicose com o dedo na tela. Apps que prometem isso podem te dar um número errado — e isso é perigoso. Preferimos ser honestos com você.
+                Não existe hoje tecnologia validada que meça glicose com o dedo na tela. Apps que prometem isso podem te dar um número errado, e isso é perigoso. Preferimos ser honestos com você.
               </p>
             </div>
 
@@ -1028,7 +1028,7 @@ export default function AvaliacaoApp() {
                 {numHistory.map((n, i) => (
                   <div key={i} style={{ background: "#1B302A", borderRadius: 12, padding: "10px 14px", marginBottom: 6, display: "flex", justifyContent: "space-between", fontSize: 12.5, color: "#F4EEE1" }}>
                     <span>{n.glicose ? `Glicose: ${n.glicose} mg/dL` : ""}</span>
-                    <span>{n.sistolica ? `${n.sistolica}/${n.diastolica || "—"}` : ""}</span>
+                    <span>{n.sistolica ? `${n.sistolica}/${n.diastolica || "N/D"}` : ""}</span>
                   </div>
                 ))}
               </div>
@@ -1055,7 +1055,7 @@ export default function AvaliacaoApp() {
             </div>
 
             <p style={{ color: "#6E7A73", fontSize: 10.5, lineHeight: 1.5, textAlign: "center", margin: "0 0 10px" }}>
-              Registro organizacional e educativo. Valores fora da faixa pedem atenção — procure um profissional de saúde.
+              Registro organizacional e educativo. Valores fora da faixa pedem atenção, procure um profissional de saúde.
             </p>
 
             <GhostLink onClick={() => setStep(12)}>Voltar ao progresso</GhostLink>

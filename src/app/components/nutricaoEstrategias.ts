@@ -41,7 +41,7 @@ export const ESTRATEGIAS: Estrategia[] = [
       { id: "mediterranea", nome: "Mediterrânea", descricao: "Ênfase em azeite, peixes, grãos integrais, leguminosas e vegetais." },
     ],
     conteudoEducativo: {
-      oQueE: "Uma forma de comer que inclui todos os grupos alimentares — carboidratos, proteínas, gorduras, frutas e vegetais — em porções ajustadas ao seu gasto energético, sem cortar nenhum grupo por completo.",
+      oQueE: "Uma forma de comer que inclui todos os grupos alimentares, como carboidratos, proteínas, gorduras, frutas e vegetais, em porções ajustadas ao seu gasto energético, sem cortar nenhum grupo por completo.",
       comoFunciona: "O foco é o déficit calórico moderado e a qualidade dos alimentos (mais in natura, menos ultraprocessado), não a exclusão de macronutrientes.",
       beneficios: [
         "Mais fácil de manter a longo prazo, por ser menos restritiva",
@@ -71,8 +71,8 @@ export const ESTRATEGIAS: Estrategia[] = [
       "Gestante ou amamentando",
     ],
     modalidades: [
-      { id: "moderado", nome: "Moderado", descricao: "Cerca de 100–150g de carboidrato por dia — reduz sem eliminar grupos de alimentos." },
-      { id: "restrito", nome: "Restrito", descricao: "Abaixo de 50g de carboidrato por dia — mais próximo da cetogênica, exige mais planejamento." },
+      { id: "moderado", nome: "Moderado", descricao: "Cerca de 100–150g de carboidrato por dia. Reduz sem eliminar grupos de alimentos." },
+      { id: "restrito", nome: "Restrito", descricao: "Abaixo de 50g de carboidrato por dia, mais próximo da cetogênica, exige mais planejamento." },
     ],
     conteudoEducativo: {
       oQueE: "Uma estratégia que reduz a quantidade de carboidratos (pães, massas, açúcares, alguns tubérculos) e aumenta proporcionalmente proteínas e gorduras boas.",
@@ -83,12 +83,12 @@ export const ESTRATEGIAS: Estrategia[] = [
       ],
       atencao: [
         "Reduzir carboidrato demais pode causar dor de cabeça, cansaço e irritabilidade nos primeiros dias",
-        "Quem usa insulina ou remédio para diabetes precisa de ajuste médico ANTES de começar — o risco de hipoglicemia é real",
+        "Quem usa insulina ou remédio para diabetes precisa de ajuste médico ANTES de começar. O risco de hipoglicemia é real",
       ],
       dicasPraticas: [
         "Troque arroz branco e pão refinado por versões integrais em quantidade menor, antes de cortar de vez",
         "Priorize vegetais fibrosos como fonte de carboidrato",
-        "Beba bastante água — a redução de carboidrato muda a retenção de líquido do corpo",
+        "Beba bastante água. A redução de carboidrato muda a retenção de líquido do corpo",
       ],
     },
   },
@@ -106,20 +106,20 @@ export const ESTRATEGIAS: Estrategia[] = [
       "Histórico de transtorno alimentar",
     ],
     modalidades: [
-      { id: "padrao", nome: "Padrão (SKD)", descricao: "Menos de 50g de carboidrato por dia, todos os dias — a versão mais comum." },
-      { id: "ciclica", nome: "Cíclica (CKD)", descricao: "Períodos de cetose intercalados com dias de mais carboidrato — mais usada por quem treina pesado." },
+      { id: "padrao", nome: "Padrão (SKD)", descricao: "Menos de 50g de carboidrato por dia, todos os dias. A versão mais comum." },
+      { id: "ciclica", nome: "Cíclica (CKD)", descricao: "Períodos de cetose intercalados com dias de mais carboidrato. Mais usada por quem treina pesado." },
     ],
     conteudoEducativo: {
       oQueE: "Uma dieta muito baixa em carboidrato (geralmente abaixo de 50g/dia) e alta em gordura, que leva o corpo a produzir corpos cetônicos como fonte de energia principal, no lugar da glicose.",
-      comoFunciona: "Sem carboidrato suficiente, o fígado converte gordura em cetonas para abastecer o cérebro e os músculos — esse processo metabólico se chama cetose.",
+      comoFunciona: "Sem carboidrato suficiente, o fígado converte gordura em cetonas para abastecer o cérebro e os músculos. Esse processo metabólico se chama cetose.",
       beneficios: [
         "Pode reduzir apetite de forma expressiva em algumas pessoas",
         "Usada em alguns casos específicos, sempre sob acompanhamento médico direto (ex: epilepsia de difícil controle)",
       ],
       atencao: [
-        "É a mais restritiva das quatro estratégias — alto risco de deficiência de fibras, vitaminas e minerais sem planejamento",
+        "É a mais restritiva das quatro estratégias, com alto risco de deficiência de fibras, vitaminas e minerais sem planejamento",
         "'Gripe da keto' (enjoo, dor de cabeça, fadiga) é comum na primeira semana",
-        "Pode alterar exames de colesterol e função renal — acompanhamento com exames periódicos é recomendado",
+        "Pode alterar exames de colesterol e função renal, por isso acompanhamento com exames periódicos é recomendado",
         "Não é recomendada sem orientação para quem tem histórico de problemas renais, hepáticos, pancreáticos ou transtorno alimentar",
       ],
       dicasPraticas: [
@@ -128,7 +128,7 @@ export const ESTRATEGIAS: Estrategia[] = [
         "Peça acompanhamento de um nutricionista para montar o cardápio e evitar deficiências",
       ],
     },
-    avisoExtra: "Por ser uma dieta restritiva e com efeito metabólico forte, a cetogênica é a que mais se beneficia de acompanhamento nutricional direto — não só leitura de conteúdo educativo.",
+    avisoExtra: "Por ser uma dieta restritiva e com efeito metabólico forte, a cetogênica é a que mais se beneficia de acompanhamento nutricional direto, não só leitura de conteúdo educativo.",
   },
   {
     id: "carnivora",
@@ -146,20 +146,20 @@ export const ESTRATEGIAS: Estrategia[] = [
       "Menor de 18 anos",
     ],
     modalidades: [
-      { id: "estrita", nome: "Carnívora estrita", descricao: "Apenas carne, peixe, ovos e um pouco de sal — sem nenhum vegetal, fruta ou laticínio." },
+      { id: "estrita", nome: "Carnívora estrita", descricao: "Apenas carne, peixe, ovos e um pouco de sal, sem nenhum vegetal, fruta ou laticínio." },
       { id: "flexivel", nome: "Carnívora + vegetais de baixa toxicidade", descricao: "Base animal, com pequenas quantidades de vegetais de fácil digestão (ex: abobrinha, folhas cozidas) e laticínios com pouca lactose." },
     ],
     conteudoEducativo: {
-      oQueE: "Uma dieta de eliminação que retira todo alimento de origem vegetal, mantendo apenas carne, peixe, ovos e — em algumas versões — laticínios com pouca lactose.",
+      oQueE: "Uma dieta de eliminação que retira todo alimento de origem vegetal, mantendo apenas carne, peixe, ovos e, em algumas versões, laticínios com pouca lactose.",
       comoFunciona: "Sem nenhum carboidrato vegetal, o corpo passa a depender quase exclusivamente de proteína e gordura animal como fonte de energia, em cetose praticamente permanente.",
       beneficios: [
         "Relatos pessoais de melhora digestiva em quadros de sensibilidade alimentar (não confirmado por evidência forte ainda)",
-        "Simplicidade de decisão alimentar — poucas categorias de alimento para escolher",
+        "Simplicidade de decisão alimentar, com poucas categorias de alimento para escolher",
       ],
       atencao: [
-        "É a estratégia com MENOS evidência científica de longo prazo entre as quatro — a maior parte do respaldo hoje vem de relatos pessoais, não de estudos robustos",
+        "É a estratégia com MENOS evidência científica de longo prazo entre as quatro. A maior parte do respaldo hoje vem de relatos pessoais, não de estudos robustos",
         "Risco real de deficiência de fibras, vitamina C e alguns antioxidantes presentes só em vegetais",
-        "Pode elevar LDL (colesterol) e ácido úrico em parte das pessoas — exames antes e durante são importantes",
+        "Pode elevar LDL (colesterol) e ácido úrico em parte das pessoas, por isso exames antes e durante são importantes",
         "Não é recomendada, sob nenhuma hipótese, sem acompanhamento médico e de nutricionista para quem tem histórico renal, hepático, cardiovascular ou de gota",
         "Não recomendada para gestantes, lactantes, menores de idade ou pessoas com histórico de transtorno alimentar",
       ],
@@ -171,7 +171,7 @@ export const ESTRATEGIAS: Estrategia[] = [
       ],
     },
     avisoExtra:
-      "A Carnívora é a estratégia mais restritiva do app e a que exige mais cautela. Ela é apresentada aqui apenas como conteúdo educativo — este app não recomenda nem prescreve a Carnívora, e ela não deve ser iniciada ou mantida sem acompanhamento médico e nutricional direto.",
+      "A Carnívora é a estratégia mais restritiva do app e a que exige mais cautela. Ela é apresentada aqui apenas como conteúdo educativo. Este app não recomenda nem prescreve a Carnívora, e ela não deve ser iniciada ou mantida sem acompanhamento médico e nutricional direto.",
   },
 ];
 

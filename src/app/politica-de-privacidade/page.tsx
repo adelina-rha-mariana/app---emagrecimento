@@ -37,7 +37,7 @@ export default function PoliticaDePrivacidadePage() {
           <p style={{ color: "#F4EEE1", fontSize: 14.5, lineHeight: 1.7, margin: "0 0 32px" }}>
             Esta página explica, em linguagem simples, quais dados o Vixofit coleta, pra que usamos cada um,
             com quem compartilhamos, por quanto tempo guardamos e quais são os seus direitos. Se algo aqui não
-            ficar claro, é só nos escrever — o contato está no fim da página.
+            ficar claro, é só nos escrever. O contato está no fim da página.
           </p>
 
           <Secao titulo="Quais dados coletamos">
@@ -50,7 +50,7 @@ export default function PoliticaDePrivacidadePage() {
 
           <Secao titulo="Para que usamos cada dado">
             <ul style={{ margin: 0, paddingLeft: 20, display: "grid", gap: 8 }}>
-              <li>Seus dados de rotina e hábitos são usados <strong style={{ color: "#F4EEE1" }}>exclusivamente para personalizar seu plano de nutrição e hábitos</strong> — nunca para fins de diagnóstico médico ou qualquer avaliação clínica.</li>
+              <li>Seus dados de rotina e hábitos são usados <strong style={{ color: "#F4EEE1" }}>exclusivamente para personalizar seu plano de nutrição e hábitos</strong>, nunca para fins de diagnóstico médico ou qualquer avaliação clínica.</li>
               <li>Dados de pagamento (quando existirem) serão usados só para processar sua assinatura ou compra.</li>
             </ul>
           </Secao>
@@ -58,7 +58,7 @@ export default function PoliticaDePrivacidadePage() {
           <Secao titulo="Com quem compartilhamos">
             <ul style={{ margin: 0, paddingLeft: 20, display: "grid", gap: 8 }}>
               <li><strong style={{ color: "#F4EEE1" }}>Supabase:</strong> a empresa que hospeda o banco de dados onde suas respostas ficam guardadas com segurança.</li>
-              <li><strong style={{ color: "#F4EEE1" }}>Anthropic (Claude):</strong> a empresa de IA que processa suas respostas abertas pra gerar seu plano personalizado. Ela recebe só o texto necessário pra montar sua avaliação — não usamos seus dados pra treinar modelos de terceiros.</li>
+              <li><strong style={{ color: "#F4EEE1" }}>Anthropic (Claude):</strong> a empresa de IA que processa suas respostas abertas pra gerar seu plano personalizado. Ela recebe só o texto necessário pra montar sua avaliação. Não usamos seus dados pra treinar modelos de terceiros.</li>
               <li><strong style={{ color: "#F4EEE1" }}>Processador de pagamento:</strong> quando um meio de pagamento real for integrado, o provedor escolhido receberá só os dados necessários pra processar a cobrança.</li>
             </ul>
             <p style={{ margin: "10px 0 0" }}>Não vendemos seus dados pra ninguém.</p>

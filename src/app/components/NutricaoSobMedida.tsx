@@ -115,7 +115,7 @@ export default function NutricaoSobMedida({ onVoltar }: { onVoltar: () => void }
               <Eyebrow icon={<Stethoscope size={16} color={cor} />}>{estrategia.nome.toUpperCase()} · TRIAGEM DE SEGURANÇA</Eyebrow>
               <QTitle>Alguma dessas situações é sua?</QTitle>
               <p style={{ color: COLORS.textMuted, fontSize: 13, margin: "0 0 16px", lineHeight: 1.4 }}>
-                Marque o que se aplica. Isso não avalia sua saúde de verdade — é só pra saber se vale buscar
+                Marque o que se aplica. Isso não avalia sua saúde de verdade, é só pra saber se vale buscar
                 orientação profissional antes de seguir com essa estratégia.
               </p>
               {estrategia.triagem.length > 0 ? (
@@ -134,7 +134,7 @@ export default function NutricaoSobMedida({ onVoltar }: { onVoltar: () => void }
                 </div>
               ) : (
                 <div style={{ background: COLORS.card, borderRadius: 12, padding: "12px 14px", marginBottom: 14 }}>
-                  <span style={{ color: COLORS.textMuted, fontSize: 13 }}>Nenhuma restrição especial pra essa estratégia — pode seguir direto.</span>
+                  <span style={{ color: COLORS.textMuted, fontSize: 13 }}>Nenhuma restrição especial pra essa estratégia, pode seguir direto.</span>
                 </div>
               )}
 
@@ -146,7 +146,7 @@ export default function NutricaoSobMedida({ onVoltar }: { onVoltar: () => void }
                   </div>
                   <p style={{ color: COLORS.textMuted, fontSize: 12, lineHeight: 1.5, margin: "0 0 12px" }}>
                     Com o que você marcou, essa estratégia precisa de acompanhamento profissional direto para ser segura.
-                    Você ainda pode ver o conteúdo educativo — mas não deve começar sozinho(a).
+                    Você ainda pode ver o conteúdo educativo, mas não deve começar sozinho(a).
                   </p>
                   <label style={{ display: "flex", alignItems: "flex-start", gap: 10, cursor: "pointer" }}>
                     <input
@@ -178,7 +178,7 @@ export default function NutricaoSobMedida({ onVoltar }: { onVoltar: () => void }
               <Eyebrow icon={<ClipboardCheck size={16} color={cor} />}>{estrategia.nome.toUpperCase()} · MODALIDADE</Eyebrow>
               <QTitle>Qual jeito faz mais sentido pra você?</QTitle>
               <p style={{ color: COLORS.textMuted, fontSize: 13, margin: "0 0 16px", lineHeight: 1.4 }}>
-                Dá pra trocar de modalidade depois — comece pela que parecer mais fácil de sustentar.
+                Dá pra trocar de modalidade depois, comece pela que parecer mais fácil de sustentar.
               </p>
               <div style={{ display: "grid", gap: 10 }}>
                 {estrategia.modalidades.map((m) => (

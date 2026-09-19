@@ -424,7 +424,7 @@ export default function ContaPage() {
                 </h1>
                 <p style={{ color: "#9CB3A8", fontSize: 13, lineHeight: 1.5, margin: "0 0 20px" }}>
                   {modo === "criar"
-                    ? "Sua conta salva suas respostas, seu plano e sua evolução — sem ela, tudo se perde ao fechar o app."
+                    ? "Sua conta salva suas respostas, seu plano e sua evolução. Sem ela, tudo se perde ao fechar o app."
                     : "Entre pra continuar de onde parou."}
                 </p>
 

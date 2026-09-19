@@ -2,9 +2,9 @@ import type { MetadataRoute } from "next";
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: "Vixofit — mais vida em você",
+    name: "Vixofit, mais vida em você",
     short_name: "Vixofit",
-    description: "Vixofit — emagreça com saúde, no seu ritmo.",
+    description: "Vixofit, emagreça com saúde, no seu ritmo.",
     start_url: "/",
     display: "standalone",
     background_color: "#0B1512",

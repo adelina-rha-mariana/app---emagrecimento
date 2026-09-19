@@ -14,7 +14,7 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "Vixofit",
-  description: "Vixofit — emagreça com saúde, no seu ritmo.",
+  description: "Vixofit, emagreça com saúde, no seu ritmo.",
 };
 
 export const viewport: Viewport = {

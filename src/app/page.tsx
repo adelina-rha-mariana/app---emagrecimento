@@ -37,7 +37,7 @@ export default function LandingPage() {
           </h1>
 
           <p style={{ color: "#9CB3A8", fontSize: 15.5, lineHeight: 1.6, margin: "0 0 32px" }}>
-            Um plano de hábitos e alimentação pensado a partir da sua própria rotina —
+            Um plano de hábitos e alimentação pensado a partir da sua própria rotina,
             sem promessas milagrosas, sem dieta pronta pra qualquer pessoa.
           </p>
 
@@ -65,7 +65,7 @@ export default function LandingPage() {
           </Link>
 
           <p style={{ color: "#6E7A73", fontSize: 11.5, lineHeight: 1.5, margin: "18px 0 0" }}>
-            O Vixofit é um app de hábitos e bem-estar — não substitui o acompanhamento de um profissional de saúde.
+            O Vixofit é um app de hábitos e bem-estar. Não substitui o acompanhamento de um profissional de saúde.
           </p>
         </div>
       </main>

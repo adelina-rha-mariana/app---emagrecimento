@@ -59,7 +59,7 @@ export default function TermosDeUsoPage() {
             <p style={{ margin: 0 }}>
               <strong style={{ color: "#F4EEE1" }}>O Vixofit não é um serviço médico, não faz diagnóstico e não
               substitui o acompanhamento de nutricionista, médico ou psicólogo.</strong> O conteúdo gerado é
-              educativo e comportamental, baseado no que você relata — não avalia sua saúde clinicamente.
+              educativo e comportamental, baseado no que você relata. Não avalia sua saúde clinicamente.
             </p>
           </Secao>
 
@@ -68,7 +68,7 @@ export default function TermosDeUsoPage() {
               <li>Você precisa criar uma conta (email e senha) para usar o Vixofit.</li>
               <li>Você é responsável por manter sua senha em sigilo e por tudo que acontecer na sua conta.</li>
               <li>As informações que você fornece no cadastro e na avaliação devem ser verdadeiras, na medida do
-                seu conhecimento — o plano gerado é baseado nelas.</li>
+                seu conhecimento, já que o plano gerado é baseado nelas.</li>
               <li>Você pode pedir o encerramento da sua conta a qualquer momento pelo email de contato.</li>
             </ul>
           </Secao>
@@ -77,7 +77,7 @@ export default function TermosDeUsoPage() {
             <ul style={{ margin: 0, paddingLeft: 20, display: "grid", gap: 8 }}>
               <li>O acesso ao plano completo do Vixofit é pago, nos valores e condições informados na tela de
                 checkout no momento da contratação.</li>
-              <li>[ Completar: periodicidade da cobrança — mensal/anual, renovação automática ou não, como
+              <li>[ Completar: periodicidade da cobrança, mensal ou anual, renovação automática ou não, como
                 cancelar a renovação. ]</li>
               <li>Por se tratar de uma compra feita fora de estabelecimento físico, você tem direito de
                 arrependimento em até 7 (sete) dias corridos a partir da contratação, conforme o art. 49 do
@@ -116,7 +116,7 @@ export default function TermosDeUsoPage() {
             <p style={{ margin: 0 }}>
               O conteúdo gerado pelo Vixofit (planos, sugestões, textos) é educativo e comportamental. O
               Vixofit não se responsabiliza por decisões de saúde tomadas exclusivamente com base nesse
-              conteúdo, sem acompanhamento profissional — reforçamos essa recomendação em várias telas do
+              conteúdo, sem acompanhamento profissional. Reforçamos essa recomendação em várias telas do
               aplicativo.
             </p>
           </Secao>
@@ -124,7 +124,7 @@ export default function TermosDeUsoPage() {
           <Secao titulo="7. Propriedade intelectual">
             <p style={{ margin: 0 }}>
               A marca Vixofit, o design do aplicativo e o software são de propriedade [ da empresa / titular ].
-              O plano gerado para você é de uso pessoal — não pode ser revendido ou redistribuído.
+              O plano gerado para você é de uso pessoal. Não pode ser revendido ou redistribuído.
             </p>
           </Secao>
 

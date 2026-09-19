@@ -8,7 +8,7 @@ export function LogoCompleta({ width = 220 }: { width?: number }) {
   return (
     <Image
       src={logoCompleta}
-      alt="Vixofit — mais vida em você"
+      alt="Vixofit, mais vida em você"
       width={width}
       height={width}
       style={{ width, height: "auto" }}
