@@ -259,6 +259,25 @@ export default function AvaliacaoApp() {
   // Indicar para uma amiga (compartilhamento)
   const [shareStatus, setShareStatus] = useState<"idle" | "copiado" | "erro">("idle");
 
+  // Conquistas reais da tela de progresso (step 12) — cada uma checa um dado
+  // que de fato existe no banco, em vez de um valor fixo no código.
+  const [avaliacaoDia7Enviada, setAvaliacaoDia7Enviada] = useState(false);
+
+  useEffect(() => {
+    if (step !== 12) return;
+    let ativo = true;
+    (async () => {
+      const { data: sessionData } = await supabase.auth.getSession();
+      const user = sessionData.session?.user;
+      if (!user || !ativo) return;
+      const { data } = await supabase.from("avaliacoes_dia7").select("id").limit(1);
+      if (ativo) setAvaliacaoDia7Enviada(!!data && data.length > 0);
+    })();
+    return () => {
+      ativo = false;
+    };
+  }, [step]);
+
   useEffect(() => {
     let ativo = true;
 
@@ -910,7 +929,15 @@ export default function AvaliacaoApp() {
         )}
 
         {/* STEP 12: PROGRESSO */}
-        {step === 12 && (
+        {step === 12 && result && (() => {
+          const diasDesbloqueados = diasDesbloqueadosDesde(result.gerado_em);
+          const temRegistroVitais = numHistory.length > 0;
+          const conquistas = [
+            { ic: <Award size={18} color="#1B140D" />, lab: "Plano criado", earned: true },
+            { ic: <Activity size={18} color="#1B140D" />, lab: "Registrou seus números", earned: temRegistroVitais },
+            { ic: <Star size={18} color="#1B140D" />, lab: "Avaliação Dia 7", earned: avaliacaoDia7Enviada },
+          ];
+          return (
           <Screen>
             <Eyebrow icon={<TrendingUp size={16} color="#F0A15C" />}>SUA EVOLUÇÃO</Eyebrow>
             <h2 style={{ fontFamily: "Fraunces, serif", fontSize: 22, color: "#F4EEE1", margin: "4px 0 6px", fontWeight: 600 }}>
@@ -922,34 +949,32 @@ export default function AvaliacaoApp() {
 
             <div style={{ background: "linear-gradient(135deg, #1B302A, #12211D)", border: "1px solid #2A4A40", borderRadius: 18, padding: "22px 20px", textAlign: "center", marginBottom: 18 }}>
               <Flame size={26} color="#F0A15C" />
-              <div style={{ fontFamily: "Fraunces, serif", fontSize: 36, fontWeight: 700, color: "#F4EEE1", marginTop: 2 }}>1</div>
-              <div style={{ color: "#9CB3A8", fontSize: 12 }}>dia completado no seu plano</div>
+              <div style={{ fontFamily: "Fraunces, serif", fontSize: 36, fontWeight: 700, color: "#F4EEE1", marginTop: 2 }}>{diasDesbloqueados}</div>
+              <div style={{ color: "#9CB3A8", fontSize: 12 }}>de 5 dias do seu plano já liberados</div>
               <div style={{ display: "flex", gap: 6, marginTop: 16 }}>
-                {["S", "T", "Q", "Q", "S", "S", "D"].map((d, i) => (
-                  <div key={i} style={{
+                {result.plano.map((d) => (
+                  <div key={d.dia} style={{
                     flex: 1, aspectRatio: "1", borderRadius: 8, display: "flex", alignItems: "center", justifyContent: "center",
                     fontSize: 11, fontWeight: 700,
-                    background: i === 0 ? "#F0A15C" : "rgba(255,255,255,0.06)",
-                    color: i === 0 ? "#1B140D" : "#6E7A73",
-                    border: i === 1 ? "1.5px solid #F0A15C" : "none",
-                  }}>{d}</div>
+                    background: d.dia <= diasDesbloqueados ? "#F0A15C" : "rgba(255,255,255,0.06)",
+                    color: d.dia <= diasDesbloqueados ? "#1B140D" : "#6E7A73",
+                    border: d.dia === diasDesbloqueados ? "1.5px solid #F0A15C" : "none",
+                  }}>{d.dia}</div>
                 ))}
               </div>
             </div>
 
-            <div style={{ fontSize: 11, color: "#9CB3A8", fontWeight: 700, letterSpacing: 0.5, margin: "0 0 10px" }}>PESO DESDE O INÍCIO</div>
-            <div style={{ background: "#1B302A", borderRadius: 16, padding: "14px 8px", marginBottom: 18 }}>
+            <div style={{ fontSize: 11, color: "#9CB3A8", fontWeight: 700, letterSpacing: 0.5, margin: "0 0 10px" }}>PROJEÇÃO DE PESO</div>
+            <div style={{ background: "#1B302A", borderRadius: 16, padding: "14px 8px", marginBottom: 8 }}>
               <WeightChart weightNow={weightNow} weightGoal={weightGoal} weeks={weeksEstimate} />
             </div>
+            <p style={{ color: "#6E7A73", fontSize: 10.5, lineHeight: 1.4, margin: "0 0 18px" }}>
+              Estimativa com base no seu ritmo (~0,5kg/semana), não é um histórico medido de verdade.
+            </p>
 
             <div style={{ fontSize: 11, color: "#9CB3A8", fontWeight: 700, letterSpacing: 0.5, margin: "0 0 10px" }}>CONQUISTAS</div>
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 8, marginBottom: 18 }}>
-              {[
-                { ic: <Award size={18} color="#1B140D" />, lab: "Primeiro dia", earned: true },
-                { ic: <Utensils size={18} color="#1B140D" />, lab: "1ª refeição", earned: true },
-                { ic: <Music size={18} color="#9CB3A8" />, lab: "1ª trilha", earned: false },
-                { ic: <Moon size={18} color="#9CB3A8" />, lab: "1ª noite", earned: false },
-              ].map((b, i) => (
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 8, marginBottom: 18 }}>
+              {conquistas.map((b, i) => (
                 <div key={i} style={{
                   background: b.earned ? "rgba(240,161,92,0.15)" : "#1B302A", borderRadius: 12, padding: "10px 4px",
                   textAlign: "center", opacity: b.earned ? 1 : 0.5,
@@ -985,7 +1010,8 @@ export default function AvaliacaoApp() {
               <GhostLink onClick={() => setStep(10)}>Voltar ao plano</GhostLink>
             </div>
           </Screen>
-        )}
+          );
+        })()}
 
         {/* STEP 13: MEUS NÚMEROS */}
         {step === 13 && (
