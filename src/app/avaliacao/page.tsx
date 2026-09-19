@@ -449,7 +449,7 @@ export default function AvaliacaoApp() {
 
   if (!sessaoPronta) {
     return (
-      <div style={{ minHeight: "100vh", width: "100%", display: "flex", alignItems: "center", justifyContent: "center", background: "#0B1512" }}>
+      <div style={{ minHeight: "100dvh", width: "100%", display: "flex", alignItems: "center", justifyContent: "center", background: "#0B1512" }}>
         <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
         <div style={{ width: 40, height: 40, borderRadius: "50%", border: "3px solid #2A4A40", borderTopColor: "#F0A15C", animation: "spin 0.9s linear infinite" }} />
       </div>
@@ -457,17 +457,29 @@ export default function AvaliacaoApp() {
   }
 
   return (
-    <div style={{ minHeight: "100vh", width: "100%", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", background: "#0B1512", fontFamily: "Inter, sans-serif", padding: "24px 12px" }}>
+    <div className="avaliacao-viewport" style={{ minHeight: "100dvh", width: "100%", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", background: "#0B1512", fontFamily: "Inter, sans-serif", padding: "24px 12px" }}>
       <style>{`
         ${FONT_IMPORT}
         * { box-sizing: border-box; }
         ::-webkit-scrollbar { display: none; }
         textarea:focus, input:focus { outline: none; border-color: #F0A15C !important; }
         @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* Abaixo de 480px (qualquer celular real), a moldura decorativa de
+           "telefone dentro do navegador" vira o app cheio, sem borda/notch
+           falsos — evita overflow horizontal em telas mais estreitas que
+           os 375px fixos da moldura (ex: 360px, 320px). */
+        .avaliacao-frame { width: 375px; height: 780px; max-height: 92vh; border-radius: 42px; border: 10px solid #05100C; }
+        .avaliacao-notch { display: block; }
+        @media (max-width: 480px) {
+          .avaliacao-viewport { padding: 0; }
+          .avaliacao-frame { width: 100%; height: 100dvh; max-height: none; border-radius: 0; border: none; }
+          .avaliacao-notch { display: none; }
+        }
       `}</style>
 
-      <div style={{ width: 375, height: 780, maxHeight: "92vh", borderRadius: 42, border: "10px solid #05100C", background: "#12211D", boxShadow: "0 30px 60px -20px rgba(0,0,0,0.6)", position: "relative", display: "flex", flexDirection: "column", overflow: "hidden" }}>
-        <div style={{ position: "absolute", top: 0, left: "50%", transform: "translateX(-50%)", width: 130, height: 22, background: "#05100C", borderBottomLeftRadius: 14, borderBottomRightRadius: 14, zIndex: 10 }} />
+      <div className="avaliacao-frame" style={{ background: "#12211D", boxShadow: "0 30px 60px -20px rgba(0,0,0,0.6)", position: "relative", display: "flex", flexDirection: "column", overflow: "hidden" }}>
+        <div className="avaliacao-notch" style={{ position: "absolute", top: 0, left: "50%", transform: "translateX(-50%)", width: 130, height: 22, background: "#05100C", borderBottomLeftRadius: 14, borderBottomRightRadius: 14, zIndex: 10 }} />
 
         <div style={{ padding: "34px 20px 0", display: "flex", alignItems: "center", justifyContent: "center", position: "relative" }}>
           {showBack && (
