@@ -234,6 +234,7 @@ export default function NutricaoSobMedida({ onVoltar }: { onVoltar: () => void }
                   alt={`Prato ilustrativo da estratégia ${estrategia.nome}`}
                   fill
                   sizes="400px"
+                  priority
                   style={{ objectFit: "cover" }}
                 />
               </div>
