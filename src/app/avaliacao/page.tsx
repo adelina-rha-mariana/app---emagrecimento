@@ -15,6 +15,7 @@ import {
   Screen, ProgressDots, QTitle, Eyebrow, PrimaryButton, SecondaryButton, GhostLink, btnCircle,
 } from "@/app/components/ui";
 import NutricaoSobMedida from "@/app/components/NutricaoSobMedida";
+import TimerProgressoPlano from "@/app/components/TimerProgressoPlano";
 import TelaAvaliacaoDia7 from "@/app/components/TelaAvaliacaoDia7";
 import { buildShareLink, copyToClipboard } from "@/app/components/shareLink";
 import { LogoCompleta, BrandHeader } from "@/app/components/Logo";
@@ -795,6 +796,8 @@ export default function AvaliacaoApp() {
             <p style={{ color: "#9CB3A8", fontSize: 12, margin: "0 0 16px" }}>
               Faltam {weightToLose.toFixed(0)}kg pra sua meta · ~{weeksEstimate} semanas no ritmo certo
             </p>
+
+            <TimerProgressoPlano geradoEm={result.gerado_em} />
 
             {result.plano.map((d) => (
               <div key={d.dia} style={{ background: "#1B302A", border: d.dia === 1 ? "1px solid #F0A15C" : "1px solid #2A4A40", borderRadius: 16, padding: 16, marginBottom: 10 }}>
