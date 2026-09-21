@@ -228,7 +228,7 @@ export default function NutricaoSobMedida({ onVoltar }: { onVoltar: () => void }
 
           {subStep === "conteudo" && (
             <>
-              <div style={{ borderRadius: 16, overflow: "hidden", marginBottom: 14, position: "relative", height: 140 }}>
+              <div style={{ borderRadius: 16, overflow: "hidden", marginBottom: 14, position: "relative", height: 140, flexShrink: 0 }}>
                 <Image
                   src={FOTOS[estrategia.id]}
                   alt={`Prato ilustrativo da estratégia ${estrategia.nome}`}
