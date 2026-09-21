@@ -78,6 +78,12 @@ const ROTINA_SINAIS = [
 const STEP_NUTRICAO = 20;
 const STEP_AVALIACAO_DIA7 = 21;
 
+// Saudação leve pra quem já tem plano (pula a tela de boas-vindas completa do
+// step 0, que é só pra quem ainda não fez a avaliação inicial). Não trava o
+// fluxo: avança sozinha depois de alguns segundos ou no toque em "Continuar".
+const STEP_SAUDACAO_VOLTA = 22;
+const SAUDACAO_VOLTA_DURACAO_MS = 2200;
+
 const WALK_MOODS = [
   { key: "presenca", icon: "🧘", label: "Presença", sub: "respiração guiada", url: "https://open.spotify.com/search/playlist%20mindfulness%20respira%C3%A7%C3%A3o" },
   { key: "relaxar", icon: "🌿", label: "Relaxar", sub: "sons ambiente", url: "https://open.spotify.com/search/playlist%20sons%20da%20natureza%20relaxar" },
@@ -263,6 +269,11 @@ export default function AvaliacaoApp() {
   // que de fato existe no banco, em vez de um valor fixo no código.
   const [avaliacaoDia7Enviada, setAvaliacaoDia7Enviada] = useState(false);
 
+  // Primeiro nome pra saudação de retorno (step 22) — só existe se algo tiver
+  // salvo em user_metadata.nome. Hoje o cadastro não pede nome, então isso fica
+  // vazio até essa coleta existir; a saudação cai pra versão genérica nesse caso.
+  const [nomeUsuario, setNomeUsuario] = useState<string | null>(null);
+
   useEffect(() => {
     if (step !== 12) return;
     let ativo = true;
@@ -288,6 +299,9 @@ export default function AvaliacaoApp() {
         router.replace("/conta");
         return;
       }
+
+      const nomeSalvo = (user.user_metadata as { nome?: string } | undefined)?.nome;
+      if (nomeSalvo) setNomeUsuario(nomeSalvo.trim().split(" ")[0]);
 
       const [{ data: planos }, { data: vitais }] = await Promise.all([
         supabase
@@ -326,7 +340,7 @@ export default function AvaliacaoApp() {
         if (plano.altura_cm) setHeight(plano.altura_cm);
         if (plano.peso_atual_kg) setWeightNow(plano.peso_atual_kg);
         if (plano.peso_meta_kg) setWeightGoal(plano.peso_meta_kg);
-        setStep(10);
+        setStep(STEP_SAUDACAO_VOLTA);
       }
 
       setSessaoPronta(true);
@@ -434,7 +448,16 @@ export default function AvaliacaoApp() {
     if (step === 13) return setStep(12);
     setStep(step - 1);
   };
-  const showBack = step !== -1 && step !== 8 && step !== STEP_NUTRICAO && step !== STEP_AVALIACAO_DIA7;
+  const showBack =
+    step !== -1 && step !== 8 && step !== STEP_NUTRICAO && step !== STEP_AVALIACAO_DIA7 && step !== STEP_SAUDACAO_VOLTA;
+
+  // Saudação de retorno avança sozinha depois de alguns segundos, sem esperar
+  // clique — quem quiser pular mais rápido ainda tem o botão "Continuar".
+  useEffect(() => {
+    if (step !== STEP_SAUDACAO_VOLTA) return;
+    const t = setTimeout(() => setStep(10), SAUDACAO_VOLTA_DURACAO_MS);
+    return () => clearTimeout(t);
+  }, [step]);
 
   const saveNumber = async () => {
     if (!glicose && !sistolica) return;
@@ -740,6 +763,23 @@ export default function AvaliacaoApp() {
             <div style={{ marginTop: "auto" }}>
               <PrimaryButton onClick={() => setStep(10)}>Ver meu plano de 5 dias</PrimaryButton>
             </div>
+          </Screen>
+        )}
+
+        {step === STEP_SAUDACAO_VOLTA && (
+          <Screen>
+            <div style={{ flex: 1, display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", textAlign: "center" }}>
+              <div style={{ width: 56, height: 56, borderRadius: 16, background: "linear-gradient(135deg, #F0A15C, #E8785A)", display: "flex", alignItems: "center", justifyContent: "center", marginBottom: 22 }}>
+                <HeartHandshake size={26} color="#1B140D" />
+              </div>
+              <h1 style={{ fontFamily: "Fraunces, serif", fontWeight: 600, fontSize: 26, lineHeight: 1.25, color: "#F4EEE1", margin: "0 0 8px" }}>
+                {nomeUsuario ? `Bem-vindo(a) de volta, ${nomeUsuario}!` : "Bem-vindo(a) de volta!"}
+              </h1>
+              <p style={{ color: "#9CB3A8", fontSize: 14, lineHeight: 1.5, margin: 0 }}>
+                Já vamos te levar pro seu plano.
+              </p>
+            </div>
+            <GhostLink onClick={() => setStep(10)}>Continuar</GhostLink>
           </Screen>
         )}
 

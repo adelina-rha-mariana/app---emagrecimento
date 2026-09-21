@@ -82,6 +82,7 @@ function PasswordInput({
 export default function ContaPage() {
   const router = useRouter();
   const [modo, setModo] = useState<Modo>("criar");
+  const [nome, setNome] = useState("");
   const [email, setEmail] = useState("");
   const [senha, setSenha] = useState("");
   const [carregando, setCarregando] = useState(false);
@@ -108,7 +109,12 @@ export default function ContaPage() {
     setCarregando(true);
 
     if (modo === "criar") {
-      const { data, error } = await supabase.auth.signUp({ email: email.trim(), password: senha });
+      const nomeTrim = nome.trim();
+      const { data, error } = await supabase.auth.signUp({
+        email: email.trim(),
+        password: senha,
+        options: nomeTrim ? { data: { nome: nomeTrim } } : undefined,
+      });
       setCarregando(false);
       if (error) {
         setErro(error.message);
@@ -429,6 +435,12 @@ export default function ContaPage() {
                 </p>
 
                 <div style={{ display: "grid", gap: 12 }}>
+                  {modo === "criar" && (
+                    <div>
+                      <label style={{ display: "block", fontSize: 11, fontWeight: 700, color: "#9CB3A8", letterSpacing: 0.4, marginBottom: 6 }}>NOME (OPCIONAL)</label>
+                      <input type="text" value={nome} onChange={(e) => setNome(e.target.value)} placeholder="Como podemos te chamar?" style={inputStyle} />
+                    </div>
+                  )}
                   <div>
                     <label style={{ display: "block", fontSize: 11, fontWeight: 700, color: "#9CB3A8", letterSpacing: 0.4, marginBottom: 6 }}>EMAIL</label>
                     <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="voce@email.com" style={inputStyle} />
