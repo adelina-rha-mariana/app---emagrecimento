@@ -16,6 +16,7 @@ import {
 } from "@/app/components/ui";
 import NutricaoSobMedida from "@/app/components/NutricaoSobMedida";
 import TimerProgressoPlano from "@/app/components/TimerProgressoPlano";
+import StreakSemanal from "@/app/components/StreakSemanal";
 import TelaAvaliacaoDia7 from "@/app/components/TelaAvaliacaoDia7";
 import { buildShareLink, copyToClipboard } from "@/app/components/shareLink";
 import { LogoCompleta, BrandHeader } from "@/app/components/Logo";
@@ -798,6 +799,7 @@ export default function AvaliacaoApp() {
             </p>
 
             <TimerProgressoPlano geradoEm={result.gerado_em} />
+            <StreakSemanal />
 
             {result.plano.map((d) => (
               <div key={d.dia} style={{ background: "#1B302A", border: d.dia === 1 ? "1px solid #F0A15C" : "1px solid #2A4A40", borderRadius: 16, padding: 16, marginBottom: 10 }}>
