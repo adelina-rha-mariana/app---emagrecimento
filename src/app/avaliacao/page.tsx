@@ -106,6 +106,10 @@ const OPCOES_DESAFIO_PESSOAL = [
   { id: "ansiedade_restricao", texto: "Ansiedade com restrição alimentar" },
 ] as const;
 
+// Tela de apoio emocional, entre a 1ª e a 2ª pergunta aberta (meio do bloco
+// de perguntas abertas) — só uma pausa de acolhimento, sem pergunta nenhuma.
+const STEP_APOIO_EMOCIONAL = 26;
+
 const WALK_MOODS = [
   { key: "presenca", icon: "🧘", label: "Presença", sub: "respiração guiada", url: "https://open.spotify.com/search/playlist%20mindfulness%20respira%C3%A7%C3%A3o" },
   { key: "relaxar", icon: "🌿", label: "Relaxar", sub: "sons ambiente", url: "https://open.spotify.com/search/playlist%20sons%20da%20natureza%20relaxar" },
@@ -452,6 +456,7 @@ export default function AvaliacaoApp() {
   };
 
   const handleNext = async () => {
+    if (step === 5) { setStep(STEP_APOIO_EMOCIONAL); return; }
     if (step < 7) { setStep(step + 1); return; }
     setStep(8);
     setLoading(true);
@@ -480,6 +485,7 @@ export default function AvaliacaoApp() {
     if (step === STEP_TENTATIVA_ANTERIOR) return setStep(4);
     if (step === STEP_DESAFIO_PESSOAL) return setStep(STEP_TENTATIVA_ANTERIOR);
     if (step === 5) return setStep(STEP_DESAFIO_PESSOAL);
+    if (step === STEP_APOIO_EMOCIONAL) return setStep(5);
     setStep(step - 1);
   };
   const showBack =
@@ -801,6 +807,24 @@ export default function AvaliacaoApp() {
                 Continuar
               </PrimaryButton>
             </div>
+          </Screen>
+        )}
+
+        {step === STEP_APOIO_EMOCIONAL && (
+          <Screen>
+            <div style={{ flex: 1, display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", textAlign: "center" }}>
+              <div style={{ width: 56, height: 56, borderRadius: 16, background: "linear-gradient(135deg, #F0A15C, #E8785A)", display: "flex", alignItems: "center", justifyContent: "center", marginBottom: 22 }}>
+                <HeartHandshake size={26} color="#1B140D" />
+              </div>
+              <h1 style={{ fontFamily: "Fraunces, serif", fontWeight: 600, fontSize: 24, lineHeight: 1.25, color: "#F4EEE1", margin: "0 0 12px" }}>
+                Você não vai passar por isso sozinho(a)
+              </h1>
+              <p style={{ color: "#9CB3A8", fontSize: 14, lineHeight: 1.55, margin: 0 }}>
+                Estamos aqui para te ajudar. Muita gente sente exatamente o que você está sentindo agora,
+                e dá pra construir uma relação mais leve com a comida, no seu tempo, sem culpa.
+              </p>
+            </div>
+            <PrimaryButton onClick={() => setStep(6)}>Continuar</PrimaryButton>
           </Screen>
         )}
 
