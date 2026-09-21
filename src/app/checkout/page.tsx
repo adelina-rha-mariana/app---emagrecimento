@@ -60,7 +60,7 @@ export default function CheckoutPage() {
             )}
           </div>
           <p style={{ color: "#F0A15C", fontSize: 26, fontFamily: "Fraunces, serif", fontWeight: 600, margin: "6px 0 18px" }}>
-            R$ 29,90<span style={{ fontSize: 13, color: "#9CB3A8", fontFamily: "Inter, sans-serif", fontWeight: 500 }}> /mês</span>
+            R$ 89,90<span style={{ fontSize: 13, color: "#9CB3A8", fontFamily: "Inter, sans-serif", fontWeight: 500 }}> /mês</span>
           </p>
 
           <div style={{ display: "grid", gap: 10, marginBottom: 22 }}>
