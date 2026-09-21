@@ -14,6 +14,7 @@ import fotoEquilibrada from "@/assets/nutricao/equilibrada.jpg";
 import fotoLowCarb from "@/assets/nutricao/low-carb.jpg";
 import fotoCetogenica from "@/assets/nutricao/cetogenica.jpg";
 import fotoCarnivora from "@/assets/nutricao/carnivora.jpg";
+import ComparativoDietaRestritiva from "./ComparativoDietaRestritiva";
 
 const ICONS: Record<string, React.ComponentType<{ size?: number; color?: string }>> = {
   equilibrada: Salad,
@@ -254,6 +255,8 @@ export default function NutricaoSobMedida({ onVoltar }: { onVoltar: () => void }
                   <p style={{ color: COLORS.text, fontSize: 12, lineHeight: 1.5, margin: 0 }}>{estrategia.avisoExtra}</p>
                 </div>
               )}
+
+              <ComparativoDietaRestritiva />
 
               <div style={{ marginTop: "auto", paddingTop: 10 }}>
                 <PrimaryButton onClick={() => setSubStep("resumo")}>Continuar</PrimaryButton>
