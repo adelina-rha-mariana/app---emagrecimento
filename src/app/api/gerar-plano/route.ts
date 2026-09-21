@@ -12,6 +12,7 @@ type DadosIniciais = {
   peso_meta_kg?: number;
   sinais_rotina?: string[];
   tentativa_anterior?: string;
+  desafio_pessoal?: string;
 };
 
 type PlanDay = {
@@ -48,14 +49,17 @@ function supabaseComoUsuario(accessToken: string) {
 
 const client = new Anthropic(); // lê ANTHROPIC_API_KEY do ambiente do servidor
 
-function buildPrompt(answers: Answers, tentativaAnterior?: string): string {
+function buildPrompt(answers: Answers, tentativaAnterior?: string, desafioPessoal?: string): string {
   const linhaTentativa = tentativaAnterior
     ? `\nSobre tentativas anteriores com estratégias alimentares, ela marcou: "${tentativaAnterior}".\n`
+    : "";
+  const linhaDesafio = desafioPessoal
+    ? `\nSobre o maior desafio pessoal dela hoje, ela marcou: "${desafioPessoal}".\n`
     : "";
   return `Você é um assistente de acolhimento e bem-estar dentro de um app de hábitos alimentares e comportamento (NÃO é terapia nem substitui acompanhamento médico).
 
 Uma pessoa respondeu três perguntas abertas sobre a relação dela com comida, corpo e peso:
-${linhaTentativa}
+${linhaTentativa}${linhaDesafio}
 1) O que mais pesa: ${answers.q1}
 2) O que já tentou e não funcionou: ${answers.q2}
 3) Como isso afeta o dia a dia dela: ${answers.q3}
@@ -194,7 +198,7 @@ export async function POST(request: Request) {
     );
   }
 
-  const prompt = buildPrompt({ q1, q2, q3 }, body.dadosIniciais?.tentativa_anterior);
+  const prompt = buildPrompt({ q1, q2, q3 }, body.dadosIniciais?.tentativa_anterior, body.dadosIniciais?.desafio_pessoal);
 
   let message;
   try {

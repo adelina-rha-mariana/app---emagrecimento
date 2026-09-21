@@ -96,6 +96,16 @@ const OPCOES_TENTATIVA_ANTERIOR = [
   { id: "deu_certo_continuar", texto: "Já tentei e deu certo, mas quero continuar" },
 ] as const;
 
+// Maior desafio pessoal — enriquece a pergunta aberta "o que mais pesa" (step
+// 5) com opções específicas, logo antes dela. Mesmo padrão da triagem acima.
+const STEP_DESAFIO_PESSOAL = 25;
+const OPCOES_DESAFIO_PESSOAL = [
+  { id: "desejo_incontrolavel", texto: "Desejo incontrolável por comida" },
+  { id: "recaidas", texto: "Dificuldade com recaídas" },
+  { id: "falta_motivacao", texto: "Falta de motivação ou apoio" },
+  { id: "ansiedade_restricao", texto: "Ansiedade com restrição alimentar" },
+] as const;
+
 const WALK_MOODS = [
   { key: "presenca", icon: "🧘", label: "Presença", sub: "respiração guiada", url: "https://open.spotify.com/search/playlist%20mindfulness%20respira%C3%A7%C3%A3o" },
   { key: "relaxar", icon: "🌿", label: "Relaxar", sub: "sons ambiente", url: "https://open.spotify.com/search/playlist%20sons%20da%20natureza%20relaxar" },
@@ -204,6 +214,7 @@ type DadosIniciais = {
   peso_meta_kg: number;
   sinais_rotina: string[];
   tentativa_anterior?: string;
+  desafio_pessoal?: string;
 };
 
 // Uma semana (em horas) é dividida em 5 blocos de 24h — 1 dia novo do plano
@@ -264,6 +275,8 @@ export default function AvaliacaoApp() {
 
   // Triagem sobre tentativas anteriores (step STEP_TENTATIVA_ANTERIOR)
   const [tentativaAnterior, setTentativaAnterior] = useState<string | null>(null);
+  // Maior desafio pessoal (step STEP_DESAFIO_PESSOAL)
+  const [desafioPessoal, setDesafioPessoal] = useState<string | null>(null);
 
   // Rotina / consentimento
   const [rotina, setRotina] = useState<Record<string, boolean>>({});
@@ -450,6 +463,7 @@ export default function AvaliacaoApp() {
         peso_meta_kg: weightGoal,
         sinais_rotina: ROTINA_SINAIS.filter((c) => rotina[c]),
         tentativa_anterior: OPCOES_TENTATIVA_ANTERIOR.find((o) => o.id === tentativaAnterior)?.texto,
+        desafio_pessoal: OPCOES_DESAFIO_PESSOAL.find((o) => o.id === desafioPessoal)?.texto,
       });
       setResult(res);
       setLoading(false);
@@ -464,7 +478,8 @@ export default function AvaliacaoApp() {
     if (step === 8) return setStep(7);
     if (step === 13) return setStep(12);
     if (step === STEP_TENTATIVA_ANTERIOR) return setStep(4);
-    if (step === 5) return setStep(STEP_TENTATIVA_ANTERIOR);
+    if (step === STEP_DESAFIO_PESSOAL) return setStep(STEP_TENTATIVA_ANTERIOR);
+    if (step === 5) return setStep(STEP_DESAFIO_PESSOAL);
     setStep(step - 1);
   };
   const showBack =
@@ -747,7 +762,42 @@ export default function AvaliacaoApp() {
               ))}
             </div>
             <div style={{ marginTop: "auto", paddingTop: 20 }}>
-              <PrimaryButton onClick={() => setStep(5)} disabled={!tentativaAnterior}>
+              <PrimaryButton onClick={() => setStep(STEP_DESAFIO_PESSOAL)} disabled={!tentativaAnterior}>
+                Continuar
+              </PrimaryButton>
+            </div>
+          </Screen>
+        )}
+
+        {step === STEP_DESAFIO_PESSOAL && (
+          <Screen>
+            <QTitle>Qual é o seu maior desafio hoje?</QTitle>
+            <p style={{ color: "#9CB3A8", fontSize: 13, margin: "0 0 16px", lineHeight: 1.4 }}>
+              Escolha o que mais se aproxima do que você sente. Na próxima tela você pode contar com mais detalhes.
+            </p>
+            <div style={{ display: "grid", gap: 10 }}>
+              {OPCOES_DESAFIO_PESSOAL.map((op) => (
+                <label
+                  key={op.id}
+                  style={{
+                    display: "flex", gap: 12, alignItems: "center", cursor: "pointer",
+                    background: "#1B302A", borderRadius: 14, padding: "14px 16px",
+                    border: desafioPessoal === op.id ? "1.5px solid #F0A15C" : "1px solid #2A4A40",
+                  }}
+                >
+                  <input
+                    type="radio"
+                    name="desafioPessoal"
+                    checked={desafioPessoal === op.id}
+                    onChange={() => setDesafioPessoal(op.id)}
+                    style={{ width: 17, height: 17, accentColor: "#F0A15C", flexShrink: 0 }}
+                  />
+                  <span style={{ color: "#F4EEE1", fontSize: 13.5 }}>{op.texto}</span>
+                </label>
+              ))}
+            </div>
+            <div style={{ marginTop: "auto", paddingTop: 20 }}>
+              <PrimaryButton onClick={() => setStep(5)} disabled={!desafioPessoal}>
                 Continuar
               </PrimaryButton>
             </div>
