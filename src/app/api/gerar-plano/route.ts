@@ -11,6 +11,7 @@ type DadosIniciais = {
   peso_atual_kg?: number;
   peso_meta_kg?: number;
   sinais_rotina?: string[];
+  tentativa_anterior?: string;
 };
 
 type PlanDay = {
@@ -47,17 +48,20 @@ function supabaseComoUsuario(accessToken: string) {
 
 const client = new Anthropic(); // lê ANTHROPIC_API_KEY do ambiente do servidor
 
-function buildPrompt(answers: Answers): string {
+function buildPrompt(answers: Answers, tentativaAnterior?: string): string {
+  const linhaTentativa = tentativaAnterior
+    ? `\nSobre tentativas anteriores com estratégias alimentares, ela marcou: "${tentativaAnterior}".\n`
+    : "";
   return `Você é um assistente de acolhimento e bem-estar dentro de um app de hábitos alimentares e comportamento (NÃO é terapia nem substitui acompanhamento médico).
 
 Uma pessoa respondeu três perguntas abertas sobre a relação dela com comida, corpo e peso:
-
+${linhaTentativa}
 1) O que mais pesa: ${answers.q1}
 2) O que já tentou e não funcionou: ${answers.q2}
 3) Como isso afeta o dia a dia dela: ${answers.q3}
 
 Sua tarefa:
-1. Identifique um "perfil" curto e humano que resuma o padrão dela (ex: quem come por ansiedade à noite e se culpa depois), com base SOMENTE no que ela escreveu.
+1. Identifique um "perfil" curto e humano que resuma o padrão dela (ex: quem come por ansiedade à noite e se culpa depois), com base no que ela escreveu e, se houver, no que ela marcou sobre tentativas anteriores.
 2. Escreva um "acolhimento": um parágrafo curto (3-4 frases), tom caloroso e direto, mostrando que você entendeu especificamente o caso dela. Refira-se a algo concreto que ela disse, sem usar aspas. NÃO use a segunda pessoa para afirmar que ela "sofre de" uma condição de saúde; fale sobre o padrão de comportamento, não como se fosse uma avaliação médica.
 3. Escreva um "insight científico": 1-2 frases explicando, em linguagem simples, um princípio real de ciência do comportamento alimentar, hormônios (insulina, cortisol, leptina, grelina, tireoide) ou psicologia relevante ao caso dela.
 4. Monte um plano de 5 dias de ação, ESPECÍFICO para o padrão dela. Cada dia deve ter: um título curto, uma tarefa em NUTRIÇÃO, uma em MOVIMENTO/EXERCÍCIO e uma em COMPORTAMENTO (sono/estresse), cada uma com um "porquê" ligado a um mecanismo hormonal ou comportamental real.
@@ -190,7 +194,7 @@ export async function POST(request: Request) {
     );
   }
 
-  const prompt = buildPrompt({ q1, q2, q3 });
+  const prompt = buildPrompt({ q1, q2, q3 }, body.dadosIniciais?.tentativa_anterior);
 
   let message;
   try {

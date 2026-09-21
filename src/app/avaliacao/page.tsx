@@ -86,6 +86,16 @@ const STEP_AVALIACAO_DIA7 = 21;
 const STEP_SAUDACAO_VOLTA = 22;
 const SAUDACAO_VOLTA_DURACAO_MS = 2200;
 
+// Triagem sobre tentativas anteriores — inserida entre "Seus números" (step 4)
+// e as perguntas abertas (steps 5-7), sem renumerar nada do que já existe.
+const STEP_TENTATIVA_ANTERIOR = 24;
+const OPCOES_TENTATIVA_ANTERIOR = [
+  { id: "nao_deu_certo", texto: "Já tentei e não deu certo" },
+  { id: "perdeu_recuperou", texto: "Já perdi peso, mas recuperei" },
+  { id: "nunca_tentou", texto: "Nunca tentei antes" },
+  { id: "deu_certo_continuar", texto: "Já tentei e deu certo, mas quero continuar" },
+] as const;
+
 const WALK_MOODS = [
   { key: "presenca", icon: "🧘", label: "Presença", sub: "respiração guiada", url: "https://open.spotify.com/search/playlist%20mindfulness%20respira%C3%A7%C3%A3o" },
   { key: "relaxar", icon: "🌿", label: "Relaxar", sub: "sons ambiente", url: "https://open.spotify.com/search/playlist%20sons%20da%20natureza%20relaxar" },
@@ -193,6 +203,7 @@ type DadosIniciais = {
   peso_atual_kg: number;
   peso_meta_kg: number;
   sinais_rotina: string[];
+  tentativa_anterior?: string;
 };
 
 // Uma semana (em horas) é dividida em 5 blocos de 24h — 1 dia novo do plano
@@ -250,6 +261,9 @@ export default function AvaliacaoApp() {
   const [result, setResult] = useState<PlanResult | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+
+  // Triagem sobre tentativas anteriores (step STEP_TENTATIVA_ANTERIOR)
+  const [tentativaAnterior, setTentativaAnterior] = useState<string | null>(null);
 
   // Rotina / consentimento
   const [rotina, setRotina] = useState<Record<string, boolean>>({});
@@ -435,6 +449,7 @@ export default function AvaliacaoApp() {
         peso_atual_kg: weightNow,
         peso_meta_kg: weightGoal,
         sinais_rotina: ROTINA_SINAIS.filter((c) => rotina[c]),
+        tentativa_anterior: OPCOES_TENTATIVA_ANTERIOR.find((o) => o.id === tentativaAnterior)?.texto,
       });
       setResult(res);
       setLoading(false);
@@ -448,6 +463,8 @@ export default function AvaliacaoApp() {
   const goBack = () => {
     if (step === 8) return setStep(7);
     if (step === 13) return setStep(12);
+    if (step === STEP_TENTATIVA_ANTERIOR) return setStep(4);
+    if (step === 5) return setStep(STEP_TENTATIVA_ANTERIOR);
     setStep(step - 1);
   };
   const showBack =
@@ -697,7 +714,42 @@ export default function AvaliacaoApp() {
             </p>
 
             <div style={{ marginTop: "auto" }}>
-              <PrimaryButton onClick={() => setStep(5)}>Agora, quero te ouvir</PrimaryButton>
+              <PrimaryButton onClick={() => setStep(STEP_TENTATIVA_ANTERIOR)}>Agora, quero te ouvir</PrimaryButton>
+            </div>
+          </Screen>
+        )}
+
+        {step === STEP_TENTATIVA_ANTERIOR && (
+          <Screen>
+            <QTitle>Você já tentou uma estratégia alimentar antes?</QTitle>
+            <p style={{ color: "#9CB3A8", fontSize: 13, margin: "0 0 16px", lineHeight: 1.4 }}>
+              Não tem resposta certa, isso só ajuda a personalizar seu plano.
+            </p>
+            <div style={{ display: "grid", gap: 10 }}>
+              {OPCOES_TENTATIVA_ANTERIOR.map((op) => (
+                <label
+                  key={op.id}
+                  style={{
+                    display: "flex", gap: 12, alignItems: "center", cursor: "pointer",
+                    background: "#1B302A", borderRadius: 14, padding: "14px 16px",
+                    border: tentativaAnterior === op.id ? "1.5px solid #F0A15C" : "1px solid #2A4A40",
+                  }}
+                >
+                  <input
+                    type="radio"
+                    name="tentativaAnterior"
+                    checked={tentativaAnterior === op.id}
+                    onChange={() => setTentativaAnterior(op.id)}
+                    style={{ width: 17, height: 17, accentColor: "#F0A15C", flexShrink: 0 }}
+                  />
+                  <span style={{ color: "#F4EEE1", fontSize: 13.5 }}>{op.texto}</span>
+                </label>
+              ))}
+            </div>
+            <div style={{ marginTop: "auto", paddingTop: 20 }}>
+              <PrimaryButton onClick={() => setStep(5)} disabled={!tentativaAnterior}>
+                Continuar
+              </PrimaryButton>
             </div>
           </Screen>
         )}
