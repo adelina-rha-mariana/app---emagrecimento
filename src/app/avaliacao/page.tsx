@@ -307,6 +307,10 @@ export default function AvaliacaoApp() {
   // vazio até essa coleta existir; a saudação cai pra versão genérica nesse caso.
   const [nomeUsuario, setNomeUsuario] = useState<string | null>(null);
 
+  // true quando user_metadata.pago === true (setado no checkout). Controla se
+  // o step 9 (resultado) libera o plano completo ou manda pro checkout.
+  const [hasPago, setHasPago] = useState(false);
+
   useEffect(() => {
     if (step !== 12) return;
     let ativo = true;
@@ -327,10 +331,20 @@ export default function AvaliacaoApp() {
 
     (async () => {
       const { data: sessionData } = await supabase.auth.getSession();
-      const user = sessionData.session?.user;
+      let user = sessionData.session?.user;
+
       if (!user) {
-        router.replace("/conta");
-        return;
+        // Sem sessão nenhuma: cria uma sessão anônima pra deixar fazer o quiz
+        // sem pedir conta. Ela vira conta de verdade só quando a pessoa decide
+        // pagar e se cadastrar (ver src/app/conta/page.tsx).
+        const { data: anonData, error: anonError } = await supabase.auth.signInAnonymously();
+        if (anonError || !anonData.user) {
+          // Login anônimo desabilitado no projeto Supabase ou falhou — cai no
+          // fluxo antigo de exigir conta, pra não deixar a pessoa travada.
+          router.replace("/conta");
+          return;
+        }
+        user = anonData.user;
       }
 
       const nomeSalvo = (user.user_metadata as { nome?: string } | undefined)?.nome;
@@ -373,7 +387,27 @@ export default function AvaliacaoApp() {
         if (plano.altura_cm) setHeight(plano.altura_cm);
         if (plano.peso_atual_kg) setWeightNow(plano.peso_atual_kg);
         if (plano.peso_meta_kg) setWeightGoal(plano.peso_meta_kg);
-        setStep(STEP_SAUDACAO_VOLTA);
+
+        // Contas reais (não anônimas) só existem hoje porque, no fluxo antigo,
+        // o pagamento já era obrigatório antes do cadastro — então são
+        // consideradas pagas mesmo sem a flag explícita. Só sessão anônima
+        // (o novo caminho, sem pagamento antes do quiz) depende da flag.
+        const metadataPago = (user.user_metadata as { pago?: boolean } | undefined)?.pago === true;
+        const pago = !user.is_anonymous || metadataPago;
+        setHasPago(pago);
+
+        if (!pago) {
+          // Já fez o quiz mas ainda não pagou: mostra o resultado (step 9) de
+          // novo, sem liberar o plano dia a dia.
+          setStep(9);
+        } else if (user.is_anonymous) {
+          // Pagou mas nunca terminou o cadastro (ex: fechou a aba antes) —
+          // manda direto pra criar a conta de verdade.
+          router.replace("/conta");
+          return;
+        } else {
+          setStep(STEP_SAUDACAO_VOLTA);
+        }
       }
 
       setSessaoPronta(true);
@@ -889,7 +923,9 @@ export default function AvaliacaoApp() {
             </div>
 
             <div style={{ marginTop: "auto" }}>
-              <PrimaryButton onClick={() => setStep(10)}>Ver meu plano de 5 dias</PrimaryButton>
+              <PrimaryButton onClick={() => (hasPago ? setStep(10) : router.push("/checkout"))}>
+                {hasPago ? "Ver meu plano de 5 dias" : "Desbloquear meu plano completo"}
+              </PrimaryButton>
             </div>
           </Screen>
         )}

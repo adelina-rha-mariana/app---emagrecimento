@@ -6,6 +6,7 @@ import Link from "next/link";
 import { Check } from "lucide-react";
 import PageFooter from "@/app/components/PageFooter";
 import { BrandHeader } from "@/app/components/Logo";
+import { supabase } from "@/lib/supabase";
 
 // TODO(pagamento): nenhum gateway de pagamento está integrado ainda (Stripe,
 // Mercado Pago, PagSeguro, etc.). Enquanto isso, PAGAMENTO_SIMULADO=true faz
@@ -33,7 +34,12 @@ export default function CheckoutPage() {
     setProcessando(true);
     // Simulação: em produção, aqui entraria a criação da sessão de pagamento
     // no gateway escolhido, e o redirecionamento aconteceria pela resposta dele.
-    setTimeout(() => router.push("/pagamento-aprovado"), 900);
+    setTimeout(async () => {
+      // Marca a sessão atual (anônima ou já cadastrada) como paga. É isso que
+      // libera o plano completo em /avaliacao depois do cadastro.
+      await supabase.auth.updateUser({ data: { pago: true } });
+      router.push("/pagamento-aprovado");
+    }, 900);
   };
 
   return (

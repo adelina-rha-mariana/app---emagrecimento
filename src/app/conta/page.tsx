@@ -94,6 +94,10 @@ export default function ContaPage() {
   const [aguardandoConfirmacao, setAguardandoConfirmacao] = useState(false);
   const [codigoConfirmacao, setCodigoConfirmacao] = useState("");
   const [codigoReenviado, setCodigoReenviado] = useState(false);
+  // "email_change" quando a conta vem de um upgrade de sessão anônima (fez o
+  // quiz sem login e agora está finalizando o cadastro) — o Supabase usa um
+  // tipo de confirmação diferente nesse caso do que num cadastro do zero.
+  const [tipoConfirmacao, setTipoConfirmacao] = useState<"signup" | "email_change">("signup");
 
   // Esqueci minha senha — mesma lógica de código, sem depender de link.
   const [etapaSenha, setEtapaSenha] = useState<EtapaSenha>("fechado");
@@ -110,6 +114,29 @@ export default function ContaPage() {
 
     if (modo === "criar") {
       const nomeTrim = nome.trim();
+
+      // Se já existe uma sessão anônima (fez o quiz em /avaliacao sem login),
+      // não criamos um usuário novo — fazemos upgrade dessa mesma conta pra
+      // manter o plano e o pagamento já associados a ela.
+      const { data: sessionData } = await supabase.auth.getSession();
+      const sessaoAnonima = sessionData.session?.user.is_anonymous === true;
+
+      if (sessaoAnonima) {
+        const { error } = await supabase.auth.updateUser({
+          email: email.trim(),
+          password: senha,
+          data: nomeTrim ? { nome: nomeTrim } : undefined,
+        });
+        setCarregando(false);
+        if (error) {
+          setErro(error.message);
+          return;
+        }
+        setTipoConfirmacao("email_change");
+        setAguardandoConfirmacao(true);
+        return;
+      }
+
       const { data, error } = await supabase.auth.signUp({
         email: email.trim(),
         password: senha,
@@ -122,6 +149,7 @@ export default function ContaPage() {
       }
       if (!data.session) {
         // Confirmação de email habilitada no projeto: ainda não há sessão até confirmar o código.
+        setTipoConfirmacao("signup");
         setAguardandoConfirmacao(true);
         return;
       }
@@ -135,6 +163,7 @@ export default function ContaPage() {
       if (error.message.toLowerCase().includes("email not confirmed")) {
         // Conta criada mas nunca confirmada — manda direto pra tela de código em vez de um erro genérico.
         await supabase.auth.resend({ type: "signup", email: email.trim() });
+        setTipoConfirmacao("signup");
         setAguardandoConfirmacao(true);
         return;
       }
@@ -154,7 +183,7 @@ export default function ContaPage() {
     const { error } = await supabase.auth.verifyOtp({
       email: email.trim(),
       token: codigoConfirmacao.trim(),
-      type: "signup",
+      type: tipoConfirmacao,
     });
     setCarregando(false);
     if (error) {
@@ -167,7 +196,7 @@ export default function ContaPage() {
   const reenviarCodigoCadastro = async () => {
     setErro(null);
     setCarregando(true);
-    const { error } = await supabase.auth.resend({ type: "signup", email: email.trim() });
+    const { error } = await supabase.auth.resend({ type: tipoConfirmacao, email: email.trim() });
     setCarregando(false);
     if (error) {
       setErro(error.message);

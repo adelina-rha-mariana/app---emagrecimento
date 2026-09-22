@@ -1,12 +1,33 @@
+"use client";
+
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { CheckCircle2 } from "lucide-react";
 import PageFooter from "@/app/components/PageFooter";
 import { BrandHeader } from "@/app/components/Logo";
+import { supabase } from "@/lib/supabase";
 
 const FONT_IMPORT =
   "@import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap');";
 
 export default function PagamentoAprovadoPage() {
+  // Se a sessão atual é anônima (fez o quiz sem conta), falta criar a conta
+  // de verdade pra guardar o plano pago. Se já é conta real, o plano já está
+  // liberado — só falta ir ver ele.
+  const [precisaCadastro, setPrecisaCadastro] = useState<boolean | null>(null);
+
+  useEffect(() => {
+    let ativo = true;
+    (async () => {
+      const { data } = await supabase.auth.getSession();
+      if (!ativo) return;
+      setPrecisaCadastro(data.session?.user.is_anonymous ?? true);
+    })();
+    return () => {
+      ativo = false;
+    };
+  }, []);
+
   return (
     <div style={{ minHeight: "100vh", width: "100%", background: "#0B1512", fontFamily: "Inter, sans-serif", display: "flex", flexDirection: "column" }}>
       <style>{`
@@ -27,11 +48,13 @@ export default function PagamentoAprovadoPage() {
           Pagamento aprovado!
         </h1>
         <p style={{ color: "#9CB3A8", fontSize: 14.5, lineHeight: 1.6, margin: "0 0 30px" }}>
-          Agora vamos te conhecer melhor pra montar sua avaliação e seu plano de hábitos personalizado.
+          {precisaCadastro === false
+            ? "Seu plano completo já está liberado."
+            : "Falta só criar sua conta pra garantir o acesso ao seu plano completo, mesmo se trocar de aparelho."}
         </p>
 
         <Link
-          href="/conta"
+          href={precisaCadastro === false ? "/avaliacao" : "/conta"}
           style={{
             display: "block", width: "100%", padding: "17px 20px", borderRadius: 14,
             background: "linear-gradient(135deg, #F0A15C, #E8785A)", color: "#1B140D",
@@ -39,7 +62,7 @@ export default function PagamentoAprovadoPage() {
             textDecoration: "none", boxShadow: "0 8px 20px -8px rgba(232,120,90,0.6)",
           }}
         >
-          Começar minha avaliação
+          {precisaCadastro === false ? "Ver meu plano completo" : "Criar minha conta"}
         </Link>
       </div>
       </main>

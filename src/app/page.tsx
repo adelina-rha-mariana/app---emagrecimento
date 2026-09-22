@@ -4,7 +4,8 @@ import PageFooter from "./components/PageFooter";
 import { LogoCompleta } from "./components/Logo";
 
 // Landing page pública do Vixofit. Início do funil:
-// Landing (aqui) -> /checkout -> /pagamento-aprovado -> /avaliacao
+// Landing (aqui) -> /avaliacao (quiz + resultado, sem precisar de conta) ->
+// /checkout -> /pagamento-aprovado -> /conta (se ainda não tiver) -> plano completo.
 // (a experiência completa de perguntas/plano, que antes vivia em "/",
 // agora mora em /avaliacao — ver src/app/avaliacao/page.tsx).
 
@@ -53,7 +54,7 @@ export default function LandingPage() {
           </div>
 
           <Link
-            href="/checkout"
+            href="/avaliacao"
             style={{
               display: "block", width: "100%", padding: "17px 20px", borderRadius: 14,
               background: "linear-gradient(135deg, #F0A15C, #E8785A)", color: "#1B140D",
