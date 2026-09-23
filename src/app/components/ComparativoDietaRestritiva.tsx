@@ -45,7 +45,7 @@ export default function ComparativoDietaRestritiva() {
 
       <div style={{ color: COLORS.text, fontWeight: 700, fontSize: 13, marginBottom: 4 }}>Por que o ritmo importa</div>
       <p style={{ color: COLORS.textMuted, fontSize: 12, lineHeight: 1.5, margin: "0 0 12px" }}>
-        Dietas muito restritivas costumam derrubar o peso rápido — e trazer boa parte de volta depois.
+        Dietas muito restritivas costumam derrubar o peso rápido, mas trazem boa parte de volta depois.
         Uma abordagem gradual, no seu ritmo, tende a se sustentar melhor.
       </p>
 
@@ -72,7 +72,7 @@ export default function ComparativoDietaRestritiva() {
       </div>
 
       <p style={{ color: COLORS.textFaint, fontSize: 10, lineHeight: 1.4, margin: "8px 0 0" }}>
-        Ilustração conceitual baseada em padrões descritos na literatura científica — não representa dados reais de nenhum usuário.
+        Ilustração conceitual baseada em padrões descritos na literatura científica. Não representa dados reais de nenhum usuário.
       </p>
     </div>
   );

@@ -91,7 +91,7 @@ export default function TimerProgressoPlano({ geradoEm }: { geradoEm: string }) 
         </div>
         <p style={{ color: COLORS.textMuted, fontSize: 12, lineHeight: 1.4, margin: 0 }}>
           {completo
-            ? `Você chegou aos 5 dias — ${formatarDuracao(horasDecorridas)} desde o início.`
+            ? `Você chegou aos 5 dias. Já se passaram ${formatarDuracao(horasDecorridas)} desde o início.`
             : `Começou há ${formatarDuracao(horasDecorridas)} · faltam ${formatarDuracao(horasRestantesPlano)} pro fim do plano.`}
         </p>
       </div>
