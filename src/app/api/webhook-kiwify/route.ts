@@ -17,32 +17,40 @@ function supabaseAdmin() {
   return createClient(supabaseUrl, serviceRoleKey);
 }
 
-// A documentação da Kiwify não deixa claro em que formato/profundidade o
-// parâmetro de rastreamento "s1" volta no corpo do webhook. Em vez de assumir
-// um caminho fixo (ex: body.TrackingParameters.s1), procura recursivamente
-// por qualquer chave chamada "s1" (sem diferenciar maiúsculas/minúsculas) em
-// todo o JSON recebido.
-function encontrarS1(valor: unknown): string | null {
+// A documentação da Kiwify não deixa claro em que formato/profundidade os
+// campos voltam no corpo do webhook. Em vez de assumir um caminho fixo (ex:
+// body.TrackingParameters.s1), procura recursivamente pela primeira chave com
+// esse nome (sem diferenciar maiúsculas/minúsculas) em todo o JSON recebido.
+function encontrarChave(valor: unknown, nome: string): string | null {
   if (valor == null) return null;
   if (Array.isArray(valor)) {
     for (const item of valor) {
-      const achado = encontrarS1(item);
+      const achado = encontrarChave(item, nome);
       if (achado) return achado;
     }
     return null;
   }
   if (typeof valor === "object") {
     for (const [chave, item] of Object.entries(valor as Record<string, unknown>)) {
-      if (chave.toLowerCase() === "s1" && typeof item === "string" && item.trim()) {
+      if (chave.toLowerCase() === nome && typeof item === "string" && item.trim()) {
         return item.trim();
       }
     }
     for (const item of Object.values(valor as Record<string, unknown>)) {
-      const achado = encontrarS1(item);
+      const achado = encontrarChave(item, nome);
       if (achado) return achado;
     }
   }
   return null;
+}
+
+// Só libera o plano com pagamento aprovado. A Kiwify manda o mesmo webhook
+// para outros eventos (Pix/boleto gerado, recusado, reembolso, chargeback),
+// e cada um deles marcaria a pessoa como paga se não fosse filtrado aqui.
+function pagamentoAprovado(body: unknown): boolean {
+  const status = encontrarChave(body, "order_status")?.toLowerCase();
+  const evento = encontrarChave(body, "webhook_event_type")?.toLowerCase();
+  return status === "paid" || evento === "order_approved";
 }
 
 export async function POST(request: Request) {
@@ -65,12 +73,23 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Corpo da requisição inválido." }, { status: 400 });
   }
 
-  // Log completo pra debug da primeira compra real — a Kiwify não documenta
-  // o formato exato do payload, então isso é o que vamos olhar pra ajustar
-  // a extração do s1 se necessário.
-  console.log("[webhook-kiwify] Payload recebido:", JSON.stringify(body));
+  // Só status e ID do pedido: o payload completo traz nome, e-mail, CPF e
+  // telefone do comprador, que não devem ficar gravados nos logs.
+  console.log(
+    "[webhook-kiwify] Pedido recebido:",
+    JSON.stringify({
+      order_id: encontrarChave(body, "order_id"),
+      order_status: encontrarChave(body, "order_status"),
+    }),
+  );
 
-  const userId = encontrarS1(body);
+  if (!pagamentoAprovado(body)) {
+    console.log("[webhook-kiwify] Evento ignorado: pagamento não aprovado.");
+    // 200 pra Kiwify não retentar: o evento chegou certo, só não libera nada.
+    return NextResponse.json({ ok: true, ignorado: "pagamento não aprovado." });
+  }
+
+  const userId = encontrarChave(body, "s1");
   if (!userId) {
     console.error("[webhook-kiwify] Não encontrei o parâmetro s1 (user_id) no payload.");
     // Responde 200 mesmo assim pra Kiwify não ficar retentando indefinidamente
