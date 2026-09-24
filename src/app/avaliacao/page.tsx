@@ -581,13 +581,14 @@ export default function AvaliacaoApp() {
         textarea:focus, input:focus { outline: none; border-color: #F0A15C !important; }
         @keyframes spin { to { transform: rotate(360deg); } }
 
-        /* Abaixo de 480px (qualquer celular real), a moldura decorativa de
+        /* Abaixo de 768px (celular e tablet pequeno), a moldura decorativa de
            "telefone dentro do navegador" vira o app cheio, sem borda/notch
            falsos — evita overflow horizontal em telas mais estreitas que
-           os 375px fixos da moldura (ex: 360px, 320px). */
+           os 375px fixos da moldura (ex: 360px, 320px) e evita a moldura
+           virar uma ilha flutuante em telas médias (tablets, paisagem). */
         .avaliacao-frame { width: 375px; height: 780px; max-height: 92vh; border-radius: 42px; border: 10px solid #05100C; }
         .avaliacao-notch { display: block; }
-        @media (max-width: 480px) {
+        @media (max-width: 768px) {
           .avaliacao-viewport { padding: 0; }
           .avaliacao-frame { width: 100%; height: 100dvh; max-height: none; border-radius: 0; border: none; }
           .avaliacao-notch { display: none; }
