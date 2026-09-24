@@ -34,7 +34,8 @@ export default function PagamentoAprovadoPage() {
       const { data } = await supabase.auth.getUser();
       if (!ativo) return;
       const user = data.user;
-      const pago = (user?.user_metadata as { pago?: boolean } | undefined)?.pago === true;
+      // app_metadata (não user_metadata) — só o servidor consegue gravar isso.
+      const pago = (user?.app_metadata as { pago?: boolean } | undefined)?.pago === true;
 
       if (pago) {
         setPrecisaCadastro(user?.is_anonymous ?? true);

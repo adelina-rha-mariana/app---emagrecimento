@@ -307,8 +307,9 @@ export default function AvaliacaoApp() {
   // vazio até essa coleta existir; a saudação cai pra versão genérica nesse caso.
   const [nomeUsuario, setNomeUsuario] = useState<string | null>(null);
 
-  // true quando user_metadata.pago === true (setado no checkout). Controla se
-  // o step 9 (resultado) libera o plano completo ou manda pro checkout.
+  // true quando app_metadata.pago === true (setado pelo webhook da Kiwify,
+  // nunca pelo navegador). Controla se o step 9 (resultado) libera o plano
+  // completo ou manda pro checkout.
   const [hasPago, setHasPago] = useState(false);
 
   useEffect(() => {
@@ -392,7 +393,9 @@ export default function AvaliacaoApp() {
         // o pagamento já era obrigatório antes do cadastro — então são
         // consideradas pagas mesmo sem a flag explícita. Só sessão anônima
         // (o novo caminho, sem pagamento antes do quiz) depende da flag.
-        const metadataPago = (user.user_metadata as { pago?: boolean } | undefined)?.pago === true;
+        // app_metadata (não user_metadata) — só o servidor consegue gravar isso
+        // via service_role, o usuário não edita sozinho pelo navegador.
+        const metadataPago = (user.app_metadata as { pago?: boolean } | undefined)?.pago === true;
         const pago = !user.is_anonymous || metadataPago;
         setHasPago(pago);
 

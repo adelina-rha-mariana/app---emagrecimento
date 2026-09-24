@@ -86,8 +86,13 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Supabase (service role) não configurado no servidor." }, { status: 500 });
   }
 
+  // app_metadata (não user_metadata!) só pode ser alterado via Admin API, com
+  // a service_role key — o usuário não consegue editar isso sozinho pelo
+  // navegador. Guardar "pago" em user_metadata seria uma brecha: qualquer
+  // pessoa logada poderia rodar supabase.auth.updateUser({ data: { pago: true } })
+  // no console e destravar o plano sem pagar.
   const { error } = await admin.auth.admin.updateUserById(userId, {
-    user_metadata: { pago: true },
+    app_metadata: { pago: true },
   });
 
   if (error) {
