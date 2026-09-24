@@ -115,7 +115,7 @@ export default function NutricaoSobMedida({ onVoltar }: { onVoltar: () => void }
             })}
           </div>
 
-          <p style={{ color: COLORS.textFaint, fontSize: 10.5, lineHeight: 1.5, textAlign: "center", margin: "20px 0 0" }}>
+          <p style={{ color: COLORS.textFaint, fontSize: 12, lineHeight: 1.5, textAlign: "center", margin: "20px 0 0" }}>
             Este conteúdo é educativo e não substitui o acompanhamento de um profissional de saúde e nutrição.
           </p>
         </Screen>
@@ -270,9 +270,9 @@ export default function NutricaoSobMedida({ onVoltar }: { onVoltar: () => void }
               <Eyebrow icon={<ShieldCheck size={16} color={cor} />}>{estrategia.nome.toUpperCase()} · RESUMO</Eyebrow>
               <QTitle>Sua escolha</QTitle>
               <div style={{ background: COLORS.card, borderRadius: 16, padding: 18, marginBottom: 14 }}>
-                <div style={{ color: COLORS.textMuted, fontSize: 11, fontWeight: 700, letterSpacing: 0.4, marginBottom: 4 }}>ESTRATÉGIA</div>
+                <div style={{ color: COLORS.textMuted, fontSize: 12, fontWeight: 700, letterSpacing: 0.4, marginBottom: 4 }}>ESTRATÉGIA</div>
                 <div style={{ color: COLORS.text, fontSize: 15, fontWeight: 700, marginBottom: 12 }}>{estrategia.nome}</div>
-                <div style={{ color: COLORS.textMuted, fontSize: 11, fontWeight: 700, letterSpacing: 0.4, marginBottom: 4 }}>MODALIDADE</div>
+                <div style={{ color: COLORS.textMuted, fontSize: 12, fontWeight: 700, letterSpacing: 0.4, marginBottom: 4 }}>MODALIDADE</div>
                 <div style={{ color: COLORS.text, fontSize: 14 }}>{estrategia.modalidades.find((m) => m.id === modalidadeId)?.nome}</div>
               </div>
 
@@ -299,7 +299,7 @@ export default function NutricaoSobMedida({ onVoltar }: { onVoltar: () => void }
 function SecaoLista({ titulo, itens, icon }: { titulo: string; itens: string[]; icon: React.ReactNode }) {
   return (
     <div style={{ marginBottom: 14 }}>
-      <div style={{ fontSize: 11, color: COLORS.textMuted, fontWeight: 700, letterSpacing: 0.5, marginBottom: 8 }}>{titulo.toUpperCase()}</div>
+      <div style={{ fontSize: 12, color: COLORS.textMuted, fontWeight: 700, letterSpacing: 0.5, marginBottom: 8 }}>{titulo.toUpperCase()}</div>
       <div style={{ display: "grid", gap: 7 }}>
         {itens.map((item, i) => (
           <div key={i} style={{ display: "flex", gap: 8, alignItems: "flex-start" }}>

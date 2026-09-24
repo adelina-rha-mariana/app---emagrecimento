@@ -285,7 +285,7 @@ export default function ContaPage() {
                   <p style={{ color: "#9CB3A8", fontSize: 13, lineHeight: 1.5, margin: "0 0 18px" }}>
                     Digite o email da sua conta e mandamos um código pra você criar uma senha nova.
                   </p>
-                  <label style={{ display: "block", fontSize: 11, fontWeight: 700, color: "#9CB3A8", letterSpacing: 0.4, marginBottom: 6 }}>EMAIL</label>
+                  <label style={{ display: "block", fontSize: 12, fontWeight: 700, color: "#9CB3A8", letterSpacing: 0.4, marginBottom: 6 }}>EMAIL</label>
                   <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="voce@email.com" style={inputStyle} />
 
                   {erro && (
@@ -326,14 +326,14 @@ export default function ContaPage() {
                     Mandamos um código pra <strong style={{ color: "#F4EEE1" }}>{email}</strong>.
                   </p>
 
-                  <label style={{ display: "block", fontSize: 11, fontWeight: 700, color: "#9CB3A8", letterSpacing: 0.4, marginBottom: 6 }}>CÓDIGO</label>
+                  <label style={{ display: "block", fontSize: 12, fontWeight: 700, color: "#9CB3A8", letterSpacing: 0.4, marginBottom: 6 }}>CÓDIGO</label>
                   <input
                     type="text" inputMode="numeric" maxLength={10} value={codigoSenha}
                     onChange={(e) => setCodigoSenha(e.target.value.replace(/\D/g, ""))}
                     placeholder="Digite o código" style={codigoInputStyle}
                   />
 
-                  <label style={{ display: "block", fontSize: 11, fontWeight: 700, color: "#9CB3A8", letterSpacing: 0.4, margin: "14px 0 6px" }}>NOVA SENHA</label>
+                  <label style={{ display: "block", fontSize: 12, fontWeight: 700, color: "#9CB3A8", letterSpacing: 0.4, margin: "14px 0 6px" }}>NOVA SENHA</label>
                   <PasswordInput
                     value={novaSenha} onChange={setNovaSenha}
                     placeholder="Mínimo 6 caracteres"
@@ -386,7 +386,7 @@ export default function ContaPage() {
                   Mandamos um código pra <strong style={{ color: "#F4EEE1" }}>{email}</strong>. Digite abaixo pra ativar sua conta.
                 </p>
 
-                <label style={{ display: "block", fontSize: 11, fontWeight: 700, color: "#9CB3A8", letterSpacing: 0.4, marginBottom: 6 }}>CÓDIGO</label>
+                <label style={{ display: "block", fontSize: 12, fontWeight: 700, color: "#9CB3A8", letterSpacing: 0.4, marginBottom: 6 }}>CÓDIGO</label>
                 <input
                   type="text" inputMode="numeric" maxLength={10} value={codigoConfirmacao}
                   onChange={(e) => setCodigoConfirmacao(e.target.value.replace(/\D/g, ""))}
@@ -466,16 +466,16 @@ export default function ContaPage() {
                 <div style={{ display: "grid", gap: 12 }}>
                   {modo === "criar" && (
                     <div>
-                      <label style={{ display: "block", fontSize: 11, fontWeight: 700, color: "#9CB3A8", letterSpacing: 0.4, marginBottom: 6 }}>NOME (OPCIONAL)</label>
+                      <label style={{ display: "block", fontSize: 12, fontWeight: 700, color: "#9CB3A8", letterSpacing: 0.4, marginBottom: 6 }}>NOME (OPCIONAL)</label>
                       <input type="text" value={nome} onChange={(e) => setNome(e.target.value)} placeholder="Como podemos te chamar?" style={inputStyle} />
                     </div>
                   )}
                   <div>
-                    <label style={{ display: "block", fontSize: 11, fontWeight: 700, color: "#9CB3A8", letterSpacing: 0.4, marginBottom: 6 }}>EMAIL</label>
+                    <label style={{ display: "block", fontSize: 12, fontWeight: 700, color: "#9CB3A8", letterSpacing: 0.4, marginBottom: 6 }}>EMAIL</label>
                     <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="voce@email.com" style={inputStyle} />
                   </div>
                   <div>
-                    <label style={{ display: "block", fontSize: 11, fontWeight: 700, color: "#9CB3A8", letterSpacing: 0.4, marginBottom: 6 }}>SENHA</label>
+                    <label style={{ display: "block", fontSize: 12, fontWeight: 700, color: "#9CB3A8", letterSpacing: 0.4, marginBottom: 6 }}>SENHA</label>
                     <PasswordInput
                       value={senha} onChange={setSenha}
                       placeholder={modo === "criar" ? "Mínimo 6 caracteres" : "Sua senha"}
@@ -517,7 +517,7 @@ export default function ContaPage() {
                   </button>
                 </div>
 
-                <div style={{ display: "flex", alignItems: "center", gap: 8, marginTop: 16, color: "#6E7A73", fontSize: 11 }}>
+                <div style={{ display: "flex", alignItems: "center", gap: 8, marginTop: 16, color: "#6E7A73", fontSize: 12 }}>
                   <Lock size={12} />
                   <span>Seus dados ficam protegidos e só você acessa sua avaliação.</span>
                 </div>

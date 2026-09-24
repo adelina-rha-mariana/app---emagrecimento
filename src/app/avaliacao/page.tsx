@@ -620,7 +620,7 @@ export default function AvaliacaoApp() {
               Queremos te conhecer um pouco antes de começar. Sono, alimentação, movimento e rotina fazem parte da sua jornada.
             </p>
 
-            <div style={{ fontSize: 11, color: "#9CB3A8", fontWeight: 700, letterSpacing: 0.5, marginBottom: 8 }}>COMO ANDA SUA ROTINA?</div>
+            <div style={{ fontSize: 12, color: "#9CB3A8", fontWeight: 700, letterSpacing: 0.5, marginBottom: 8 }}>COMO ANDA SUA ROTINA?</div>
             <div style={{ display: "grid", gap: 8, marginBottom: 14 }}>
               {ROTINA_SINAIS.map((c) => (
                 <label key={c} style={{ display: "flex", alignItems: "center", gap: 10, background: "#1B302A", borderRadius: 12, padding: "11px 14px", cursor: "pointer", minHeight: 44 }}>
@@ -634,7 +634,7 @@ export default function AvaliacaoApp() {
                 </label>
               ))}
             </div>
-            <p style={{ color: "#6E7A73", fontSize: 11, lineHeight: 1.4, margin: "0 0 4px" }}>
+            <p style={{ color: "#6E7A73", fontSize: 12, lineHeight: 1.4, margin: "0 0 4px" }}>
               Marque o que fizer sentido pra você agora, não tem certo ou errado, isso só nos ajuda a personalizar sua jornada.
             </p>
 
@@ -670,7 +670,7 @@ export default function AvaliacaoApp() {
             <div style={{ marginTop: 20 }}>
               <PrimaryButton onClick={() => setStep(0)} disabled={!aceitouTermos || !aceitouDadosRotina}>Continuar para avaliação</PrimaryButton>
             </div>
-            <p style={{ color: "#6E7A73", fontSize: 10.5, lineHeight: 1.5, textAlign: "center", margin: "12px 0 0" }}>
+            <p style={{ color: "#6E7A73", fontSize: 12, lineHeight: 1.5, textAlign: "center", margin: "12px 0 0" }}>
               Este app não substitui o acompanhamento de um profissional de saúde.
             </p>
           </Screen>
@@ -764,7 +764,7 @@ export default function AvaliacaoApp() {
               <WeightChart weightNow={weightNow} weightGoal={weightGoal} weeks={weeksEstimate} />
             </div>
 
-            <p style={{ color: "#6E7A73", fontSize: 11, lineHeight: 1.4, margin: "12px 0 16px" }}>
+            <p style={{ color: "#6E7A73", fontSize: 12, lineHeight: 1.4, margin: "12px 0 16px" }}>
               Projeção com ritmo seguro (~0,5kg/semana), sem promessas milagrosas.
             </p>
 
@@ -991,7 +991,7 @@ export default function AvaliacaoApp() {
                       <Moon size={14} color="#7FA6C9" style={{ marginTop: 2, flexShrink: 0 }} />
                       <span style={{ color: "#F4EEE1", fontSize: 12.5, lineHeight: 1.4 }}>{d.comportamento}</span>
                     </div>
-                    <div style={{ color: "#9CB3A8", fontSize: 11.5, lineHeight: 1.4, fontStyle: "italic", marginTop: 2 }}>Por quê: {d.porque}</div>
+                    <div style={{ color: "#9CB3A8", fontSize: 12.5, lineHeight: 1.4, fontStyle: "italic", marginTop: 2 }}>Por quê: {d.porque}</div>
                   </div>
                 ) : (
                   <div style={{ color: "#6E7A73", fontSize: 12 }}>
@@ -1001,7 +1001,7 @@ export default function AvaliacaoApp() {
               </div>
             ))}
 
-            <p style={{ color: "#6E7A73", fontSize: 11, lineHeight: 1.5, margin: "10px 0 16px" }}>
+            <p style={{ color: "#6E7A73", fontSize: 12, lineHeight: 1.5, margin: "10px 0 16px" }}>
               Isso é orientação baseada em hábitos e ciência comportamental. Não substitui acompanhamento
               de nutricionista, psicólogo ou médico.
             </p>
@@ -1062,8 +1062,8 @@ export default function AvaliacaoApp() {
                   }}
                 >
                   <div style={{ fontSize: 15 }}>{m.icon}</div>
-                  <div style={{ fontSize: 10.5, fontWeight: 700, marginTop: 2 }}>{m.label}</div>
-                  <div style={{ fontSize: 9, color: "#9CB3A8", marginTop: 1 }}>{m.sub}</div>
+                  <div style={{ fontSize: 12, fontWeight: 700, marginTop: 2 }}>{m.label}</div>
+                  <div style={{ fontSize: 12, color: "#9CB3A8", marginTop: 1 }}>{m.sub}</div>
                 </button>
               ))}
             </div>
@@ -1127,7 +1127,7 @@ export default function AvaliacaoApp() {
               <Music size={15} color="#8FBF9F" /> Abrir playlist {activeMood.label} no Spotify <ExternalLink size={13} color="#9CB3A8" />
             </a>
 
-            <p style={{ color: "#6E7A73", fontSize: 11, lineHeight: 1.5, textAlign: "center", margin: "0 0 6px" }}>
+            <p style={{ color: "#6E7A73", fontSize: 12, lineHeight: 1.5, textAlign: "center", margin: "0 0 6px" }}>
               A narração usa a voz do seu navegador, a música toca à parte, no Spotify.
             </p>
 
@@ -1164,7 +1164,7 @@ export default function AvaliacaoApp() {
                 {result.plano.map((d) => (
                   <div key={d.dia} style={{
                     flex: 1, aspectRatio: "1", borderRadius: 8, display: "flex", alignItems: "center", justifyContent: "center",
-                    fontSize: 11, fontWeight: 700,
+                    fontSize: 12, fontWeight: 700,
                     background: d.dia <= diasDesbloqueados ? "#F0A15C" : "rgba(255,255,255,0.06)",
                     color: d.dia <= diasDesbloqueados ? "#1B140D" : "#6E7A73",
                     border: d.dia === diasDesbloqueados ? "1.5px solid #F0A15C" : "none",
@@ -1173,15 +1173,15 @@ export default function AvaliacaoApp() {
               </div>
             </div>
 
-            <div style={{ fontSize: 11, color: "#9CB3A8", fontWeight: 700, letterSpacing: 0.5, margin: "0 0 10px" }}>PROJEÇÃO DE PESO</div>
+            <div style={{ fontSize: 12, color: "#9CB3A8", fontWeight: 700, letterSpacing: 0.5, margin: "0 0 10px" }}>PROJEÇÃO DE PESO</div>
             <div style={{ background: "#1B302A", borderRadius: 16, padding: "14px 8px", marginBottom: 8 }}>
               <WeightChart weightNow={weightNow} weightGoal={weightGoal} weeks={weeksEstimate} />
             </div>
-            <p style={{ color: "#6E7A73", fontSize: 10.5, lineHeight: 1.4, margin: "0 0 18px" }}>
+            <p style={{ color: "#6E7A73", fontSize: 12, lineHeight: 1.4, margin: "0 0 18px" }}>
               Estimativa com base no seu ritmo (~0,5kg/semana), não é um histórico medido de verdade.
             </p>
 
-            <div style={{ fontSize: 11, color: "#9CB3A8", fontWeight: 700, letterSpacing: 0.5, margin: "0 0 10px" }}>CONQUISTAS</div>
+            <div style={{ fontSize: 12, color: "#9CB3A8", fontWeight: 700, letterSpacing: 0.5, margin: "0 0 10px" }}>CONQUISTAS</div>
             <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 8, marginBottom: 18 }}>
               {conquistas.map((b, i) => (
                 <div key={i} style={{
@@ -1189,7 +1189,7 @@ export default function AvaliacaoApp() {
                   textAlign: "center", opacity: b.earned ? 1 : 0.5,
                 }}>
                   <div style={{ width: 30, height: 30, borderRadius: "50%", background: b.earned ? "#F0A15C" : "#2A4A40", display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto" }}>{b.ic}</div>
-                  <div style={{ fontSize: 9, color: "#F4EEE1", fontWeight: 600, marginTop: 6, lineHeight: 1.3 }}>{b.lab}</div>
+                  <div style={{ fontSize: 12, color: "#F4EEE1", fontWeight: 600, marginTop: 6, lineHeight: 1.3 }}>{b.lab}</div>
                 </div>
               ))}
             </div>
@@ -1235,14 +1235,14 @@ export default function AvaliacaoApp() {
 
             <div style={{ background: "rgba(240,161,92,0.08)", border: "1px solid rgba(240,161,92,0.25)", borderRadius: 14, padding: "14px 16px", marginBottom: 18 }}>
               <div style={{ color: "#F4EEE1", fontSize: 12.5, fontWeight: 700, marginBottom: 5 }}>Por que não medimos pelo celular?</div>
-              <p style={{ color: "#9CB3A8", fontSize: 11.5, lineHeight: 1.5, margin: 0 }}>
+              <p style={{ color: "#9CB3A8", fontSize: 12.5, lineHeight: 1.5, margin: 0 }}>
                 Não existe hoje tecnologia validada que meça glicose com o dedo na tela. Apps que prometem isso podem te dar um número errado, e isso é perigoso. Preferimos ser honestos com você.
               </p>
             </div>
 
             <div style={{ display: "grid", gap: 10, marginBottom: 8 }}>
               <div>
-                <label style={{ display: "block", fontSize: 11, fontWeight: 700, color: "#9CB3A8", letterSpacing: 0.4, marginBottom: 6 }}>GLICOSE (mg/dL)</label>
+                <label style={{ display: "block", fontSize: 12, fontWeight: 700, color: "#9CB3A8", letterSpacing: 0.4, marginBottom: 6 }}>GLICOSE (mg/dL)</label>
                 <input
                   type="number" value={glicose} onChange={(e) => setGlicose(e.target.value)} placeholder="Ex: 95"
                   style={{ width: "100%", border: "1.5px solid #2A4A40", borderRadius: 10, padding: "11px 13px", fontSize: 14, background: "#1B302A", color: "#F4EEE1", fontFamily: "Inter, sans-serif" }}
@@ -1250,14 +1250,14 @@ export default function AvaliacaoApp() {
               </div>
               <div style={{ display: "flex", gap: 10 }}>
                 <div style={{ flex: 1 }}>
-                  <label style={{ display: "block", fontSize: 11, fontWeight: 700, color: "#9CB3A8", letterSpacing: 0.4, marginBottom: 6 }}>SISTÓLICA</label>
+                  <label style={{ display: "block", fontSize: 12, fontWeight: 700, color: "#9CB3A8", letterSpacing: 0.4, marginBottom: 6 }}>SISTÓLICA</label>
                   <input
                     type="number" value={sistolica} onChange={(e) => setSistolica(e.target.value)} placeholder="Ex: 120"
                     style={{ width: "100%", border: "1.5px solid #2A4A40", borderRadius: 10, padding: "11px 13px", fontSize: 14, background: "#1B302A", color: "#F4EEE1", fontFamily: "Inter, sans-serif" }}
                   />
                 </div>
                 <div style={{ flex: 1 }}>
-                  <label style={{ display: "block", fontSize: 11, fontWeight: 700, color: "#9CB3A8", letterSpacing: 0.4, marginBottom: 6 }}>DIASTÓLICA</label>
+                  <label style={{ display: "block", fontSize: 12, fontWeight: 700, color: "#9CB3A8", letterSpacing: 0.4, marginBottom: 6 }}>DIASTÓLICA</label>
                   <input
                     type="number" value={diastolica} onChange={(e) => setDiastolica(e.target.value)} placeholder="Ex: 80"
                     style={{ width: "100%", border: "1.5px solid #2A4A40", borderRadius: 10, padding: "11px 13px", fontSize: 14, background: "#1B302A", color: "#F4EEE1", fontFamily: "Inter, sans-serif" }}
@@ -1271,7 +1271,7 @@ export default function AvaliacaoApp() {
 
             {numHistory.length > 0 && (
               <div style={{ marginBottom: 18 }}>
-                <div style={{ fontSize: 11, color: "#9CB3A8", fontWeight: 700, letterSpacing: 0.5, marginBottom: 8 }}>HISTÓRICO</div>
+                <div style={{ fontSize: 12, color: "#9CB3A8", fontWeight: 700, letterSpacing: 0.5, marginBottom: 8 }}>HISTÓRICO</div>
                 {numHistory.map((n, i) => (
                   <div key={i} style={{ background: "#1B302A", borderRadius: 12, padding: "10px 14px", marginBottom: 6, display: "flex", justifyContent: "space-between", fontSize: 12.5, color: "#F4EEE1" }}>
                     <span>{n.glicose ? `Glicose: ${n.glicose} mg/dL` : ""}</span>
@@ -1281,7 +1281,7 @@ export default function AvaliacaoApp() {
               </div>
             )}
 
-            <div style={{ fontSize: 11, color: "#9CB3A8", fontWeight: 700, letterSpacing: 0.5, marginBottom: 10 }}>FAIXAS DE REFERÊNCIA GERAL</div>
+            <div style={{ fontSize: 12, color: "#9CB3A8", fontWeight: 700, letterSpacing: 0.5, marginBottom: 10 }}>FAIXAS DE REFERÊNCIA GERAL</div>
             <div style={{ display: "grid", gap: 10, marginBottom: 18 }}>
               <div style={{ background: "#1B302A", borderRadius: 14, padding: "14px 16px" }}>
                 <div style={{ fontSize: 12.5, fontWeight: 700, color: "#F4EEE1", marginBottom: 8 }}>🩸 Glicose em jejum</div>
@@ -1301,7 +1301,7 @@ export default function AvaliacaoApp() {
               </div>
             </div>
 
-            <p style={{ color: "#6E7A73", fontSize: 10.5, lineHeight: 1.5, textAlign: "center", margin: "0 0 10px" }}>
+            <p style={{ color: "#6E7A73", fontSize: 12, lineHeight: 1.5, textAlign: "center", margin: "0 0 10px" }}>
               Registro organizacional e educativo. Valores fora da faixa pedem atenção, procure um profissional de saúde.
             </p>
 

@@ -76,7 +76,7 @@ export default function TimerProgressoPlano({ geradoEm }: { geradoEm: string }) 
           <span style={{ fontFamily: "Fraunces, serif", fontWeight: 600, fontSize: 34, color: COLORS.text, lineHeight: 1 }}>
             {diaAtual}
           </span>
-          <span style={{ fontSize: 11, color: COLORS.textMuted, marginTop: 2 }}>de {TOTAL_DIAS}</span>
+          <span style={{ fontSize: 12, color: COLORS.textMuted, marginTop: 2 }}>de {TOTAL_DIAS}</span>
         </div>
       </div>
 

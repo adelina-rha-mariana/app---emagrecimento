@@ -40,7 +40,7 @@ export default function ComparativoDietaRestritiva() {
         }}
       >
         <ShieldCheck size={11} color={COLORS.accent} />
-        <span style={{ fontSize: 10, color: COLORS.accent, fontWeight: 700, letterSpacing: 0.3 }}>BASEADO EM ESTUDOS</span>
+        <span style={{ fontSize: 12, color: COLORS.accent, fontWeight: 700, letterSpacing: 0.3 }}>BASEADO EM ESTUDOS</span>
       </div>
 
       <div style={{ color: COLORS.text, fontWeight: 700, fontSize: 13, marginBottom: 4 }}>Por que o ritmo importa</div>
@@ -61,17 +61,17 @@ export default function ComparativoDietaRestritiva() {
       </div>
 
       <div style={{ background: "rgba(143,191,159,0.08)", border: "1px solid rgba(143,191,159,0.25)", borderRadius: 12, padding: "10px 12px" }}>
-        <p style={{ color: COLORS.text, fontSize: 11.5, lineHeight: 1.5, margin: 0, fontStyle: "italic" }}>
+        <p style={{ color: COLORS.text, fontSize: 12.5, lineHeight: 1.5, margin: 0, fontStyle: "italic" }}>
           &ldquo;Um terço a dois terços das pessoas que fazem dieta recuperam mais peso do que perderam.&rdquo;
         </p>
-        <p style={{ color: COLORS.textMuted, fontSize: 10.5, margin: "4px 0 0" }}>
+        <p style={{ color: COLORS.textMuted, fontSize: 12, margin: "4px 0 0" }}>
           Mann, T., Tomiyama, A. J., Westling, E., Lew, A. M., Samuels, B., &amp; Chatman, J. (2007).
           Medicare&apos;s Search for Effective Obesity Treatments: Diets Are Not the Answer.
           <i> American Psychologist</i>, 62(3), 220–233.
         </p>
       </div>
 
-      <p style={{ color: COLORS.textFaint, fontSize: 10, lineHeight: 1.4, margin: "8px 0 0" }}>
+      <p style={{ color: COLORS.textFaint, fontSize: 12, lineHeight: 1.4, margin: "8px 0 0" }}>
         Ilustração conceitual baseada em padrões descritos na literatura científica. Não representa dados reais de nenhum usuário.
       </p>
     </div>
@@ -82,7 +82,7 @@ function LegendaItem({ cor, texto }: { cor: string; texto: string }) {
   return (
     <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
       <div style={{ width: 10, height: 3, borderRadius: 2, background: cor }} />
-      <span style={{ color: COLORS.textMuted, fontSize: 11 }}>{texto}</span>
+      <span style={{ color: COLORS.textMuted, fontSize: 12 }}>{texto}</span>
     </div>
   );
 }

@@ -90,7 +90,7 @@ export default function StreakSemanal() {
           const ehHoje = iso === hojeISO;
           return (
             <div key={iso} style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 6 }}>
-              <span style={{ fontSize: 10.5, color: COLORS.textFaint, fontWeight: 700 }}>{DIAS_SEMANA[i]}</span>
+              <span style={{ fontSize: 12, color: COLORS.textFaint, fontWeight: 700 }}>{DIAS_SEMANA[i]}</span>
               <div
                 style={{
                   width: 30, height: 30, borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center",
