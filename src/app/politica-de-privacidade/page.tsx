@@ -30,7 +30,7 @@ export default function PoliticaDePrivacidadePage() {
           <h1 style={{ fontFamily: "Fraunces, serif", fontWeight: 600, fontSize: 30, color: "#F4EEE1", margin: "14px 0 6px" }}>
             Política de Privacidade
           </h1>
-          <p style={{ color: "#6E7A73", fontSize: 12.5, margin: "0 0 32px" }}>
+          <p style={{ color: "#7E8A83", fontSize: 12.5, margin: "0 0 32px" }}>
             Última atualização: 14 de setembro de 2026
           </p>
 

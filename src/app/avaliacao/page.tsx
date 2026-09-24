@@ -635,7 +635,7 @@ export default function AvaliacaoApp() {
                 </label>
               ))}
             </div>
-            <p style={{ color: "#6E7A73", fontSize: 12, lineHeight: 1.4, margin: "0 0 4px" }}>
+            <p style={{ color: "#7E8A83", fontSize: 12, lineHeight: 1.4, margin: "0 0 4px" }}>
               Marque o que fizer sentido pra você agora, não tem certo ou errado, isso só nos ajuda a personalizar sua jornada.
             </p>
 
@@ -671,7 +671,7 @@ export default function AvaliacaoApp() {
             <div style={{ marginTop: 20 }}>
               <PrimaryButton onClick={() => setStep(0)} disabled={!aceitouTermos || !aceitouDadosRotina}>Continuar para avaliação</PrimaryButton>
             </div>
-            <p style={{ color: "#6E7A73", fontSize: 12, lineHeight: 1.5, textAlign: "center", margin: "12px 0 0" }}>
+            <p style={{ color: "#7E8A83", fontSize: 12, lineHeight: 1.5, textAlign: "center", margin: "12px 0 0" }}>
               Este app não substitui o acompanhamento de um profissional de saúde.
             </p>
           </Screen>
@@ -765,7 +765,7 @@ export default function AvaliacaoApp() {
               <WeightChart weightNow={weightNow} weightGoal={weightGoal} weeks={weeksEstimate} />
             </div>
 
-            <p style={{ color: "#6E7A73", fontSize: 12, lineHeight: 1.4, margin: "12px 0 16px" }}>
+            <p style={{ color: "#7E8A83", fontSize: 12, lineHeight: 1.4, margin: "12px 0 16px" }}>
               Projeção com ritmo seguro (~0,5kg/semana), sem promessas milagrosas.
             </p>
 
@@ -973,7 +973,7 @@ export default function AvaliacaoApp() {
                   {d.dia <= diasDesbloqueados ? (
                     <Check size={16} color="#8FBF9F" />
                   ) : (
-                    <Lock size={13} color="#6E7A73" />
+                    <Lock size={13} color="#7E8A83" />
                   )}
                 </div>
                 <div style={{ color: "#F4EEE1", fontWeight: 600, fontSize: 15, marginBottom: 10 }}>{d.titulo}</div>
@@ -995,14 +995,14 @@ export default function AvaliacaoApp() {
                     <div style={{ color: "#9CB3A8", fontSize: 12.5, lineHeight: 1.4, fontStyle: "italic", marginTop: 2 }}>Por quê: {d.porque}</div>
                   </div>
                 ) : (
-                  <div style={{ color: "#6E7A73", fontSize: 12 }}>
+                  <div style={{ color: "#7E8A83", fontSize: 12 }}>
                     {d.dia === diasDesbloqueados + 1 ? `Desbloqueia em ${horasProximo}h.` : "Desbloqueia nos próximos dias."}
                   </div>
                 )}
               </div>
             ))}
 
-            <p style={{ color: "#6E7A73", fontSize: 12, lineHeight: 1.5, margin: "10px 0 16px" }}>
+            <p style={{ color: "#7E8A83", fontSize: 12, lineHeight: 1.5, margin: "10px 0 16px" }}>
               Isso é orientação baseada em hábitos e ciência comportamental. Não substitui acompanhamento
               de nutricionista, psicólogo ou médico.
             </p>
@@ -1128,7 +1128,7 @@ export default function AvaliacaoApp() {
               <Music size={15} color="#8FBF9F" /> Abrir playlist {activeMood.label} no Spotify <ExternalLink size={13} color="#9CB3A8" />
             </a>
 
-            <p style={{ color: "#6E7A73", fontSize: 12, lineHeight: 1.5, textAlign: "center", margin: "0 0 6px" }}>
+            <p style={{ color: "#7E8A83", fontSize: 12, lineHeight: 1.5, textAlign: "center", margin: "0 0 6px" }}>
               A narração usa a voz do seu navegador, a música toca à parte, no Spotify.
             </p>
 
@@ -1167,7 +1167,7 @@ export default function AvaliacaoApp() {
                     flex: 1, aspectRatio: "1", borderRadius: 8, display: "flex", alignItems: "center", justifyContent: "center",
                     fontSize: 12, fontWeight: 700,
                     background: d.dia <= diasDesbloqueados ? "#F0A15C" : "rgba(255,255,255,0.06)",
-                    color: d.dia <= diasDesbloqueados ? "#1B140D" : "#6E7A73",
+                    color: d.dia <= diasDesbloqueados ? "#1B140D" : "#7E8A83",
                     border: d.dia === diasDesbloqueados ? "1.5px solid #F0A15C" : "none",
                   }}>{d.dia}</div>
                 ))}
@@ -1178,7 +1178,7 @@ export default function AvaliacaoApp() {
             <div style={{ background: "#1B302A", borderRadius: 16, padding: "14px 8px", marginBottom: 8 }}>
               <WeightChart weightNow={weightNow} weightGoal={weightGoal} weeks={weeksEstimate} />
             </div>
-            <p style={{ color: "#6E7A73", fontSize: 12, lineHeight: 1.4, margin: "0 0 18px" }}>
+            <p style={{ color: "#7E8A83", fontSize: 13, lineHeight: 1.4, margin: "0 0 18px" }}>
               Estimativa com base no seu ritmo (~0,5kg/semana), não é um histórico medido de verdade.
             </p>
 
@@ -1302,7 +1302,7 @@ export default function AvaliacaoApp() {
               </div>
             </div>
 
-            <p style={{ color: "#6E7A73", fontSize: 12, lineHeight: 1.5, textAlign: "center", margin: "0 0 10px" }}>
+            <p style={{ color: "#7E8A83", fontSize: 13, lineHeight: 1.5, textAlign: "center", margin: "0 0 10px" }}>
               Registro organizacional e educativo. Valores fora da faixa pedem atenção, procure um profissional de saúde.
             </p>
 

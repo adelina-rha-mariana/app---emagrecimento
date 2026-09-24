@@ -8,7 +8,7 @@ export default function PageFooter() {
     <footer style={{ padding: "20px 20px 28px", textAlign: "center" }}>
       <Link
         href="/politica-de-privacidade"
-        style={{ color: "#6E7A73", fontSize: 12, textDecoration: "underline", textUnderlineOffset: 3 }}
+        style={{ color: "#7E8A83", fontSize: 12, textDecoration: "underline", textUnderlineOffset: 3 }}
       >
         Política de Privacidade
       </Link>

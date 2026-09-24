@@ -12,7 +12,7 @@ export const COLORS = {
   border: "#2A4A40",
   text: "#F4EEE1",
   textMuted: "#9CB3A8",
-  textFaint: "#6E7A73",
+  textFaint: "#7E8A83",
   accent: "#F0A15C",
   accent2: "#E8785A",
   good: "#8FBF9F",

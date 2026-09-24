@@ -65,7 +65,7 @@ export default function LandingPage() {
             Quero começar
           </Link>
 
-          <p style={{ color: "#6E7A73", fontSize: 12.5, lineHeight: 1.5, margin: "18px 0 0" }}>
+          <p style={{ color: "#7E8A83", fontSize: 12.5, lineHeight: 1.5, margin: "18px 0 0" }}>
             O Vixofit é um app de hábitos e bem-estar. Não substitui o acompanhamento de um profissional de saúde.
           </p>
         </div>
