@@ -136,7 +136,7 @@ export default function NutricaoSobMedida({ onVoltar }: { onVoltar: () => void }
               {estrategia.triagem.length > 0 ? (
                 <div style={{ display: "grid", gap: 8, marginBottom: 14 }}>
                   {estrategia.triagem.map((c) => (
-                    <label key={c} style={{ display: "flex", alignItems: "center", gap: 10, background: COLORS.card, borderRadius: 12, padding: "11px 14px", cursor: "pointer" }}>
+                    <label key={c} style={{ display: "flex", alignItems: "center", gap: 10, background: COLORS.card, borderRadius: 12, padding: "11px 14px", cursor: "pointer", minHeight: 44 }}>
                       <input
                         type="checkbox"
                         checked={!!condicoesMarcadas[c]}
@@ -163,7 +163,7 @@ export default function NutricaoSobMedida({ onVoltar }: { onVoltar: () => void }
                     Com o que você marcou, essa estratégia precisa de acompanhamento profissional direto para ser segura.
                     Você ainda pode ver o conteúdo educativo, mas não deve começar sozinho(a).
                   </p>
-                  <label style={{ display: "flex", alignItems: "flex-start", gap: 10, cursor: "pointer" }}>
+                  <label style={{ display: "flex", alignItems: "flex-start", gap: 10, cursor: "pointer", minHeight: 44 }}>
                     <input
                       type="checkbox"
                       checked={riscoReconhecido}
@@ -203,6 +203,7 @@ export default function NutricaoSobMedida({ onVoltar }: { onVoltar: () => void }
                       display: "flex", gap: 12, alignItems: "flex-start", cursor: "pointer",
                       background: COLORS.card, borderRadius: 14, padding: "14px 16px",
                       border: modalidadeId === m.id ? `1.5px solid ${cor}` : `1px solid ${COLORS.border}`,
+                      minHeight: 44,
                     }}
                   >
                     <input

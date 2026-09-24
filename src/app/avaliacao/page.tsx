@@ -623,7 +623,7 @@ export default function AvaliacaoApp() {
             <div style={{ fontSize: 11, color: "#9CB3A8", fontWeight: 700, letterSpacing: 0.5, marginBottom: 8 }}>COMO ANDA SUA ROTINA?</div>
             <div style={{ display: "grid", gap: 8, marginBottom: 14 }}>
               {ROTINA_SINAIS.map((c) => (
-                <label key={c} style={{ display: "flex", alignItems: "center", gap: 10, background: "#1B302A", borderRadius: 12, padding: "11px 14px", cursor: "pointer" }}>
+                <label key={c} style={{ display: "flex", alignItems: "center", gap: 10, background: "#1B302A", borderRadius: 12, padding: "11px 14px", cursor: "pointer", minHeight: 44 }}>
                   <input
                     type="checkbox"
                     checked={!!rotina[c]}
@@ -638,7 +638,7 @@ export default function AvaliacaoApp() {
               Marque o que fizer sentido pra você agora, não tem certo ou errado, isso só nos ajuda a personalizar sua jornada.
             </p>
 
-            <label style={{ display: "flex", alignItems: "flex-start", gap: 11, background: "rgba(240,161,92,0.08)", border: "1px solid rgba(240,161,92,0.25)", borderRadius: 14, padding: "15px 16px", marginTop: 18, cursor: "pointer" }}>
+            <label style={{ display: "flex", alignItems: "flex-start", gap: 11, background: "rgba(240,161,92,0.08)", border: "1px solid rgba(240,161,92,0.25)", borderRadius: 14, padding: "15px 16px", marginTop: 18, cursor: "pointer", minHeight: 44 }}>
               <input
                 type="checkbox"
                 checked={aceitouTermos}
@@ -653,7 +653,7 @@ export default function AvaliacaoApp() {
               </span>
             </label>
 
-            <label style={{ display: "flex", alignItems: "flex-start", gap: 11, background: "rgba(240,161,92,0.08)", border: "1px solid rgba(240,161,92,0.25)", borderRadius: 14, padding: "15px 16px", marginTop: 10, cursor: "pointer" }}>
+            <label style={{ display: "flex", alignItems: "flex-start", gap: 11, background: "rgba(240,161,92,0.08)", border: "1px solid rgba(240,161,92,0.25)", borderRadius: 14, padding: "15px 16px", marginTop: 10, cursor: "pointer", minHeight: 44 }}>
               <input
                 type="checkbox"
                 checked={aceitouDadosRotina}
@@ -788,6 +788,7 @@ export default function AvaliacaoApp() {
                     display: "flex", gap: 12, alignItems: "center", cursor: "pointer",
                     background: "#1B302A", borderRadius: 14, padding: "14px 16px",
                     border: tentativaAnterior === op.id ? "1.5px solid #F0A15C" : "1px solid #2A4A40",
+                    minHeight: 44,
                   }}
                 >
                   <input
@@ -823,6 +824,7 @@ export default function AvaliacaoApp() {
                     display: "flex", gap: 12, alignItems: "center", cursor: "pointer",
                     background: "#1B302A", borderRadius: 14, padding: "14px 16px",
                     border: desafioPessoal === op.id ? "1.5px solid #F0A15C" : "1px solid #2A4A40",
+                    minHeight: 44,
                   }}
                 >
                   <input
