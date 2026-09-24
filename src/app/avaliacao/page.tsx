@@ -389,14 +389,11 @@ export default function AvaliacaoApp() {
         if (plano.peso_atual_kg) setWeightNow(plano.peso_atual_kg);
         if (plano.peso_meta_kg) setWeightGoal(plano.peso_meta_kg);
 
-        // Contas reais (não anônimas) só existem hoje porque, no fluxo antigo,
-        // o pagamento já era obrigatório antes do cadastro — então são
-        // consideradas pagas mesmo sem a flag explícita. Só sessão anônima
-        // (o novo caminho, sem pagamento antes do quiz) depende da flag.
         // app_metadata (não user_metadata) — só o servidor consegue gravar isso
-        // via service_role, o usuário não edita sozinho pelo navegador.
-        const metadataPago = (user.app_metadata as { pago?: boolean } | undefined)?.pago === true;
-        const pago = !user.is_anonymous || metadataPago;
+        // via service_role, nunca o usuário pelo navegador. "pago" depende só
+        // disso, pra todo mundo (conta anônima ou real) — nenhuma conta real
+        // recebe acesso de graça só por não ser anônima.
+        const pago = (user.app_metadata as { pago?: boolean } | undefined)?.pago === true;
         setHasPago(pago);
 
         if (!pago) {
