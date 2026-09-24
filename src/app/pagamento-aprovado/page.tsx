@@ -65,7 +65,7 @@ export default function PagamentoAprovadoPage() {
   };
 
   return (
-    <div style={{ minHeight: "100vh", width: "100%", background: "#0B1512", fontFamily: "Inter, sans-serif", display: "flex", flexDirection: "column" }}>
+    <div style={{ minHeight: "100dvh", width: "100%", background: "#0B1512", fontFamily: "Inter, sans-serif", display: "flex", flexDirection: "column" }}>
       <style>{`
         ${FONT_IMPORT}
         * { box-sizing: border-box; }
