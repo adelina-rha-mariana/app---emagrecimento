@@ -7,10 +7,10 @@ import PageFooter from "@/app/components/PageFooter";
 import { BrandHeader } from "@/app/components/Logo";
 import { supabase } from "@/lib/supabase";
 
-// Checkout real da Kiwify (pagamento único). O user_id vai no parâmetro s1,
-// que a Kiwify devolve no payload do webhook — é assim que o backend sabe pra
-// qual conta liberar o acesso depois de confirmar o pagamento de verdade.
-// Ver src/app/api/webhook-kiwify/route.ts.
+// Checkout real da Kiwify (pagamento único). O webhook libera o plano pela
+// conta com o mesmo e-mail da compra (confirmado) e também pelo user_id que
+// vai no parâmetro s1 — que cobre a sessão anônima, ainda sem e-mail, que
+// fica esperando em /pagamento-aprovado. Ver src/app/api/webhook-kiwify/route.ts.
 const KIWIFY_CHECKOUT_URL = "https://pay.kiwify.com.br/HUeTau6";
 
 const INCLUSOS = [
@@ -37,9 +37,8 @@ export default function CheckoutPage() {
     };
   }, []);
 
-  // O user_id vai como parâmetro s1 — a Kiwify devolve isso no webhook, então
-  // é assim que o backend sabe pra qual conta liberar o acesso depois de
-  // confirmar o pagamento de verdade (ver src/app/api/webhook-kiwify/route.ts).
+  // O user_id vai como parâmetro s1 — a Kiwify devolve isso no webhook, que
+  // libera essa sessão além da conta com o e-mail da compra.
   const linkPagamento = userId ? `${KIWIFY_CHECKOUT_URL}?s1=${encodeURIComponent(userId)}` : null;
 
   return (
