@@ -39,6 +39,16 @@ const codigoInputStyle: React.CSSProperties = {
 // quebraria a confirmação se o tamanho do código mudar do lado deles.
 const CODIGO_MIN_LENGTH = 4;
 
+// O Supabase só deixa mandar outro email de confirmação depois de ~60s. A
+// mensagem dele vem em inglês ("For security purposes, you can only request
+// this after N seconds"), então trocamos por uma explicação simples.
+function mensagemErroEnvio(error: { message: string; code?: string; status?: number }): string {
+  if (error.code === "over_email_send_rate_limit" || error.status === 429) {
+    return "Aguarde um minuto antes de pedir outro código.";
+  }
+  return error.message;
+}
+
 // Campo de senha com botão de mostrar/ocultar — ajuda quem tem menos prática
 // com tecnologia a conferir o que digitou antes de confirmar.
 function PasswordInput({
@@ -129,7 +139,7 @@ export default function ContaPage() {
         });
         setCarregando(false);
         if (error) {
-          setErro(error.message);
+          setErro(mensagemErroEnvio(error));
           return;
         }
         setTipoConfirmacao("email_change");
@@ -196,10 +206,17 @@ export default function ContaPage() {
   const reenviarCodigoCadastro = async () => {
     setErro(null);
     setCarregando(true);
-    const { error } = await supabase.auth.resend({ type: tipoConfirmacao, email: email.trim() });
+    // No upgrade de sessão anônima, resend({ type: "email_change" }) não serve:
+    // o Supabase procura a conta pelo email *atual*, que a sessão anônima ainda
+    // não tem — e responde "ok" sem mandar nada. Pedir a troca de email de novo
+    // gera e envia um código novo (o anterior deixa de valer).
+    const { error } =
+      tipoConfirmacao === "email_change"
+        ? await supabase.auth.updateUser({ email: email.trim() })
+        : await supabase.auth.resend({ type: "signup", email: email.trim() });
     setCarregando(false);
     if (error) {
-      setErro(error.message);
+      setErro(mensagemErroEnvio(error));
       return;
     }
     setCodigoReenviado(true);
