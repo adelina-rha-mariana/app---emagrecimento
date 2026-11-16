@@ -648,7 +648,7 @@ export default function AvaliacaoApp() {
               Marque o que fizer sentido pra você agora, não tem certo ou errado, isso só nos ajuda a personalizar sua jornada.
             </p>
 
-            <label style={{ display: "flex", alignItems: "flex-start", gap: 11, background: "rgba(240,161,92,0.08)", border: "1px solid rgba(240,161,92,0.25)", borderRadius: 14, padding: "15px 16px", marginTop: 18, cursor: "pointer", minHeight: 44 }}>
+            <label style={{ display: "flex", alignItems: "flex-start", gap: 11, background: "rgba(240,161,92,0.08)", border: "1px solid rgba(240,161,92,0.25)", borderRadius: 14, padding: "15px 16px", marginTop: 18, cursor: "pointer", minHeight: 44, flexShrink: 0 }}>
               <input
                 type="checkbox"
                 checked={aceitouTermos}
@@ -663,7 +663,7 @@ export default function AvaliacaoApp() {
               </span>
             </label>
 
-            <label style={{ display: "flex", alignItems: "flex-start", gap: 11, background: "rgba(240,161,92,0.08)", border: "1px solid rgba(240,161,92,0.25)", borderRadius: 14, padding: "15px 16px", marginTop: 10, cursor: "pointer", minHeight: 44 }}>
+            <label style={{ display: "flex", alignItems: "flex-start", gap: 11, background: "rgba(240,161,92,0.08)", border: "1px solid rgba(240,161,92,0.25)", borderRadius: 14, padding: "15px 16px", marginTop: 10, cursor: "pointer", minHeight: 44, flexShrink: 0 }}>
               <input
                 type="checkbox"
                 checked={aceitouDadosRotina}
