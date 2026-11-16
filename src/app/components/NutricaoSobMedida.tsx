@@ -76,7 +76,7 @@ export default function NutricaoSobMedida({ onVoltar }: { onVoltar: () => void }
   return (
     <>
       <div style={{ padding: "34px 20px 0", display: "flex", alignItems: "center" }}>
-        <button onClick={back} style={{ background: "none", border: "none", cursor: "pointer", padding: 4 }}>
+        <button onClick={back} aria-label="Voltar" style={{ background: "none", border: "none", cursor: "pointer", padding: 4 }}>
           <ChevronLeft size={22} color={COLORS.textMuted} />
         </button>
       </div>

@@ -604,7 +604,7 @@ export default function AvaliacaoApp() {
 
         <div style={{ padding: "34px 20px 0", display: "flex", alignItems: "center", justifyContent: "center", position: "relative" }}>
           {showBack && (
-            <button onClick={goBack} style={{ position: "absolute", left: 20, background: "none", border: "none", cursor: "pointer", padding: 4 }}>
+            <button onClick={goBack} aria-label="Voltar" style={{ position: "absolute", left: 20, background: "none", border: "none", cursor: "pointer", padding: 4 }}>
               <ChevronLeft size={22} color="#9CB3A8" />
             </button>
           )}
@@ -1116,6 +1116,7 @@ export default function AvaliacaoApp() {
               </button>
               <button
                 onClick={() => setWalkMuted(!walkMuted)}
+                aria-label={walkMuted ? "Ligar narração por voz" : "Desligar narração por voz"}
                 style={{ width: 52, borderRadius: 14, border: "1px solid #2A4A40", background: "#1B302A", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center" }}
               >
                 {walkMuted ? <VolumeX size={18} color="#9CB3A8" /> : <Volume2 size={18} color="#F0A15C" />}
