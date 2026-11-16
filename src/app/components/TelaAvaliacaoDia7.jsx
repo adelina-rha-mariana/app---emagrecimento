@@ -82,10 +82,11 @@ export default function TelaAvaliacaoDia7({ onVoltar }) {
         ))}
       </div>
 
-      <label style={{ display: "block", fontSize: 12, fontWeight: 700, color: COLORS.textMuted, letterSpacing: 0.4, marginBottom: 8 }}>
+      <label htmlFor="comentario-dia7" style={{ display: "block", fontSize: 12, fontWeight: 700, color: COLORS.textMuted, letterSpacing: 0.4, marginBottom: 8 }}>
         QUER CONTAR MAIS ALGUMA COISA? (OPCIONAL)
       </label>
       <textarea
+        id="comentario-dia7"
         value={comentario}
         onChange={(e) => setComentario(e.target.value)}
         placeholder="Ex: o que ajudou mais, o que poderia ser diferente..."

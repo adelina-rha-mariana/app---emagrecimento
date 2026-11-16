@@ -42,6 +42,7 @@ function PasswordInput({
         value={value}
         onChange={(e) => onChange(e.target.value)}
         placeholder={placeholder}
+        aria-label="Nova senha"
         style={{ ...inputStyle, paddingRight: 44 }}
         onKeyDown={onKeyDown}
       />

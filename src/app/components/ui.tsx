@@ -62,9 +62,9 @@ export function ProgressDots({ step, total }: { step: number; total: number }) {
   );
 }
 
-export function QTitle({ children }: { children: React.ReactNode }) {
+export function QTitle({ children, id }: { children: React.ReactNode; id?: string }) {
   return (
-    <h2 style={{ fontFamily: "Fraunces, serif", fontSize: 21, fontWeight: 600, color: COLORS.text, margin: "0 0 8px", lineHeight: 1.3 }}>
+    <h2 id={id} style={{ fontFamily: "Fraunces, serif", fontSize: 21, fontWeight: 600, color: COLORS.text, margin: "0 0 8px", lineHeight: 1.3 }}>
       {children}
     </h2>
   );

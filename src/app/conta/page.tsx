@@ -57,16 +57,19 @@ function PasswordInput({
   onChange,
   placeholder,
   onKeyDown,
+  id,
 }: {
   value: string;
   onChange: (v: string) => void;
   placeholder?: string;
   onKeyDown?: (e: React.KeyboardEvent<HTMLInputElement>) => void;
+  id?: string;
 }) {
   const [visivel, setVisivel] = useState(false);
   return (
     <div style={{ position: "relative" }}>
       <input
+        id={id}
         type={visivel ? "text" : "password"}
         value={value}
         onChange={(e) => onChange(e.target.value)}
@@ -307,8 +310,8 @@ export default function ContaPage() {
                   <p style={{ color: "#9CB3A8", fontSize: 13, lineHeight: 1.5, margin: "0 0 18px" }}>
                     Digite o email da sua conta e mandamos um código pra você criar uma senha nova.
                   </p>
-                  <label style={{ display: "block", fontSize: 12, fontWeight: 700, color: "#9CB3A8", letterSpacing: 0.4, marginBottom: 6 }}>EMAIL</label>
-                  <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="voce@email.com" style={inputStyle} />
+                  <label htmlFor="email-recuperar" style={{ display: "block", fontSize: 12, fontWeight: 700, color: "#9CB3A8", letterSpacing: 0.4, marginBottom: 6 }}>EMAIL</label>
+                  <input id="email-recuperar" type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="voce@email.com" style={inputStyle} />
 
                   {erro && (
                     <div style={{ display: "flex", gap: 8, alignItems: "center", marginTop: 12 }}>
@@ -348,15 +351,17 @@ export default function ContaPage() {
                     Mandamos um código pra <strong style={{ color: "#F4EEE1" }}>{email}</strong>.
                   </p>
 
-                  <label style={{ display: "block", fontSize: 12, fontWeight: 700, color: "#9CB3A8", letterSpacing: 0.4, marginBottom: 6 }}>CÓDIGO</label>
+                  <label htmlFor="codigo-senha" style={{ display: "block", fontSize: 12, fontWeight: 700, color: "#9CB3A8", letterSpacing: 0.4, marginBottom: 6 }}>CÓDIGO</label>
                   <input
+                    id="codigo-senha"
                     type="text" inputMode="numeric" maxLength={10} value={codigoSenha}
                     onChange={(e) => setCodigoSenha(e.target.value.replace(/\D/g, ""))}
                     placeholder="Digite o código" style={codigoInputStyle}
                   />
 
-                  <label style={{ display: "block", fontSize: 12, fontWeight: 700, color: "#9CB3A8", letterSpacing: 0.4, margin: "14px 0 6px" }}>NOVA SENHA</label>
+                  <label htmlFor="nova-senha" style={{ display: "block", fontSize: 12, fontWeight: 700, color: "#9CB3A8", letterSpacing: 0.4, margin: "14px 0 6px" }}>NOVA SENHA</label>
                   <PasswordInput
+                    id="nova-senha"
                     value={novaSenha} onChange={setNovaSenha}
                     placeholder="Mínimo 6 caracteres"
                     onKeyDown={(e) => e.key === "Enter" && redefinirComCodigo()}
@@ -408,8 +413,9 @@ export default function ContaPage() {
                   Mandamos um código pra <strong style={{ color: "#F4EEE1" }}>{email}</strong>. Digite abaixo pra ativar sua conta.
                 </p>
 
-                <label style={{ display: "block", fontSize: 12, fontWeight: 700, color: "#9CB3A8", letterSpacing: 0.4, marginBottom: 6 }}>CÓDIGO</label>
+                <label htmlFor="codigo-confirmacao" style={{ display: "block", fontSize: 12, fontWeight: 700, color: "#9CB3A8", letterSpacing: 0.4, marginBottom: 6 }}>CÓDIGO</label>
                 <input
+                  id="codigo-confirmacao"
                   type="text" inputMode="numeric" maxLength={10} value={codigoConfirmacao}
                   onChange={(e) => setCodigoConfirmacao(e.target.value.replace(/\D/g, ""))}
                   placeholder="Digite o código" style={codigoInputStyle}
@@ -488,17 +494,18 @@ export default function ContaPage() {
                 <div style={{ display: "grid", gap: 12 }}>
                   {modo === "criar" && (
                     <div>
-                      <label style={{ display: "block", fontSize: 12, fontWeight: 700, color: "#9CB3A8", letterSpacing: 0.4, marginBottom: 6 }}>NOME (OPCIONAL)</label>
-                      <input type="text" value={nome} onChange={(e) => setNome(e.target.value)} placeholder="Como podemos te chamar?" style={inputStyle} />
+                      <label htmlFor="nome" style={{ display: "block", fontSize: 12, fontWeight: 700, color: "#9CB3A8", letterSpacing: 0.4, marginBottom: 6 }}>NOME (OPCIONAL)</label>
+                      <input id="nome" type="text" value={nome} onChange={(e) => setNome(e.target.value)} placeholder="Como podemos te chamar?" style={inputStyle} />
                     </div>
                   )}
                   <div>
-                    <label style={{ display: "block", fontSize: 12, fontWeight: 700, color: "#9CB3A8", letterSpacing: 0.4, marginBottom: 6 }}>EMAIL</label>
-                    <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="voce@email.com" style={inputStyle} />
+                    <label htmlFor="email" style={{ display: "block", fontSize: 12, fontWeight: 700, color: "#9CB3A8", letterSpacing: 0.4, marginBottom: 6 }}>EMAIL</label>
+                    <input id="email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="voce@email.com" style={inputStyle} />
                   </div>
                   <div>
-                    <label style={{ display: "block", fontSize: 12, fontWeight: 700, color: "#9CB3A8", letterSpacing: 0.4, marginBottom: 6 }}>SENHA</label>
+                    <label htmlFor="senha" style={{ display: "block", fontSize: 12, fontWeight: 700, color: "#9CB3A8", letterSpacing: 0.4, marginBottom: 6 }}>SENHA</label>
                     <PasswordInput
+                      id="senha"
                       value={senha} onChange={setSenha}
                       placeholder={modo === "criar" ? "Mínimo 6 caracteres" : "Sua senha"}
                       onKeyDown={(e) => e.key === "Enter" && submeter()}

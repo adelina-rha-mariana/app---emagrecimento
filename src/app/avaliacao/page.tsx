@@ -872,9 +872,11 @@ export default function AvaliacaoApp() {
         {step >= 5 && step <= 7 && (
           <Screen>
             <ProgressDots step={step - 5} total={totalOpenQuestions} />
-            <QTitle>{currentQ.title}</QTitle>
-            <p style={{ color: "#9CB3A8", fontSize: 13, margin: "0 0 16px", lineHeight: 1.4 }}>{currentQ.sub}</p>
+            <QTitle id="pergunta-aberta-titulo">{currentQ.title}</QTitle>
+            <p id="pergunta-aberta-dica" style={{ color: "#9CB3A8", fontSize: 13, margin: "0 0 16px", lineHeight: 1.4 }}>{currentQ.sub}</p>
             <textarea
+              aria-labelledby="pergunta-aberta-titulo"
+              aria-describedby="pergunta-aberta-dica"
               value={answers[currentQ.key]}
               onChange={(e) => setAnswers({ ...answers, [currentQ.key]: e.target.value })}
               placeholder={currentQ.placeholder}
@@ -1252,23 +1254,28 @@ export default function AvaliacaoApp() {
 
             <div style={{ display: "grid", gap: 10, marginBottom: 8 }}>
               <div>
-                <label style={{ display: "block", fontSize: 12, fontWeight: 700, color: "#9CB3A8", letterSpacing: 0.4, marginBottom: 6 }}>GLICOSE (mg/dL)</label>
+                <label htmlFor="glicose" style={{ display: "block", fontSize: 12, fontWeight: 700, color: "#9CB3A8", letterSpacing: 0.4, marginBottom: 6 }}>GLICOSE (mg/dL)</label>
                 <input
+                  id="glicose"
                   type="number" value={glicose} onChange={(e) => setGlicose(e.target.value)} placeholder="Ex: 95"
                   style={{ width: "100%", border: "1.5px solid #2A4A40", borderRadius: 10, padding: "11px 13px", fontSize: 14, background: "#1B302A", color: "#F4EEE1", fontFamily: "Inter, sans-serif" }}
                 />
               </div>
               <div style={{ display: "flex", gap: 10 }}>
                 <div style={{ flex: 1 }}>
-                  <label style={{ display: "block", fontSize: 12, fontWeight: 700, color: "#9CB3A8", letterSpacing: 0.4, marginBottom: 6 }}>SISTÓLICA</label>
+                  <label htmlFor="sistolica" style={{ display: "block", fontSize: 12, fontWeight: 700, color: "#9CB3A8", letterSpacing: 0.4, marginBottom: 6 }}>SISTÓLICA</label>
                   <input
+                    id="sistolica"
+                    aria-label="Pressão sistólica (a maior)"
                     type="number" value={sistolica} onChange={(e) => setSistolica(e.target.value)} placeholder="Ex: 120"
                     style={{ width: "100%", border: "1.5px solid #2A4A40", borderRadius: 10, padding: "11px 13px", fontSize: 14, background: "#1B302A", color: "#F4EEE1", fontFamily: "Inter, sans-serif" }}
                   />
                 </div>
                 <div style={{ flex: 1 }}>
-                  <label style={{ display: "block", fontSize: 12, fontWeight: 700, color: "#9CB3A8", letterSpacing: 0.4, marginBottom: 6 }}>DIASTÓLICA</label>
+                  <label htmlFor="diastolica" style={{ display: "block", fontSize: 12, fontWeight: 700, color: "#9CB3A8", letterSpacing: 0.4, marginBottom: 6 }}>DIASTÓLICA</label>
                   <input
+                    id="diastolica"
+                    aria-label="Pressão diastólica (a menor)"
                     type="number" value={diastolica} onChange={(e) => setDiastolica(e.target.value)} placeholder="Ex: 80"
                     style={{ width: "100%", border: "1.5px solid #2A4A40", borderRadius: 10, padding: "11px 13px", fontSize: 14, background: "#1B302A", color: "#F4EEE1", fontFamily: "Inter, sans-serif" }}
                   />
