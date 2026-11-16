@@ -71,7 +71,7 @@ export default function ComparativoDietaRestritiva() {
         </p>
       </div>
 
-      <p style={{ color: COLORS.textFaint, fontSize: 12, lineHeight: 1.4, margin: "8px 0 0" }}>
+      <p style={{ color: COLORS.textMuted, fontSize: 12, lineHeight: 1.4, margin: "8px 0 0" }}>
         Ilustração conceitual baseada em padrões descritos na literatura científica. Não representa dados reais de nenhum usuário.
       </p>
     </div>

@@ -546,7 +546,7 @@ export default function ContaPage() {
                   </button>
                 </div>
 
-                <div style={{ display: "flex", alignItems: "center", gap: 8, marginTop: 16, color: "#7E8A83", fontSize: 12 }}>
+                <div style={{ display: "flex", alignItems: "center", gap: 8, marginTop: 16, color: "#9CB3A8", fontSize: 12 }}>
                   <Lock size={12} />
                   <span>Seus dados ficam protegidos e só você acessa sua avaliação.</span>
                 </div>

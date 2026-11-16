@@ -1008,7 +1008,7 @@ export default function AvaliacaoApp() {
                     <div style={{ color: "#9CB3A8", fontSize: 12.5, lineHeight: 1.4, fontStyle: "italic", marginTop: 2 }}>Por quê: {d.porque}</div>
                   </div>
                 ) : (
-                  <div style={{ color: "#7E8A83", fontSize: 12 }}>
+                  <div style={{ color: "#9CB3A8", fontSize: 12 }}>
                     {d.dia === diasDesbloqueados + 1 ? `Desbloqueia em ${horasProximo}h.` : "Desbloqueia nos próximos dias."}
                   </div>
                 )}
@@ -1181,7 +1181,7 @@ export default function AvaliacaoApp() {
                     flex: 1, aspectRatio: "1", borderRadius: 8, display: "flex", alignItems: "center", justifyContent: "center",
                     fontSize: 12, fontWeight: 700,
                     background: d.dia <= diasDesbloqueados ? "#F0A15C" : "rgba(255,255,255,0.06)",
-                    color: d.dia <= diasDesbloqueados ? "#1B140D" : "#7E8A83",
+                    color: d.dia <= diasDesbloqueados ? "#1B140D" : "#9CB3A8",
                     border: d.dia === diasDesbloqueados ? "1.5px solid #F0A15C" : "none",
                   }}>{d.dia}</div>
                 ))}
@@ -1201,10 +1201,12 @@ export default function AvaliacaoApp() {
               {conquistas.map((b, i) => (
                 <div key={i} style={{
                   background: b.earned ? "rgba(240,161,92,0.15)" : "#1B302A", borderRadius: 12, padding: "10px 4px",
-                  textAlign: "center", opacity: b.earned ? 1 : 0.5,
+                  textAlign: "center",
                 }}>
-                  <div style={{ width: 30, height: 30, borderRadius: "50%", background: b.earned ? "#F0A15C" : "#2A4A40", display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto" }}>{b.ic}</div>
-                  <div style={{ fontSize: 12, color: "#F4EEE1", fontWeight: 600, marginTop: 6, lineHeight: 1.3 }}>{b.lab}</div>
+                  {/* Conquista não alcançada: só o ícone fica apagado — o texto
+                      continua com contraste legível pra quem tem baixa visão. */}
+                  <div style={{ width: 30, height: 30, borderRadius: "50%", background: b.earned ? "#F0A15C" : "#2A4A40", opacity: b.earned ? 1 : 0.5, display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto" }}>{b.ic}</div>
+                  <div style={{ fontSize: 12, color: b.earned ? "#F4EEE1" : "#9CB3A8", fontWeight: 600, marginTop: 6, lineHeight: 1.3 }}>{b.lab}</div>
                 </div>
               ))}
             </div>
