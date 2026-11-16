@@ -13,6 +13,7 @@ import {
 } from "lucide-react";
 import {
   Screen, ProgressDots, QTitle, Eyebrow, PrimaryButton, SecondaryButton, GhostLink, btnCircle,
+  srOnly, useFocoNoTitulo,
 } from "@/app/components/ui";
 import NutricaoSobMedida from "@/app/components/NutricaoSobMedida";
 import TimerProgressoPlano from "@/app/components/TimerProgressoPlano";
@@ -311,6 +312,9 @@ export default function AvaliacaoApp() {
   // nunca pelo navegador). Controla se o step 9 (resultado) libera o plano
   // completo ou manda pro checkout.
   const [hasPago, setHasPago] = useState(false);
+
+  // Leva o leitor de tela pro título de cada tela nova (quiz, plano, progresso...).
+  useFocoNoTitulo(step);
 
   useEffect(() => {
     if (step !== 12) return;
@@ -894,14 +898,16 @@ export default function AvaliacaoApp() {
               {loading && (
                 <>
                   <div style={{ width: 84, height: 84, borderRadius: "50%", border: "3px solid #2A4A40", borderTopColor: "#F0A15C", animation: "spin 0.9s linear infinite", marginBottom: 28 }} />
-                  <p style={{ fontFamily: "Fraunces, serif", fontSize: 18, color: "#F4EEE1" }}>Lendo o que você escreveu...</p>
-                  <p style={{ color: "#9CB3A8", fontSize: 13, marginTop: 6 }}>Cruzando com evidência científica pra montar algo seu.</p>
+                  <div role="status">
+                    <p style={{ fontFamily: "Fraunces, serif", fontSize: 18, color: "#F4EEE1" }}>Lendo o que você escreveu...</p>
+                    <p style={{ color: "#9CB3A8", fontSize: 13, marginTop: 6 }}>Cruzando com evidência científica pra montar algo seu.</p>
+                  </div>
                 </>
               )}
               {error && (
                 <>
                   <AlertCircle size={40} color="#E8785A" style={{ marginBottom: 16 }} />
-                  <p style={{ color: "#F4EEE1", fontSize: 14, marginBottom: 20 }}>{error}</p>
+                  <p role="alert" style={{ color: "#F4EEE1", fontSize: 14, marginBottom: 20 }}>{error}</p>
                   <PrimaryButton onClick={handleNext}>Tentar de novo</PrimaryButton>
                 </>
               )}
@@ -1214,6 +1220,9 @@ export default function AvaliacaoApp() {
               <SecondaryButton onClick={handleIndicarAmiga}>
                 {shareStatus === "copiado" ? "Link copiado!" : shareStatus === "erro" ? "Não consegui copiar o link" : "Indicar para uma amiga"}
               </SecondaryButton>
+              <span role="status" style={srOnly}>
+                {shareStatus === "copiado" ? "Link copiado!" : shareStatus === "erro" ? "Não consegui copiar o link" : ""}
+              </span>
             </div>
 
             <div style={{ marginTop: 16 }}>

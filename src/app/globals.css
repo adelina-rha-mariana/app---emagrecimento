@@ -19,6 +19,13 @@
   }
 }
 
+/* Títulos recebem foco via código quando a tela muda (pro leitor de tela),
+   mas não são clicáveis nem alcançáveis pelo Tab — então sem contorno visual. */
+[data-tela] h1[tabindex="-1"]:focus,
+[data-tela] h2[tabindex="-1"]:focus {
+  outline: none;
+}
+
 body {
   background: var(--background);
   color: var(--foreground);

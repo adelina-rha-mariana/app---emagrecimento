@@ -7,7 +7,7 @@ import {
   Check, Stethoscope, ClipboardCheck,
 } from "lucide-react";
 import {
-  Screen, ProgressDots, QTitle, Eyebrow, PrimaryButton, GhostLink, COLORS,
+  Screen, ProgressDots, QTitle, Eyebrow, PrimaryButton, GhostLink, COLORS, useFocoNoTitulo,
 } from "./ui";
 import { ESTRATEGIAS, getEstrategiaById } from "./nutricaoEstrategias";
 import fotoEquilibrada from "@/assets/nutricao/equilibrada.jpg";
@@ -46,6 +46,9 @@ export default function NutricaoSobMedida({ onVoltar }: { onVoltar: () => void }
   const estrategia = estrategiaId ? getEstrategiaById(estrategiaId) : undefined;
   const cor = estrategia ? COLORS[estrategia.corId] : COLORS.accent;
   const algumaCondicao = estrategia ? estrategia.triagem.some((c) => condicoesMarcadas[c]) : false;
+
+  // Leva o leitor de tela pro título de cada sub-tela (triagem, modalidade...).
+  useFocoNoTitulo(subStep);
 
   const escolherEstrategia = (id: string) => {
     setEstrategiaId(id);

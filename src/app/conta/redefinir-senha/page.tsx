@@ -142,7 +142,7 @@ export default function RedefinirSenhaPage() {
                 {erro && (
                   <div style={{ display: "flex", gap: 8, alignItems: "center", marginTop: 12 }}>
                     <AlertCircle size={15} color="#E8785A" />
-                    <span style={{ color: "#F4EEE1", fontSize: 12.5 }}>{erro}</span>
+                    <span role="alert" style={{ color: "#F4EEE1", fontSize: 12.5 }}>{erro}</span>
                   </div>
                 )}
 

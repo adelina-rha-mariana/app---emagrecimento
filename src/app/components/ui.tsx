@@ -4,7 +4,32 @@
 // de fluxo (ex: Nutrição sob medida, avaliação do Dia 7), pra manter a
 // mesma identidade visual do app em todo lugar.
 
-import React from "react";
+import React, { useEffect, useRef } from "react";
+
+// Esconde um elemento da tela mas mantém ele pro leitor de tela (TalkBack /
+// VoiceOver) — usado em avisos que só precisam ser falados.
+export const srOnly: React.CSSProperties = {
+  position: "absolute", width: 1, height: 1, padding: 0, margin: -1,
+  overflow: "hidden", clip: "rect(0 0 0 0)", whiteSpace: "nowrap", border: 0,
+};
+
+// Quando a tela muda (o valor de `chave` troca), leva o foco do leitor de tela
+// pro título (h1/h2) da tela nova, dentro do elemento marcado com data-tela.
+// Sem isso, o leitor fica "preso" no botão que acabou de sumir e a pessoa cega
+// não percebe que a tela mudou. Só age quando `chave` realmente muda de valor
+// (compara com o anterior), então não rouba o foco no carregamento da página —
+// nem no modo de desenvolvimento, em que o React roda os efeitos duas vezes.
+export function useFocoNoTitulo(chave: unknown) {
+  const chaveAnterior = useRef(chave);
+  useEffect(() => {
+    if (Object.is(chaveAnterior.current, chave)) return;
+    chaveAnterior.current = chave;
+    const titulo = document.querySelector<HTMLElement>("[data-tela] h1, [data-tela] h2");
+    if (!titulo) return;
+    titulo.setAttribute("tabindex", "-1");
+    titulo.focus();
+  }, [chave]);
+}
 
 export const COLORS = {
   bg: "#0B1512",
@@ -21,7 +46,7 @@ export const COLORS = {
 
 export function Screen({ children }: { children: React.ReactNode }) {
   return (
-    <div style={{ flex: 1, minHeight: 0, display: "flex", flexDirection: "column", padding: "28px 24px 24px", overflowY: "auto" }}>
+    <div data-tela="" style={{ flex: 1, minHeight: 0, display: "flex", flexDirection: "column", padding: "28px 24px 24px", overflowY: "auto" }}>
       {children}
     </div>
   );

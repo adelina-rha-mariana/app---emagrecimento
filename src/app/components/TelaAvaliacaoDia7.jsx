@@ -6,7 +6,7 @@
 
 import React, { useState } from "react";
 import { Star, Check, AlertCircle } from "lucide-react";
-import { Screen, QTitle, Eyebrow, PrimaryButton, GhostLink, COLORS } from "./ui";
+import { Screen, QTitle, Eyebrow, PrimaryButton, GhostLink, COLORS, useFocoNoTitulo } from "./ui";
 import { supabase } from "@/lib/supabase";
 
 const NOTAS = Array.from({ length: 11 }, (_, i) => i); // 0..10
@@ -17,6 +17,9 @@ export default function TelaAvaliacaoDia7({ onVoltar }) {
   const [enviando, setEnviando] = useState(false);
   const [enviado, setEnviado] = useState(false);
   const [erro, setErro] = useState(null);
+
+  // Ao enviar, leva o leitor de tela pro título da tela de agradecimento.
+  useFocoNoTitulo(enviado);
 
   const enviar = async () => {
     if (nota === null) return;
@@ -94,7 +97,7 @@ export default function TelaAvaliacaoDia7({ onVoltar }) {
       />
 
       {erro && (
-        <div style={{ display: "flex", gap: 8, alignItems: "center", marginBottom: 14 }}>
+        <div role="alert" style={{ display: "flex", gap: 8, alignItems: "center", marginBottom: 14 }}>
           <AlertCircle size={15} color={COLORS.accent2} />
           <span style={{ color: COLORS.text, fontSize: 12.5 }}>{erro}</span>
         </div>

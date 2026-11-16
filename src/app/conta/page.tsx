@@ -7,6 +7,7 @@ import { KeyRound, Lock, AlertCircle, CheckCircle2, Eye, EyeOff } from "lucide-r
 import { supabase } from "@/lib/supabase";
 import { BrandHeader } from "@/app/components/Logo";
 import PageFooter from "@/app/components/PageFooter";
+import { useFocoNoTitulo } from "@/app/components/ui";
 
 const FONT_IMPORT =
   "@import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap');";
@@ -113,6 +114,10 @@ export default function ContaPage() {
   const [etapaSenha, setEtapaSenha] = useState<EtapaSenha>("fechado");
   const [codigoSenha, setCodigoSenha] = useState("");
   const [novaSenha, setNovaSenha] = useState("");
+
+  // Leva o leitor de tela pro título quando o cartão troca de etapa
+  // (login/cadastro → confirmar e-mail → esqueci a senha...).
+  useFocoNoTitulo(`${etapaSenha}-${aguardandoConfirmacao}`);
 
   const submeter = async () => {
     setErro(null);
@@ -292,7 +297,7 @@ export default function ContaPage() {
             <BrandHeader />
           </div>
 
-          <div style={{ background: "#1B302A", border: "1px solid #2A4A40", borderRadius: 20, padding: 24 }}>
+          <div data-tela="" style={{ background: "#1B302A", border: "1px solid #2A4A40", borderRadius: 20, padding: 24 }}>
             {etapaSenha !== "fechado" ? (
               etapaSenha === "pedir-codigo" ? (
                 <>
@@ -308,7 +313,7 @@ export default function ContaPage() {
                   {erro && (
                     <div style={{ display: "flex", gap: 8, alignItems: "center", marginTop: 12 }}>
                       <AlertCircle size={15} color="#E8785A" />
-                      <span style={{ color: "#F4EEE1", fontSize: 12.5 }}>{erro}</span>
+                      <span role="alert" style={{ color: "#F4EEE1", fontSize: 12.5 }}>{erro}</span>
                     </div>
                   )}
 
@@ -360,7 +365,7 @@ export default function ContaPage() {
                   {erro && (
                     <div style={{ display: "flex", gap: 8, alignItems: "center", marginTop: 12 }}>
                       <AlertCircle size={15} color="#E8785A" />
-                      <span style={{ color: "#F4EEE1", fontSize: 12.5 }}>{erro}</span>
+                      <span role="alert" style={{ color: "#F4EEE1", fontSize: 12.5 }}>{erro}</span>
                     </div>
                   )}
 
@@ -414,13 +419,13 @@ export default function ContaPage() {
                 {erro && (
                   <div style={{ display: "flex", gap: 8, alignItems: "center", marginTop: 12 }}>
                     <AlertCircle size={15} color="#E8785A" />
-                    <span style={{ color: "#F4EEE1", fontSize: 12.5 }}>{erro}</span>
+                    <span role="alert" style={{ color: "#F4EEE1", fontSize: 12.5 }}>{erro}</span>
                   </div>
                 )}
                 {codigoReenviado && (
                   <div style={{ display: "flex", gap: 8, alignItems: "center", marginTop: 12 }}>
                     <CheckCircle2 size={15} color="#8FBF9F" />
-                    <span style={{ color: "#F4EEE1", fontSize: 12.5 }}>Código reenviado.</span>
+                    <span role="status" style={{ color: "#F4EEE1", fontSize: 12.5 }}>Código reenviado.</span>
                   </div>
                 )}
 
@@ -515,7 +520,7 @@ export default function ContaPage() {
                 {erro && (
                   <div style={{ display: "flex", gap: 8, alignItems: "center", marginTop: 14 }}>
                     <AlertCircle size={15} color="#E8785A" />
-                    <span style={{ color: "#F4EEE1", fontSize: 12.5 }}>{erro}</span>
+                    <span role="alert" style={{ color: "#F4EEE1", fontSize: 12.5 }}>{erro}</span>
                   </div>
                 )}
 
