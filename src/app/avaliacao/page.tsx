@@ -124,6 +124,7 @@ function Stepper({
   max,
   unit,
   big,
+  rotulo,
 }: {
   value: number;
   setValue: (v: number) => void;
@@ -131,17 +132,21 @@ function Stepper({
   max: number;
   unit: string;
   big?: boolean;
+  // Nome do que está sendo ajustado ("altura", "peso atual"...), falado pelo
+  // leitor de tela nos botões + e −.
+  rotulo: string;
 }) {
   return (
-    <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 18 }}>
-      <button onClick={() => setValue(Math.max(min, value - 1))} style={btnCircle} aria-label="diminuir">–</button>
-      <div style={{ minWidth: big ? 150 : 110, textAlign: "center" }}>
+    <div role="group" aria-label={rotulo} style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 18 }}>
+      <button onClick={() => setValue(Math.max(min, value - 1))} style={btnCircle} aria-label={`Diminuir ${rotulo}`}>–</button>
+      {/* aria-live: o leitor de tela fala o valor novo a cada toque em + ou − */}
+      <div aria-live="polite" aria-atomic="true" style={{ minWidth: big ? 150 : 110, textAlign: "center" }}>
         <span style={{ fontFamily: "Fraunces, serif", fontWeight: 600, fontSize: big ? 64 : 48, color: "#F4EEE1", letterSpacing: -1 }}>
           {value}
         </span>
         <span style={{ fontSize: 16, color: "#9CB3A8", marginLeft: 6 }}>{unit}</span>
       </div>
-      <button onClick={() => setValue(Math.min(max, value + 1))} style={btnCircle} aria-label="aumentar">+</button>
+      <button onClick={() => setValue(Math.min(max, value + 1))} style={btnCircle} aria-label={`Aumentar ${rotulo}`}>+</button>
     </div>
   );
 }
@@ -704,7 +709,7 @@ export default function AvaliacaoApp() {
             <ProgressDots step={0} total={3} />
             <QTitle>Qual sua altura?</QTitle>
             <div style={{ marginTop: 30 }}>
-              <Stepper value={height} setValue={setHeight} min={140} max={210} unit="cm" big />
+              <Stepper value={height} setValue={setHeight} min={140} max={210} unit="cm" big rotulo="altura" />
             </div>
             <div style={{ marginTop: "auto", paddingTop: 20 }}>
               <PrimaryButton onClick={() => setStep(2)}>Continuar</PrimaryButton>
@@ -716,7 +721,7 @@ export default function AvaliacaoApp() {
             <ProgressDots step={1} total={3} />
             <QTitle>Qual seu peso atual?</QTitle>
             <div style={{ marginTop: 30 }}>
-              <Stepper value={weightNow} setValue={setWeightNow} min={40} max={180} unit="kg" big />
+              <Stepper value={weightNow} setValue={setWeightNow} min={40} max={180} unit="kg" big rotulo="peso atual" />
             </div>
             <div style={{ marginTop: "auto", paddingTop: 20 }}>
               <PrimaryButton onClick={() => setStep(3)}>Continuar</PrimaryButton>
@@ -728,7 +733,7 @@ export default function AvaliacaoApp() {
             <ProgressDots step={2} total={3} />
             <QTitle>Qual o peso dos seus sonhos?</QTitle>
             <div style={{ marginTop: 30 }}>
-              <Stepper value={weightGoal} setValue={setWeightGoal} min={35} max={weightNow} unit="kg" big />
+              <Stepper value={weightGoal} setValue={setWeightGoal} min={35} max={weightNow} unit="kg" big rotulo="peso dos sonhos" />
             </div>
             <div style={{ marginTop: "auto", paddingTop: 20 }}>
               <PrimaryButton onClick={() => setStep(4)}>Ver minha avaliação</PrimaryButton>
